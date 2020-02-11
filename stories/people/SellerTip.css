@@ -1,0 +1,17 @@
+.seller-tip {
+  text-align: left;
+  font-size: 0.7em;
+}
+.seller-tip-key {
+  font-weight: bold;
+  margin-right: 10px;
+  vertical-align: top;
+}
+
+.seller-tip-image {
+  width: 80px;
+  height: 80px;
+  padding: 5px 5px;
+  border: 1px dotted gray;
+  margin-left: 10px;
+}
