@@ -54,9 +54,6 @@ import React, { useReducer } from "react";
 import { Table, TableDispatch } from "react-reducer-table";
 import { myReducer } from "./myReducer";
 
-// Add the CSS at the base of your app
-import "react-reducer-table/react-reducer-table.css";
-
 const MyComponent = () => {
   // Define the initial state of your table
   const initialState = {

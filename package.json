@@ -1,6 +1,6 @@
 {
   "name": "react-reducer-table",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A library to provide a fast data grid to React apps based on the useReducer hook",
   "keywords": [
     "react",
@@ -30,7 +30,7 @@
     "url": "https://github.com/ulgaal/react-reducer-table.git"
   },
   "scripts": {
-    "build": "babel --out-dir lib --presets=@babel/preset-react,@babel/preset-env src",
+    "build": "babel --out-dir lib --presets=@babel/preset-react,@babel/preset-env src ; rsync -av src/*.css lib",
     "test": "node config/test.js",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
