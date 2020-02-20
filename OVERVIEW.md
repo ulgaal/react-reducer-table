@@ -10,11 +10,11 @@
 ## Installing
 
 ```sh
-npm install @ulgaal/react-reducer-table
+npm install react-reducer-table
 
 # or if you use yarn
 
-yarn add @ulgaal/react-reducer-table
+yarn add react-reducer-table
 ```
 
 ## Coding
@@ -27,10 +27,7 @@ Create your reducer function to transform actions emitted by the table into stat
 
 ```jsx
 // myReducer.js
-import {
-  COLUMN_REORDERING,
-  COLUMN_RESIZING
-} from "@ulgaal/react-reducer-table";
+import { COLUMN_REORDERING, COLUMN_RESIZING } from "react-reducer-table";
 
 export const tableReducer = (state, action) => {
   switch (action.type) {
@@ -54,11 +51,11 @@ Instantiate the table and pass your reducer
 ```jsx
 // MyComponent.js
 import React, { useReducer } from "react";
-import { Table, TableDispatch } from "@ulgaal/react-reducer-table";
+import { Table, TableDispatch } from "react-reducer-table";
 import { myReducer } from "./myReducer";
 
 // Add the CSS at the base of your app
-import "@ulgaal/react-reducer-table/react-reducer-table.css";
+import "react-reducer-table/react-reducer-table.css";
 
 const MyComponent = () => {
   // Define the initial state of your table

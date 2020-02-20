@@ -1,4 +1,4 @@
-[![npm (scoped)](https://img.shields.io/npm/v/@ulgaal/react-reducer-table)](https://www.npmjs.com/package/@ulgaal/react-reducer-table) [![GitHub](https://img.shields.io/github/license/ulgaal/react-reducer-table)](https://github.com/ulgaal/react-reducer-table/blob/master/LICENSE)
+[![npm (scoped)](https://img.shields.io/npm/v/react-reducer-table)](https://www.npmjs.com/package/react-reducer-table) [![GitHub](https://img.shields.io/github/license/ulgaal/react-reducer-table)](https://github.com/ulgaal/react-reducer-table/blob/master/LICENSE)
 
 # React data grid library based on the `useReducer` pattern
 
