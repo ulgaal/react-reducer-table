@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="en"><head><title>src/Header</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="src/Header"><meta name="groc-project-path" content="src/Header.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">src/Header.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>Copyright 2020 Ulrich Gaal</p>
+<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<pre><code>http://www.apache.org/licenses/LICENSE-2.0</code></pre>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> React, { useContext, useCallback } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> SortArrow <span class="hljs-keyword">from</span> <span class="hljs-string">'./SortArrow'</span>
+<span class="hljs-keyword">import</span> HeaderResizer <span class="hljs-keyword">from</span> <span class="hljs-string">'./HeaderResizer'</span>
+<span class="hljs-keyword">import</span> { encode, ASC, DESC } <span class="hljs-keyword">from</span> <span class="hljs-string">'./orders'</span>
+<span class="hljs-keyword">import</span> { TableDispatch, SORTING } <span class="hljs-keyword">from</span> <span class="hljs-string">'./actions'</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { ColumnType, LayoutType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">'./Header.css'</span>
+
+const Header = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Header&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { column, layout, sorted, resizable } = props
+  <span class="hljs-keyword">const</span> { id, label, sortable = <span class="hljs-literal">true</span> } = column
+  <span class="hljs-keyword">const</span> dispatch = useContext(TableDispatch)
+
+  <span class="hljs-keyword">const</span> handleClick = useCallback(
+    event =&gt; {
+      dispatch({
+        type: SORTING,
+        sort: encode({ order: sorted === <span class="hljs-literal">false</span> ? DESC : ASC, name: id })
+      })
+    },
+    [id, sorted, dispatch]
+  )
+
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-header'</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span>
+        <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-header-title'</span>
+        <span class="hljs-attribute">title</span>=<span class="hljs-value">{label}</span>
+        <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{sortable</span> ? <span class="hljs-attribute">handleClick</span> <span class="hljs-attribute">:</span> <span class="hljs-attribute">null</span>}
+      &gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-header-label'</span>&gt;</span>{label}<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-header-arrow'</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">SortArrow</span> <span class="hljs-attribute">sorted</span>=<span class="hljs-value">{sorted}</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+      {resizable ? (
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-header-resizer'</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">HeaderResizer</span> <span class="hljs-attribute">column</span>=<span class="hljs-value">{column}</span> <span class="hljs-attribute">layout</span>=<span class="hljs-value">{layout}</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+      )</span> : <span class="hljs-literal">null</span>}
+    &lt;<span class="hljs-regexp">/div&gt;
+  )
+}
+
+Header.propTypes = {
+  column: ColumnType,
+  layout: LayoutType,
+  sorted: PropTypes.bool,
+  resizable: PropTypes.bool,
+  onColumnResize: PropTypes.func
+}
+
+export const areEqual = (prev, next) =&gt; {
+  const areEqual =
+    prev.column === next.column &amp;&amp;
+    prev.resizable === next.resizable &amp;&amp;
+    prev.sorted === next.sorted
+  /</span>*<span class="hljs-keyword">if</span> (!areEqual) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'!Header.areEqual'</span>)
+  }*<span class="hljs-regexp">/
+  return areEqual
+}
+
+export default React.memo(Header, areEqual)
+</span></div></div></div></div></body></html>

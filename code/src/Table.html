@@ -1,0 +1,470 @@
+<!DOCTYPE html><html lang="en"><head><title>src/Table</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="src/Table"><meta name="groc-project-path" content="src/Table.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">src/Table.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>Copyright 2020 Ulrich Gaal</p>
+<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<pre><code>http://www.apache.org/licenses/LICENSE-2.0</code></pre>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> React, { useContext, useReducer, useMemo } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { TableStateType, LabelsType, ComponentsType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
+<span class="hljs-keyword">import</span> Header <span class="hljs-keyword">from</span> <span class="hljs-string">'./Header'</span>
+<span class="hljs-keyword">import</span> Pagination <span class="hljs-keyword">from</span> <span class="hljs-string">'./Pagination'</span>
+<span class="hljs-keyword">import</span> Data <span class="hljs-keyword">from</span> <span class="hljs-string">'./Data'</span>
+<span class="hljs-keyword">import</span> Loading <span class="hljs-keyword">from</span> <span class="hljs-string">'./Loading'</span>
+<span class="hljs-keyword">import</span> Empty <span class="hljs-keyword">from</span> <span class="hljs-string">'./Empty'</span>
+<span class="hljs-keyword">import</span> ResizeBar <span class="hljs-keyword">from</span> <span class="hljs-string">'./ResizeBar'</span>
+<span class="hljs-keyword">import</span> { TableDispatch, COLUMN_RESIZING } <span class="hljs-keyword">from</span> <span class="hljs-string">'./actions'</span>
+<span class="hljs-keyword">import</span> {
+  START_RESIZING,
+  RESIZE,
+  END_RESIZING,
+  ResizerContext
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'./HeaderResizer'</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">'./Table.css'</span>
+
+const resizerReducer = (state, action) =&gt; {
+  switch (action.type) {
+    case START_RESIZING:
+      return { ...state, barX: action.x, resizing: true }
+    case RESIZE:
+      return { ...state, barX: action.x }
+    case END_RESIZING:
+      state.dispatch({
+        type: COLUMN_RESIZING,
+        id: action.id,
+        width: action.width
+      })
+      return { ...state, resizing: false }
+    default:
+      throw new Error(`Unknown action: ${action.type}<span class="hljs-string">`)
+  }
+}
+</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The <code>Table</code> component is the root component for this library.
+It receives a reducer state (as a prop) and dispatcher (through the
+<code>TableDispatch</code> React context).</p>
+<p>The table will trigger the following action to ask the reducer to alter its state.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Parameters</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PAGING</td>
+<td><code>&lt;PagingType&gt;</code></td>
+<td>Triggered when the user changes the page size or navigates to another page</td>
+</tr>
+<tr>
+<td>COLUMN_REORDERING</td>
+<td><code>&lt;ColumnsType&gt;</code></td>
+<td>Triggered when the user reorders columns</td>
+</tr>
+<tr>
+<td>COLUMN_RESIZING</td>
+<td><code>&lt;ColumnsType&gt;</code></td>
+<td>Triggered when the user resizes a column</td>
+</tr>
+<tr>
+<td>SELECTING</td>
+<td><code>&lt;SelectionType&gt;</code></td>
+<td>Triggered when the user changes the row selection</td>
+</tr>
+<tr>
+<td>SORTING</td>
+<td><code>&lt;SortType&gt;</code></td>
+<td>Triggered when the user changes table sorting</td>
+</tr>
+</tbody>
+</table>
+<p><code>&lt;PagingType&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pageIndex</td>
+<td><code>&lt;number&gt;</code></td>
+<td>The current page index</td>
+</tr>
+<tr>
+<td>pageSize</td>
+<td><code>&lt;number&gt;</code></td>
+<td>The pagination page size</td>
+</tr>
+</tbody>
+</table>
+<p><code>&lt;ColumnsType&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>columns</td>
+<td><code>PropTypes.arrayOf(ColumnType)</code></td>
+<td>The updated table columns</td>
+</tr>
+</tbody>
+</table>
+<p><code>&lt;SelectionType&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>selectedIds</td>
+<td><code>&lt;object&gt;</code></td>
+<td>The updated Set of currently selected row ids</td>
+</tr>
+</tbody>
+</table>
+<p><code>&lt;SortType&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sort</td>
+<td><code>&lt;string&gt;</code></td>
+<td>The column id used for sorting, prefixed by &#39;+&#39; for ascending sort or &#39;-&#39; for descending sort (used only for sorting)</td>
+</tr>
+</tbody>
+</table></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">const</span> Table = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Table&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> {
+    state,
+    rowIdAttr,
+    components: components_ = {},
+    labels: labels_
+  } = props
+
+  <span class="hljs-keyword">const</span> components = useMemo(() =&gt; {
+    <span class="hljs-keyword">return</span> {
+      header: { type: Header, props: {} },
+      tr: { type: <span class="hljs-string">'div'</span>, props: {} },
+      pagination: {
+        type: Pagination,
+        props: {
+          pageSizes: [
+            <span class="hljs-number">10</span>,
+            <span class="hljs-number">20</span>,
+            <span class="hljs-number">30</span>,
+            <span class="hljs-number">40</span>,
+            <span class="hljs-number">50</span>,
+            <span class="hljs-number">60</span>,
+            <span class="hljs-number">70</span>,
+            <span class="hljs-number">80</span>,
+            <span class="hljs-number">90</span>,
+            <span class="hljs-number">100</span>,
+            <span class="hljs-number">200</span>,
+            <span class="hljs-number">300</span>,
+            <span class="hljs-number">400</span>,
+            <span class="hljs-number">500</span>
+          ]
+        }
+      },
+      paginationExtra: <span class="hljs-literal">null</span>,
+      ...components_
+    }
+  }, [components_])
+
+  <span class="hljs-keyword">const</span> labels = useMemo(() =&gt; {
+    <span class="hljs-keyword">return</span> {
+      loading: <span class="hljs-string">'Loading...'</span>,
+      noData: <span class="hljs-string">'No rows found'</span>,
+      toggle: <span class="hljs-string">'Toggle people selected'</span>,
+      toggleAll: <span class="hljs-string">'Toggle all people selected'</span>,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>eslint-disable-next-line no-template-curly-in-string</p></div></div><div class="code"><div class="wrapper">      rows: <span class="hljs-string">'${value} rows'</span>,
+      page: <span class="hljs-string">'Page'</span>,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>eslint-disable-next-line no-template-curly-in-string</p></div></div><div class="code"><div class="wrapper">      ofPages: <span class="hljs-string">'of ${pages}'</span>,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>eslint-disable-next-line no-template-curly-in-string</p></div></div><div class="code"><div class="wrapper">      range: <span class="hljs-string">'View ${first}-${last} of ${total}'</span>,
+      firstPage: <span class="hljs-string">'First page'</span>,
+      lastPage: <span class="hljs-string">'Last page'</span>,
+      nextPage: <span class="hljs-string">'Next page'</span>,
+      previousPage: <span class="hljs-string">'Previous page'</span>,
+      ...labels_
+    }
+  }, [labels_])
+
+  <span class="hljs-keyword">const</span> [resizerState, resizerDispatch] = useReducer(resizerReducer, {
+    resizing: <span class="hljs-literal">false</span>,
+    barX: <span class="hljs-number">0</span>,
+    dispatch: useContext(TableDispatch)
+  })
+
+  <span class="hljs-keyword">const</span> { loading, data, pageCount, pageIndex } = state
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">ResizerContext.Provider</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{resizerDispatch}</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-container'</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span>
+          <span class="hljs-attribute">className</span>=<span class="hljs-value">{`rrt-table${resizerState.resizing</span> ? ' <span class="hljs-attribute">rtf-resizing</span>' <span class="hljs-attribute">:</span> ''}`}
+        &gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">Data</span>
+            <span class="hljs-attribute">state</span>=<span class="hljs-value">{state}</span>
+            <span class="hljs-attribute">components</span>=<span class="hljs-value">{components}</span>
+            <span class="hljs-attribute">rowIdAttr</span>=<span class="hljs-value">{rowIdAttr}</span>
+            <span class="hljs-attribute">labels</span>=<span class="hljs-value">{labels}</span>
+          /&gt;</span>
+          {resizerState.resizing ? <span class="hljs-tag">&lt;<span class="hljs-title">ResizeBar</span> <span class="hljs-attribute">x</span>=<span class="hljs-value">{resizerState.barX}</span> /&gt;</span> : null}
+          {loading ? <span class="hljs-tag">&lt;<span class="hljs-title">Loading</span> <span class="hljs-attribute">labels</span>=<span class="hljs-value">{labels}</span> /&gt;</span> : null}
+          {!loading &amp;&amp; (!data || data.length === 0) ? (
+            <span class="hljs-tag">&lt;<span class="hljs-title">Empty</span> <span class="hljs-attribute">title</span>=<span class="hljs-value">{labels.noData}</span> /&gt;</span>
+          )</span> : <span class="hljs-literal">null</span>}
+        &lt;<span class="hljs-regexp">/div&gt;
+        {pageCount !== undefined &amp;&amp; pageIndex !== undefined
+          ? React.createElement(components.pagination.type, {
+              state,
+              components,
+              labels,
+              ...components.pagination.props
+            })
+          : null}
+      &lt;/</span>div&gt;
+    <span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-title">ResizerContext.Provider</span>&gt;</span>
+  )</span>
+}
+
+Table.propTypes = {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The current state of the table, as computed by the reducer</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>data</td>
+<td><code>PropTypes.arrayOf(PropTypes.object)</code></td>
+<td>An array of table rows</td>
+</tr>
+<tr>
+<td>columns</td>
+<td><code>PropTypes.arrayOf(ColumnType)</code></td>
+<td>An array of table columns</td>
+</tr>
+<tr>
+<td>total</td>
+<td><code>&lt;number&gt;</code></td>
+<td>The total number of rows in the table (used only for pagination)</td>
+</tr>
+<tr>
+<td>pageIndex</td>
+<td><code>&lt;number&gt;</code></td>
+<td>The current page index (used only for pagination)</td>
+</tr>
+<tr>
+<td>pageSize</td>
+<td><code>&lt;number&gt;</code></td>
+<td>The page size for table pages (used only for pagination)</td>
+</tr>
+<tr>
+<td>pageCount</td>
+<td><code>&lt;number&gt;</code></td>
+<td>The total number of pages in the table (used only for pagination)</td>
+</tr>
+<tr>
+<td>sort</td>
+<td><code>&lt;string&gt;</code></td>
+<td>The column id used for sorting, prefixed by &#39;+&#39; for ascending sort or &#39;-&#39; for descending sort (used only for sorting)</td>
+</tr>
+<tr>
+<td>selectedIds</td>
+<td><code>&lt;object&gt;</code></td>
+<td>a Set of ids currently selected (used only for selection)</td>
+</tr>
+<tr>
+<td>loading</td>
+<td><code>&lt;bool&gt;</code></td>
+<td>True if the table is loading its data</td>
+</tr>
+</tbody>
+</table>
+<p><code>&lt;ColumnType&gt;</code> is an object, which contains the following keys:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td><code>&lt;string&gt;</code></td>
+<td>Unique id identifying the column</td>
+</tr>
+<tr>
+<td>label</td>
+<td><code>&lt;string&gt;</code></td>
+<td>The label to display for this column</td>
+</tr>
+<tr>
+<td>resizable</td>
+<td>`<bool></td>
+<td>True if the column can be resized</td>
+</tr>
+<tr>
+<td>sortable</td>
+<td>`<bool></td>
+<td>True if the column can be sorted</td>
+</tr>
+<tr>
+<td>minWidth</td>
+<td>`<number></td>
+<td>The min width of the column (in pixels)</td>
+</tr>
+<tr>
+<td>width</td>
+<td>`<number></td>
+<td>The default width of the column (in pixels)</td>
+</tr>
+<tr>
+<td>Cell</td>
+<td>`<elementType></td>
+<td>The React component to use for cells corresponding to this column</td>
+</tr>
+<tr>
+<td>Filter</td>
+<td>`<elementType></td>
+<td>A React component to use to specify a filter is the column can be filtered</td>
+</tr>
+</tbody>
+</table></div></div><div class="code"><div class="wrapper">  state: TableStateType,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Add this property to activate row selection. It specifies
+the column id which is the primary key for rows.</p></div></div><div class="code"><div class="wrapper">  rowIdAttr: PropTypes.string,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>A hash of custom components to replace those provided by the library:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tr</td>
+<td><code>&lt;ComponentType&gt;</code></td>
+<td>Component to instantiate to wrap each row</td>
+</tr>
+<tr>
+<td>Pagination</td>
+<td><code>&lt;ComponentType&gt;</code></td>
+<td>Component to instantiate to provide pagination</td>
+</tr>
+<tr>
+<td>PaginationExtra</td>
+<td><code>&lt;ComponentType&gt;</code></td>
+<td>Component to instantiate to add extra information to the standard pagination component</td>
+</tr>
+<tr>
+<td>Header</td>
+<td><code>&lt;ComponentType&gt;</code></td>
+<td>Component to instantiate for column header</td>
+</tr>
+</tbody>
+</table>
+<p><code>&lt;ComponentType&gt;</code> is an object, which contains the following keys:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>type</td>
+<td><code>&lt;elementType&gt;</code></td>
+<td>The React component type</td>
+</tr>
+<tr>
+<td>props</td>
+<td><code>&lt;object&gt;</code></td>
+<td>A hash of React properties</td>
+</tr>
+</tbody>
+</table></div></div><div class="code"><div class="wrapper">  components: ComponentsType,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>A hash of key to labels to customize labels used by the table:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>loading</td>
+<td>Displayed while the table is loading data</td>
+</tr>
+<tr>
+<td>noData</td>
+<td>Displayed when there is no data in the table</td>
+</tr>
+<tr>
+<td>toggle</td>
+<td>Title of the checkbox used to select a row</td>
+</tr>
+<tr>
+<td>toggleAll</td>
+<td>Title of the checkbox used to select all rows</td>
+</tr>
+<tr>
+<td>rows</td>
+<td>In pagination, title of a page size (should contain a ${value} placeholder where the page size will be injected)</td>
+</tr>
+<tr>
+<td>page</td>
+<td>In pagination, &#39;page&#39; label</td>
+</tr>
+<tr>
+<td>ofPages</td>
+<td>In pagination, &#39;of pages&#39; label (should contain a ${pages} placeholder where the number of available pages will be injected)</td>
+</tr>
+<tr>
+<td>range</td>
+<td>In pagination, a label describing the current range being displayed (should contain ${first}, ${last} and ${total} placeholders where first row index, last row index, and total number of rows will be injected)</td>
+</tr>
+<tr>
+<td>firstPage</td>
+<td>In pagination, title of the first page button</td>
+</tr>
+<tr>
+<td>lastPage</td>
+<td>In pagination, title of the last page button</td>
+</tr>
+<tr>
+<td>nextPage</td>
+<td>In pagination, title of the next page button</td>
+</tr>
+<tr>
+<td>previousPage</td>
+<td>In pagination, title of the previous page button</td>
+</tr>
+</tbody>
+</table></div></div><div class="code"><div class="wrapper">  labels: LabelsType
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Table</div></div></div></div></body></html>

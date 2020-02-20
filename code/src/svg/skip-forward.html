@@ -1,0 +1,26 @@
+<!DOCTYPE html><html lang="en"><head><title>src/svg/skip-forward</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="src/svg/skip-forward"><meta name="groc-project-path" content="src/svg/skip-forward.js"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">src/svg/skip-forward.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+
+const icon = props =&gt; {
+  const { width = 16, height = 16 } = props
+  return (
+    &lt;svg
+      width={`${width}px<span class="hljs-string">`}
+      height={`</span>${height}px<span class="hljs-string">`}
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    &gt;
+      &lt;polygon points='5 4 15 12 5 20 5 4' /&gt;
+      &lt;line x1='19' y1='5' x2='19' y2='19' /&gt;
+    &lt;/svg&gt;
+  )
+}
+
+const areEqual = (prev, next) =&gt;
+  prev.width === next.width &amp;&amp; prev.height === next.height
+
+export default React.memo(icon, areEqual)
+</span></div></div></div></div></body></html>

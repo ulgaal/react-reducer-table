@@ -1,0 +1,101 @@
+<!DOCTYPE html><html lang="en"><head><title>src/Data</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="src/Data"><meta name="groc-project-path" content="src/Data.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">src/Data.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>Copyright 2020 Ulrich Gaal</p>
+<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<pre><code>http://www.apache.org/licenses/LICENSE-2.0</code></pre>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> React, { useMemo, useRef, useLayoutEffect, useState } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> Head <span class="hljs-keyword">from</span> <span class="hljs-string">'./Head'</span>
+<span class="hljs-keyword">import</span> Filters <span class="hljs-keyword">from</span> <span class="hljs-string">'./Filters'</span>
+<span class="hljs-keyword">import</span> Body <span class="hljs-keyword">from</span> <span class="hljs-string">'./Body'</span>
+<span class="hljs-keyword">import</span> { useId } <span class="hljs-keyword">from</span> <span class="hljs-string">'./hooks/useId'</span>
+<span class="hljs-keyword">import</span> stylesheet <span class="hljs-keyword">from</span> <span class="hljs-string">'./stylesheet'</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">'./Data.css'</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { TableStateType, ComponentsType, LabelsType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
+
+const styleSheet = stylesheet.createStyleSheet()
+
+const Data = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Data&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { state, components, rowIdAttr, labels } = props
+
+  <span class="hljs-keyword">const</span> { columns } = state</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Create one rule-set per table instance nad instance creation time</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> dataId = useId()
+  <span class="hljs-keyword">const</span> layouts = useRef(<span class="hljs-literal">null</span>)
+  <span class="hljs-keyword">if</span> (layouts.current === <span class="hljs-literal">null</span>) {
+    layouts.current = columns.reduce((layouts, column) =&gt; {
+      <span class="hljs-keyword">const</span> { id, minWidth = <span class="hljs-number">80</span>, width = <span class="hljs-number">250</span> } = column
+      <span class="hljs-keyword">const</span> className = <span class="hljs-string">`rrt-<span class="hljs-subst">${dataId.current}</span>-<span class="hljs-subst">${id}</span>`</span>
+      layouts[id] = {
+        className,
+        rule: stylesheet.createRule(
+          styleSheet,
+          <span class="hljs-string">`.<span class="hljs-subst">${className}</span> { min-width: <span class="hljs-subst">${minWidth}</span>px; width: <span class="hljs-subst">${width}</span>px; }`</span>
+        )
+      }
+      <span class="hljs-keyword">return</span> layouts
+    }, {})
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>To keep head and body columns align when body Y scroller appears.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> [overflow, setOverflow] = useState(<span class="hljs-literal">false</span>)
+  <span class="hljs-keyword">const</span> ref = useRef(<span class="hljs-literal">null</span>)
+  useLayoutEffect(() =&gt; {
+    <span class="hljs-keyword">const</span> node = ref.current
+    setOverflow(node.scrollHeight &gt; node.clientHeight)
+  })
+
+  <span class="hljs-keyword">const</span> hasFilters = useMemo(() =&gt; columns.some(({ Filter }) =&gt; !!Filter), [
+    columns
+  ])</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Keep track of the order of columns</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> colOrder = useMemo(() =&gt; columns.map(({ id }) =&gt; id).join(<span class="hljs-string">','</span>), [
+    columns
+  ])
+
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-data'</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">Head</span>
+        <span class="hljs-attribute">state</span>=<span class="hljs-value">{state}</span>
+        <span class="hljs-attribute">components</span>=<span class="hljs-value">{components}</span>
+        <span class="hljs-attribute">layouts</span>=<span class="hljs-value">{layouts.current}</span>
+        <span class="hljs-attribute">labels</span>=<span class="hljs-value">{labels}</span>
+        <span class="hljs-attribute">rowIdAttr</span>=<span class="hljs-value">{rowIdAttr}</span>
+        <span class="hljs-attribute">overflow</span>=<span class="hljs-value">{overflow}</span>
+      /&gt;</span>
+      {hasFilters ? (
+        <span class="hljs-tag">&lt;<span class="hljs-title">Filters</span>
+          <span class="hljs-attribute">state</span>=<span class="hljs-value">{state}</span>
+          <span class="hljs-attribute">layouts</span>=<span class="hljs-value">{layouts.current}</span>
+          <span class="hljs-attribute">rowIdAttr</span>=<span class="hljs-value">{rowIdAttr}</span>
+          <span class="hljs-attribute">overflow</span>=<span class="hljs-value">{overflow}</span>
+        /&gt;</span>
+      )</span> : <span class="hljs-literal">null</span>}
+      &lt;Body
+        ref={ref}
+        state={state}
+        components={components}
+        layouts={layouts.current}
+        colOrder={colOrder}
+        rowIdAttr={rowIdAttr}
+        labels={labels}
+      /&gt;
+    <span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  )</span>
+}
+
+Data.propTypes = {
+  state: TableStateType,
+  rowIdAttr: PropTypes.string,
+  components: ComponentsType,
+  labels: LabelsType
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> areEqual = (prev, next) =&gt; {
+  <span class="hljs-keyword">const</span> prevState = prev.state
+  <span class="hljs-keyword">const</span> nextState = next.state
+  <span class="hljs-keyword">const</span> areEqual =
+    prevState.columns === nextState.columns &amp;&amp;
+    prevState.data === nextState.data &amp;&amp;
+    prevState.selectedIds === nextState.selectedIds</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if (!areEqual) {
+  console.log(&#39;!Data.areEqual&#39;)
+} </p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">return</span> areEqual
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> React.memo(Data, areEqual)</div></div></div></div></body></html>

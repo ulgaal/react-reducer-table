@@ -1,0 +1,141 @@
+<!DOCTYPE html><html lang="en"><head><title>src/Pagination</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="src/Pagination"><meta name="groc-project-path" content="src/Pagination.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">src/Pagination.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>Copyright 2020 Ulrich Gaal</p>
+<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<pre><code>http://www.apache.org/licenses/LICENSE-2.0</code></pre>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> React, { useContext, useMemo } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { TableStateType, LabelsType, ComponentsType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
+<span class="hljs-keyword">import</span> Icon <span class="hljs-keyword">from</span> <span class="hljs-string">'./Icon'</span>
+<span class="hljs-keyword">import</span> isEqual <span class="hljs-keyword">from</span> <span class="hljs-string">'lodash.isequal'</span>
+<span class="hljs-keyword">import</span> { TableDispatch, PAGING } <span class="hljs-keyword">from</span> <span class="hljs-string">'./actions'</span>
+<span class="hljs-keyword">import</span> { subst } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">'./Pagination.css'</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Component to handle pagination</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">const</span> Pagination = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Pagination&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { state, pageSizes, components, labels } = props
+  <span class="hljs-keyword">const</span> { paginationExtra } = components
+  <span class="hljs-keyword">const</span> { pageIndex, pageSize, pageCount, total } = state
+  <span class="hljs-keyword">const</span> dispatch = useContext(TableDispatch)
+  <span class="hljs-keyword">const</span> pageSizeOptions = useMemo(
+    () =&gt;
+      pageSizes.map(value =&gt; ({
+        value,
+        label: subst({ tpl: labels.rows, data: { value } })
+      })),
+    [labels, pageSizes]
+  )
+  <span class="hljs-keyword">const</span> canPreviousPage = pageIndex &gt; <span class="hljs-number">0</span>
+  <span class="hljs-keyword">const</span> canNextPage = pageIndex &lt; pageCount - <span class="hljs-number">1</span>
+  <span class="hljs-keyword">const</span> message =
+    total &gt; <span class="hljs-number">0</span>
+      ? subst({
+          tpl: labels.range,
+          data: {
+            first: pageIndex * pageSize + <span class="hljs-number">1</span>,
+            last: <span class="hljs-built_in">Math</span>.min(total, (pageIndex + <span class="hljs-number">1</span>) * pageSize),
+            total
+          }
+        })
+      : labels.noData
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-pagination-info'</span>&gt;</span>
+      {paginationExtra
+        ? React.createElement(paginationExtra.type, paginationExtra.props)
+        : null}
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-pagination-pages'</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">button</span>
+          <span class="hljs-attribute">title</span>=<span class="hljs-value">{labels.firstPage}</span>
+          <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{()</span> =&gt;</span> dispatch({ type: PAGING, pageIndex: 0, pageSize })}
+          disabled={!canPreviousPage}
+        &gt;
+          <span class="hljs-tag">&lt;<span class="hljs-title">Icon</span> <span class="hljs-attribute">icon</span>=<span class="hljs-value">'first'</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">button</span>
+          <span class="hljs-attribute">title</span>=<span class="hljs-value">{labels.previousPage}</span>
+          <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{()</span> =&gt;</span>
+            dispatch({ type: PAGING, pageIndex: pageIndex - 1, pageSize })
+          }
+          disabled={!canPreviousPage}
+        &gt;
+          <span class="hljs-tag">&lt;<span class="hljs-title">Icon</span> <span class="hljs-attribute">icon</span>=<span class="hljs-value">'previous'</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-pagination-of'</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>{labels.page}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">input</span>
+            <span class="hljs-attribute">type</span>=<span class="hljs-value">'number'</span>
+            <span class="hljs-attribute">onChange</span>=<span class="hljs-value">{e</span> =&gt;</span> {
+              const value = e.target.value ? Number(e.target.value) : 1
+              const page = Math.min(Math.max(1, value), pageCount) - 1
+              dispatch({ type: PAGING, pageIndex: page, pageSize })
+            }}
+            className='rrt-pagination-input'
+            value={pageIndex + 1}
+          /&gt;{' '}
+          <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>
+            {subst({ tpl: labels.ofPages, data: { pages: pageCount || 1 } })}
+          <span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">button</span>
+          <span class="hljs-attribute">title</span>=<span class="hljs-value">{labels.nextPage}</span>
+          <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{()</span> =&gt;</span>
+            dispatch({ type: PAGING, pageIndex: pageIndex + 1, pageSize })
+          }
+          disabled={!canNextPage}
+        &gt;
+          <span class="hljs-tag">&lt;<span class="hljs-title">Icon</span> <span class="hljs-attribute">icon</span>=<span class="hljs-value">'next'</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">button</span>
+          <span class="hljs-attribute">title</span>=<span class="hljs-value">{labels.lastPage}</span>
+          <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{()</span> =&gt;</span>
+            dispatch({ type: PAGING, pageIndex: pageCount - 1, pageSize })
+          }
+          disabled={!canNextPage}
+        &gt;
+          <span class="hljs-tag">&lt;<span class="hljs-title">Icon</span> <span class="hljs-attribute">icon</span>=<span class="hljs-value">'last'</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">select</span>
+        <span class="hljs-attribute">value</span>=<span class="hljs-value">{pageSize}</span>
+        <span class="hljs-attribute">onChange</span>=<span class="hljs-value">{event</span> =&gt;</span> {
+          dispatch({ type: PAGING, pageIndex, pageSize: event.target.value })
+        }}
+      &gt;
+        {pageSizeOptions.map(({ value, label }, index) =&gt; (
+          <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">{index}</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{value}</span>&gt;</span>
+            {label}
+          <span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+        )</span>)}
+      &lt;<span class="hljs-regexp">/select&gt;
+      &lt;span className='rrt-pagination-view' title={message}&gt;
+        {message}
+      &lt;/</span>span&gt;
+    <span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  )</span>
+}
+
+Pagination.propTypes = {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The state of the pagination component (see <a href="./Table.md">Table</a> for more details)</p></div></div><div class="code"><div class="wrapper">  state: TableStateType,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>An array of supported page sizes.</p></div></div><div class="code"><div class="wrapper">  pageSizes: PropTypes.arrayOf(PropTypes.number),</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>A hash of custom components to replace those provided by the library (see <a href="./Table.md">Table</a> for more details)</p></div></div><div class="code"><div class="wrapper">  components: ComponentsType,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>A hash of key to labels to customize labels used by the pagination (see <a href="./Table.md">Table</a> for more details)</p></div></div><div class="code"><div class="wrapper">  labels: LabelsType
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> areEqual = (prev, next) =&gt; {
+  <span class="hljs-keyword">const</span> prevState = prev.state
+  <span class="hljs-keyword">const</span> nextState = next.state
+  <span class="hljs-keyword">const</span> areEqual =
+    prevState.pageIndex === nextState.pageIndex &amp;&amp;
+    prevState.pageSize === nextState.pageSize &amp;&amp;
+    prevState.pageCount === nextState.pageCount &amp;&amp;
+    prevState.total === nextState.total &amp;&amp;
+    (!prev.components.paginationExtra ||
+      isEqual(
+        prev.components.paginationExtra.props,
+        next.components.paginationExtra.props
+      ))
+
+  <span class="hljs-comment">/*if (!areEqual) {
+    console.log('!Pagination.areEqual')
+  }*/</span>
+  <span class="hljs-keyword">return</span> areEqual
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> React.memo(Pagination, areEqual)</div></div></div></div></body></html>

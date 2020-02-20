@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="en"><head><title>src/RowContent</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="src/RowContent"><meta name="groc-project-path" content="src/RowContent.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">src/RowContent.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>Copyright 2020 Ulrich Gaal</p>
+<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<pre><code>http://www.apache.org/licenses/LICENSE-2.0</code></pre>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { ColumnsType, LayoutsType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
+<span class="hljs-keyword">import</span> DefaultCell <span class="hljs-keyword">from</span> <span class="hljs-string">'./DefaultCell'</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">'./Row.css'</span>
+
+const RowContent = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;RowContent&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { row, layouts, columns } = props
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;&gt;</span>
+      {columns.map((column, index) =&gt; {
+        const { id, Cell = DefaultCell, resizable = true } = column
+        const layout = layouts[id]
+        const { className } = layout
+        const shouldFlex = resizable &amp;&amp; index === columns.length - 1
+        return (
+          <span class="hljs-tag">&lt;<span class="hljs-title">div</span>
+            <span class="hljs-attribute">key</span>=<span class="hljs-value">{index}</span>
+            <span class="hljs-attribute">className</span>=<span class="hljs-value">{`rrt-td</span> ${<span class="hljs-attribute">className</span>}${<span class="hljs-attribute">shouldFlex</span> ? ' <span class="hljs-attribute">flex</span>' <span class="hljs-attribute">:</span> ''}`}
+          &gt;</span>
+            {React.createElement(Cell, { row, column })}
+          <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+        )</span>
+      })}
+    &lt;<span class="hljs-regexp">/&gt;
+  )
+}
+
+RowContent.propTypes = {
+  columns: ColumnsType,
+  layouts: LayoutsType,
+  colOrder: PropTypes.string,
+  row: PropTypes.object
+}
+
+export const areEqual = (prev, next) =&gt; {
+  const areEqual = prev.row === next.row &amp;&amp; prev.colOrder === next.colOrder</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if (!areEqual) {
+  console.log(&#39;!RowContent.areEqual&#39;)
+} </p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">return</span> areEqual
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> React.memo(RowContent, areEqual)</div></div></div></div></body></html>

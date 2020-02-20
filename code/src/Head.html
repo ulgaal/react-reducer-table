@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="en"><head><title>src/Head</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="src/Head"><meta name="groc-project-path" content="src/Head.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">src/Head.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>Copyright 2020 Ulrich Gaal</p>
+<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<pre><code>http://www.apache.org/licenses/LICENSE-2.0</code></pre>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> HeaderCheckbox <span class="hljs-keyword">from</span> <span class="hljs-string">'./HeaderCheckbox'</span>
+<span class="hljs-keyword">import</span> HeadContent <span class="hljs-keyword">from</span> <span class="hljs-string">'./HeadContent'</span>
+<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> {
+  TableStateType,
+  ComponentsType,
+  LayoutsType,
+  LabelsType
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">'./Head.css'</span>
+
+const Head = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Head&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { state, components, layouts, overflow, rowIdAttr, labels } = props
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-thead'</span>&gt;</span>
+      {
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">{`rrt-tr${overflow</span> ? ' <span class="hljs-attribute">overflow</span>' <span class="hljs-attribute">:</span> ''}`}&gt;</span>
+          {rowIdAttr ? (
+            <span class="hljs-tag">&lt;<span class="hljs-title">HeaderCheckbox</span>
+              <span class="hljs-attribute">state</span>=<span class="hljs-value">{state}</span>
+              <span class="hljs-attribute">rowIdAttr</span>=<span class="hljs-value">{rowIdAttr}</span>
+              <span class="hljs-attribute">labels</span>=<span class="hljs-value">{labels}</span>
+            /&gt;</span>
+          )</span> : <span class="hljs-literal">null</span>}
+          &lt;HeadContent
+            state={state}
+            components={components}
+            layouts={layouts}
+          /&gt;
+        <span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+      }
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  )</span>
+}
+
+Head.propTypes = {
+  state: TableStateType,
+  components: ComponentsType,
+  layouts: LayoutsType,
+  rowIdAttr: PropTypes.string,
+  overflow: PropTypes.bool,
+  labels: LabelsType
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> areEqual = (prev, next) =&gt; {
+  <span class="hljs-keyword">const</span> prevState = prev.state
+  <span class="hljs-keyword">const</span> nextState = next.state
+  <span class="hljs-keyword">const</span> areEqual =
+    prevState.columns === nextState.columns &amp;&amp;
+    prevState.selectedIds === nextState.selectedIds &amp;&amp;
+    prevState.sort === next.sort &amp;&amp;
+    prevState.data === next.data &amp;&amp;
+    prev.overflow === next.overflow</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if (!areEqual) {
+  console.log(&#39;!Head.areEqual&#39;)
+} </p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">return</span> areEqual
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> React.memo(Head, areEqual)</div></div></div></div></body></html>
