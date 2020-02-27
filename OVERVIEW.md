@@ -36,7 +36,7 @@ export const tableReducer = (state, action) => {
     case COLUMN_RESIZING:
       return {
         ...state,
-        columns: columns.map(column =>
+        columns: state.columns.map(column =>
           column.id === action.id ? { ...column, width: action.width } : column
         )
       };
