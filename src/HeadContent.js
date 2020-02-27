@@ -96,7 +96,7 @@ export const areEqual = (prev, next) => {
   const prevState = prev.state
   const nextState = next.state
   const areEqual =
-    prevState.columns === nextState.columns && prevState.sort === next.sort
+    prevState.columns === nextState.columns && prevState.sort === nextState.sort
   /* if (!areEqual) {
     console.log('!HeadContent.areEqual')
   } */
