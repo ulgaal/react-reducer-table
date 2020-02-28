@@ -23,3 +23,8 @@ yarn-debug.log*
 yarn-error.log*
 
 lib
+scripts/local
+wksp.code-workspace
+code
+tmp
+storybook-static
