@@ -18,6 +18,7 @@ import { seq, compareStrings } from './utils'
 
 const { helpers, internet, address, commerce } = faker
 export const createDatabase = dbsize => {
+  console.log('createDatabase')
   const people = [...seq(0, dbsize)].map(id => ({
     id,
     ...helpers.userCard(),

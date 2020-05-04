@@ -40,10 +40,7 @@ export const FiltersContext = React.createContext({ filter: null, query: null })
 
 export const tableInit = value => {
   console.log('tableInit', value)
-  const { fetchIdRef, dbsize, ...rest } = value
   return {
-    database: createDatabase(dbsize),
-    fetchIdRef,
     columns: [
       {
         id: 'name',
@@ -79,17 +76,18 @@ export const tableInit = value => {
     ],
     selectedIds: new Set(),
     canDelete: false,
-    ...rest
+    ...value
   }
 }
 
 const People = props => {
   const { latency, dbsize } = useContext(ServerContext)
   const fetchIdRef = useRef(0)
+  const database = useMemo(() => createDatabase(dbsize), [dbsize])
   const initialArg = {
     fetchIdRef,
     latency,
-    dbsize,
+    database,
     data: [],
     total: 0,
     pageIndex: 0,
@@ -102,15 +100,7 @@ const People = props => {
   }
   const [state, dispatch] = useReducer(tableReducer, initialArg, tableInit)
   console.log('People', props, state)
-  const {
-    pageIndex,
-    pageSize,
-    sort,
-    filter,
-    query,
-    canDelete,
-    database
-  } = state
+  const { pageIndex, pageSize, sort, filter, query, canDelete } = state
 
   useEffect(() => {
     dispatch({ type: RESET, state: tableInit(initialArg) })

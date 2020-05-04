@@ -39,10 +39,7 @@ export const FiltersContext = React.createContext({ filter: null, query: null })
 
 export const tableInit = value => {
   console.log('tableInit', value)
-  const { fetchIdRef, dbsize, ...rest } = value
   return {
-    database: createDatabase(dbsize),
-    fetchIdRef,
     columns: [
       {
         id: 'name',
@@ -61,17 +58,18 @@ export const tableInit = value => {
         label: 'Products'
       }
     ],
-    ...rest
+    ...value
   }
 }
 
 const Sellers = props => {
   const { latency, dbsize } = useContext(ServerContext)
   const fetchIdRef = useRef(0)
+  const database = useMemo(() => createDatabase(dbsize), [dbsize])
   const initialArg = {
     fetchIdRef,
     latency,
-    dbsize,
+    database,
     data: [],
     total: 0,
     pageIndex: 0,
@@ -85,7 +83,7 @@ const Sellers = props => {
   }
   const [state, dispatch] = useReducer(tableReducer, initialArg, tableInit)
   console.log('Sellers', props, state)
-  const { pageIndex, pageSize, sort, filter, query, database } = state
+  const { pageIndex, pageSize, sort, filter, query } = state
 
   useEffect(() => {
     dispatch({ type: RESET, state: tableInit(initialArg) })
