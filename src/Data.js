@@ -13,7 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { useMemo, useRef, useLayoutEffect, useState } from 'react'
+import React, {
+  useMemo,
+  useRef,
+  useLayoutEffect,
+  useState,
+  useEffect
+} from 'react'
 import Head from './Head'
 import Filters from './Filters'
 import Body from './Body'
@@ -49,11 +55,22 @@ const Data = props => {
     }, {})
   }
 
+  // Update column width if they were externally resized
+  useEffect(() => {
+    columns.forEach(({ id, width }) => {
+      const { style } = layouts.current[id].rule
+      const ruleWidth = parseInt(style.width)
+      if (width && ruleWidth !== width) {
+        style.width = `${width}px`
+      }
+    })
+  }, [columns])
+
   // To keep head and body columns align when body Y scroller appears.
   const [overflow, setOverflow] = useState(false)
   const ref = useRef(null)
   useLayoutEffect(() => {
-    const node = ref.current
+    const node = ref.current.querySelector('.rrt-tbody')
     setOverflow(node.scrollHeight > node.clientHeight)
   })
 
@@ -67,7 +84,7 @@ const Data = props => {
   ])
 
   return (
-    <div className='rrt-data'>
+    <div className='rrt-data' ref={ref}>
       <Head
         state={state}
         components={components}
@@ -85,7 +102,6 @@ const Data = props => {
         />
       ) : null}
       <Body
-        ref={ref}
         state={state}
         components={components}
         layouts={layouts.current}

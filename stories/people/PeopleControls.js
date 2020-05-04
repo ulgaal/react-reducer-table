@@ -26,7 +26,7 @@ export const PeopleControls = props => {
     <div className='people-controls'>
       <button
         onClick={() => {
-          dispatch({ type: DELETING })
+          dispatch({ type: DELETING, dispatch })
         }}
         disabled={!canDelete}
       >

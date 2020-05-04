@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { useReducer } from 'react'
+import React, { useReducer, useMemo, useEffect } from 'react'
 import { storiesOf } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
 import { serverDecorator } from './decorators'
@@ -23,11 +23,14 @@ import { generateMarkdown } from './generateMarkdown'
 import BasicReadme from './md/basic.md'
 import CompleteReadme from './md/complete.md'
 import TooltipsReadme from './md/tooltips.md'
+import AutoresizeReadme from './md/autoresize.md'
 import { addReadme } from 'storybook-readme'
+import faker from 'faker'
 
 import {
   COLUMN_REORDERING,
   COLUMN_RESIZING,
+  PAGING,
   TableDispatch,
   Table
 } from '../src'
@@ -36,14 +39,14 @@ import People from './people/People'
 import Sellers from './people/Sellers'
 
 import './table.stories.css'
+import { seq } from './people/utils'
+import TextSizer from './TextSizer'
 
 const TableReadme = generateMarkdown('Table', docgen['src/Table.js'][0])
 
 storiesOf('Tables', module)
   .addDecorator(addReadme)
   .addParameters({ options: { theme: {} } })
-  .addDecorator(withKnobs)
-  .addDecorator(serverDecorator)
   .add(
     'Basic table with column reordering and resizing',
     () => {
@@ -64,26 +67,29 @@ storiesOf('Tables', module)
       }
 
       // Define the initial state of your table
-      const initialState = {
-        columns: [
-          {
-            id: 'firstName',
-            label: 'First name'
-          },
-          {
-            id: 'lastName',
-            label: 'Last name'
-          }
-        ],
-        data: [
-          { firstName: 'Neil', lastName: 'Armstrong' },
-          { firstName: 'Buzz', lastName: 'Aldrin' },
-          { firstName: 'Michael', lastName: 'Collins' }
-        ]
-      }
+      const initialState = useMemo(
+        () => ({
+          columns: [
+            {
+              id: 'firstName',
+              label: 'First name'
+            },
+            {
+              id: 'lastName',
+              label: 'Last name'
+            }
+          ],
+          data: [
+            { firstName: 'Neil', lastName: 'Armstrong' },
+            { firstName: 'Buzz', lastName: 'Aldrin' },
+            { firstName: 'Michael', lastName: 'Collins' }
+          ]
+        }),
+        []
+      )
       const [state, dispatch] = useReducer(tableReducer, initialState)
       return (
-        <div className='people-table'>
+        <div className='simple-table'>
           <TableDispatch.Provider value={dispatch}>
             <Table state={state} />
           </TableDispatch.Provider>
@@ -107,6 +113,7 @@ storiesOf('Tables', module)
       )
     },
     {
+      decorators: [withKnobs, serverDecorator],
       readme: {
         content: CompleteReadme,
         sidebar: TableReadme
@@ -123,8 +130,96 @@ storiesOf('Tables', module)
       )
     },
     {
+      decorators: [withKnobs, serverDecorator],
       readme: {
         content: TooltipsReadme,
+        sidebar: TableReadme
+      }
+    }
+  )
+  .add(
+    'Table with autosizing of first col',
+    () => {
+      const tableReducer = (state, action) => {
+        switch (action.type) {
+          case COLUMN_REORDERING:
+            return { ...state, columns: action.columns }
+          case COLUMN_RESIZING:
+            return {
+              ...state,
+              columns: state.columns.map(column =>
+                column.id === action.id
+                  ? { ...column, width: action.width }
+                  : column
+              )
+            }
+          case PAGING: {
+            const { pageIndex, pageSize } = action
+            return {
+              ...state,
+              pageSize,
+              pageIndex,
+              data: models.slice(
+                pageIndex * pageSize,
+                (pageIndex + 1) * pageSize
+              )
+            }
+          }
+        }
+      }
+
+      // Define the initial state of your table
+      const models = useMemo(() => {
+        const { name } = faker
+        return [...seq(0, 500)].map(index => ({
+          firstName: [...seq(0, Math.ceil(5 * Math.random()))]
+            .map(() => name.firstName())
+            .join(' '),
+          lastName: name.lastName()
+        }))
+      }, [])
+      const initialState = useMemo(() => {
+        const pageSize = 10
+        return {
+          columns: [
+            {
+              id: 'firstName',
+              label: 'First name'
+            },
+            {
+              id: 'lastName',
+              label: 'Last name'
+            }
+          ],
+          pageIndex: 0,
+          pageCount: models.length / pageSize,
+          pageSize,
+          data: models.slice(0, pageSize)
+        }
+      }, [])
+      const [state, dispatch] = useReducer(tableReducer, initialState)
+      const { data } = state
+      const labels = useMemo(() => data.map(({ firstName }) => firstName), [
+        data
+      ])
+      useEffect(() => {
+        const { width } = document
+          .querySelector('.text-sizer')
+          .getBoundingClientRect()
+        dispatch({ type: COLUMN_RESIZING, id: 'firstName', width })
+      }, [labels])
+      return (
+        <div className='autosize-table'>
+          <TextSizer labels={labels} />
+          <TableDispatch.Provider value={dispatch}>
+            <Table state={state} />
+          </TableDispatch.Provider>
+        </div>
+      )
+    },
+    {
+      readme: {
+        content: AutoresizeReadme,
         sidebar: TableReadme
       }
     }

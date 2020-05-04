@@ -31,20 +31,22 @@ const HeaderResizer = props => {
   const dispatch = useContext(ResizerContext)
   const handleMouseDown = useCallback(
     event => {
-      const x0 = event.clientX
-      let x1
-      let clampedWidth
       event.stopPropagation()
       event.preventDefault()
+      const table = event.target.closest('.rrt-container')
+      const { left } = table.getBoundingClientRect()
+      const x0 = event.clientX - left
+      let x1
+      let clampedWidth
+
       // current column width
       const { width } = event.target.closest('.rrt-th').getBoundingClientRect()
       dispatch({ type: START_RESIZING, x: x0 })
-      console.log('handleMouseDown', width)
       const handlers = {
         handleMouseMove: event => {
           event.stopPropagation()
           event.preventDefault()
-          const dx = event.clientX - x0
+          const dx = event.clientX - left - x0
           clampedWidth = Math.max(minWidth, width + dx)
           x1 = x0 + clampedWidth - width
           dispatch({ type: RESIZE, x: x1 })
