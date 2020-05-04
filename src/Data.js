@@ -70,7 +70,7 @@ const Data = props => {
   const [overflow, setOverflow] = useState(false)
   const ref = useRef(null)
   useLayoutEffect(() => {
-    const node = ref.current
+    const node = ref.current.querySelector('.rrt-tbody')
     setOverflow(node.scrollHeight > node.clientHeight)
   })
 
@@ -84,7 +84,7 @@ const Data = props => {
   ])
 
   return (
-    <div className='rrt-data'>
+    <div className='rrt-data' ref={ref}>
       <Head
         state={state}
         components={components}
@@ -102,7 +102,6 @@ const Data = props => {
         />
       ) : null}
       <Body
-        ref={ref}
         state={state}
         components={components}
         layouts={layouts.current}

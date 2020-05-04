@@ -25,7 +25,7 @@ import {
 } from './prop-types'
 import './Body.css'
 
-const Body = (props, ref) => {
+const Body = props => {
   // console.log('Body', props)
   const { state, components, layouts, colOrder, labels, rowIdAttr } = props
   const { data, columns, selectedIds } = state
@@ -48,7 +48,7 @@ const Body = (props, ref) => {
     [selectedIds, dispatch]
   )
   return (
-    <div ref={ref} className='rrt-tbody' onChange={handleCellCheckChange}>
+    <div className='rrt-tbody' onChange={handleCellCheckChange}>
       {data.map((row, index) => {
         // console.log('row', row)
         const id = row[rowIdAttr]
@@ -94,4 +94,4 @@ export const areEqual = (prev, next) => {
   return areEqual
 }
 
-export default React.memo(React.forwardRef(Body), areEqual)
+export default React.memo(Body, areEqual)
