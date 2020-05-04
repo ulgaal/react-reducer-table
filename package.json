@@ -72,7 +72,7 @@
     "@testing-library/user-event": "^8.1.3",
     "react-bootstrap": "^1.0.0-beta.16",
     "react-select": "^3.0.8",
-    "@ulgaal/react-infotip": "^0.9.1"
+    "@ulgaal/react-infotip": "^1.0.2"
   },
   "peerDependencies": {
     "prop-types": "^15.x",
