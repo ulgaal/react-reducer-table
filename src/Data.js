@@ -13,7 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { useMemo, useRef, useLayoutEffect, useState } from 'react'
+import React, {
+  useMemo,
+  useRef,
+  useLayoutEffect,
+  useState,
+  useEffect
+} from 'react'
 import Head from './Head'
 import Filters from './Filters'
 import Body from './Body'
@@ -48,6 +54,17 @@ const Data = props => {
       return layouts
     }, {})
   }
+
+  // Update column width if they were externally resized
+  useEffect(() => {
+    columns.forEach(({ id, width }) => {
+      const { style } = layouts.current[id].rule
+      const ruleWidth = parseInt(style.width)
+      if (width && ruleWidth !== width) {
+        style.width = `${width}px`
+      }
+    })
+  }, [columns])
 
   // To keep head and body columns align when body Y scroller appears.
   const [overflow, setOverflow] = useState(false)

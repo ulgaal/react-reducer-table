@@ -13,7 +13,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-.people-table {
+
+.simple-table,
+.people-table,
+.autosize-table {
   position: relative;
   left: 10px;
   top: 10px;
@@ -21,4 +24,16 @@ limitations under the License.
   bottom: 10px;
   min-height: 500px;
   text-align: left;
+}
+.simple-table {
+  min-height: 100px;
+}
+.people-table {
+  min-height: 500px;
+}
+.autosize-table {
+  min-height: 250px;
+}
+.autosize-table .rrt-td > div {
+  padding: 5px 10px 5px 10px;
 }
