@@ -57,11 +57,16 @@ export const tableReducer = (state, action) => {
       return { ...state, loading: false, data, pageCount, total }
     }
     case DELETING:
-      return {
+      const fetchIdRef = state.fetchIdRef
+      const fetchId = ++fetchIdRef.current
+      const newState = {
         ...state,
         selectedIds: new Set(),
-        ...deleteModels(state)
+        ...deleteModels(state),
+        loading: true
       }
+      getModels({ fetchId, dispatch, state: newState })
+      return newState
     case SORTING:
       return { ...state, sort }
     case FILTERING:
@@ -141,19 +146,8 @@ export const getModels = async params => {
 
 export const deleteModels = state => {
   console.log('deleteModels', state)
-  const { pageSize, pageIndex, sort, selectedIds, database } = state
+  const { selectedIds, database } = state
   let { people } = database
   people = people.filter(({ name }) => !selectedIds.has(name))
-  if (sort) {
-    const { order, name } = decode(sort)
-    const direction = order === DESC ? -1 : 1
-    data = [...people].sort(
-      (a, b) => a[name].localeCompare(b[name]) * direction
-    )
-  }
-  data = people.slice(
-    pageIndex * pageSize,
-    Math.min((pageIndex + 1) * pageSize, people.length)
-  )
-  return { data, total: people.length, database: { ...database, people } }
+  return { database: { ...database, people } }
 }
