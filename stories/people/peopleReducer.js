@@ -31,7 +31,7 @@ export const DELETING = 'DELETING'
 export const QUERYING = 'QUERYING'
 
 export const tableReducer = (state, action) => {
-  console.log('tableReducer', { state, action })
+  console.log('tableReducer', state, action)
   const { columns } = state
   const {
     type,
