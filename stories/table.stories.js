@@ -63,6 +63,8 @@ storiesOf('Tables', module)
                   : column
               )
             }
+          default:
+            return state
         }
       }
 
@@ -165,6 +167,8 @@ storiesOf('Tables', module)
               )
             }
           }
+          default:
+            return state
         }
       }
 
