@@ -44,7 +44,8 @@ export const TableStateType = PropTypes.shape({
   total: PropTypes.number,
   loading: PropTypes.bool,
   sort: PropTypes.string,
-  selectedIds: PropTypes.object
+  selectedIds: PropTypes.object,
+  scrollTop: PropTypes.number
 })
 
 export const LabelsType = PropTypes.shape({

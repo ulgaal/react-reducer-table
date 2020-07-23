@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { useContext, useCallback } from 'react'
+import React, { useContext, useCallback, useRef, useEffect } from 'react'
 import Row from './Row'
 import { TableDispatch, SELECTING, VSCROLL } from './actions'
 import PropTypes from 'prop-types'
@@ -26,9 +26,9 @@ import {
 import './Body.css'
 
 const Body = props => {
-  // console.log('Body', props)
+  console.log('Body', props)
   const { state, components, layouts, colOrder, labels, rowIdAttr } = props
-  const { data, columns, selectedIds } = state
+  const { data, columns, selectedIds, scrollTop = 0 } = state
   const dispatch = useContext(TableDispatch)
   const handleCellCheckChange = useCallback(
     event => {
@@ -50,9 +50,17 @@ const Body = props => {
   const handleScroll = useCallback(event => {
     dispatch({ type: VSCROLL, scrollTop: event.target.scrollTop })
   }, [])
+  const ref = useRef(null)
+  useEffect(() => {
+    const { current } = ref
+    if (scrollTop > 0 && current) {
+      current.scrollTop = scrollTop
+    }
+  })
   return (
     <div
       className='rrt-tbody'
+      ref={ref}
       onChange={handleCellCheckChange}
       onScroll={handleScroll}
     >
@@ -94,7 +102,8 @@ export const areEqual = (prev, next) => {
   const areEqual =
     prev.colOrder === next.colOrder &&
     prevState.data === nextState.data &&
-    prevState.selectedIds === nextState.selectedIds
+    prevState.selectedIds === nextState.selectedIds &&
+    prevState.scrollTop === nextState.scrollTop
   /* if (!areEqual) {
     console.log('!Body.areEqual')
   } */

@@ -209,6 +209,7 @@ Table.propTypes = {
    * | sort | `<string>` | The column id used for sorting, prefixed by '+' for ascending sort or '-' for descending sort (used only for sorting)
    * | selectedIds | `<object>` | a Set of ids currently selected (used only for selection)
    * | loading | `<bool>` | True if the table is loading its data
+   * | scrollTop | `<number>` | The scrolling offset to apply initially to the table body
    *
    * `<ColumnType>` is an object, which contains the following keys:
    *
@@ -216,12 +217,12 @@ Table.propTypes = {
    * |-----------------|-------------------|-----------------------------------------------------|
    * | id              | `<string>`        | Unique id identifying the column
    * | label           | `<string>`        | The label to display for this column
-   * | resizable       | `<bool>           | True if the column can be resized
-   * | sortable        | `<bool>           | True if the column can be sorted
-   * | minWidth        | `<number>         | The min width of the column (in pixels)
-   * | width           | `<number>         | The default width of the column (in pixels)
-   * | Cell            | `<elementType>    | The React component to use for cells corresponding to this column
-   * | Filter          | `<elementType>    | A React component to use to specify a filter is the column can be filtered
+   * | resizable       | `<bool>`          | True if the column can be resized
+   * | sortable        | `<bool>`          | True if the column can be sorted
+   * | minWidth        | `<number>`        | The min width of the column (in pixels)
+   * | width           | `<number>`        | The default width of the column (in pixels)
+   * | Cell            | `<elementType>`   | The React component to use for cells corresponding to this column
+   * | Filter          | `<elementType>`   | A React component to use to specify a filter is the column can be filtered
    */
   state: TableStateType,
   /**
