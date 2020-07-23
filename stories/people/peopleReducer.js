@@ -20,7 +20,8 @@ import {
   COLUMN_REORDERING,
   COLUMN_RESIZING,
   SELECTING,
-  SORTING
+  SORTING,
+  VSCROLL
 } from '../../src'
 
 export const RESET = 'RESET'
@@ -46,7 +47,7 @@ export const tableReducer = (state, action) => {
     total,
     dispatch
   } = action
-  switch (action.type) {
+  switch (type) {
     case LOADING: {
       const fetchIdRef = state.fetchIdRef
       const fetchId = ++fetchIdRef.current
@@ -56,7 +57,7 @@ export const tableReducer = (state, action) => {
     case END_LOADING: {
       return { ...state, loading: false, data, pageCount, total }
     }
-    case DELETING:
+    case DELETING: {
       const fetchIdRef = state.fetchIdRef
       const fetchId = ++fetchIdRef.current
       const newState = {
@@ -67,6 +68,7 @@ export const tableReducer = (state, action) => {
       }
       getModels({ fetchId, dispatch, state: newState })
       return newState
+    }
     case SORTING:
       return { ...state, sort }
     case FILTERING:
@@ -94,7 +96,7 @@ export const tableReducer = (state, action) => {
       return action.state
     }
     default:
-      throw new Error(`Unknown action: ${type}`)
+      return state
   }
 }
 

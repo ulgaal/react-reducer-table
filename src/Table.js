@@ -63,6 +63,7 @@ const resizerReducer = (state, action) => {
  * | COLUMN_RESIZING   | `<ColumnsType>` | Triggered when the user resizes a column   |
  * | SELECTING   | `<SelectionType>` | Triggered when the user changes the row selection |
  * | SORTING   | `<SortType>` | Triggered when the user changes table sorting |
+ * | VSCROLL | `<VScrollType>` | Triggered when the table body is scrolled vertically |
  *
  * `<PagingType>`
  *
@@ -89,6 +90,11 @@ const resizerReducer = (state, action) => {
  * |------------|--------------|--------------------------|
  * | sort  | `<string>` | The column id used for sorting, prefixed by '+' for ascending sort or '-' for descending sort (used only for sorting)|
  *
+ * `<VScrollType>`
+ *
+ * | Key        | Type         | Description                                                                        |
+ * |------------|--------------|--------------------------|
+ * | scrollTop  | `<number>` | the offset to the top of the table body element |
  */
 const Table = props => {
   // console.log('Table', props)

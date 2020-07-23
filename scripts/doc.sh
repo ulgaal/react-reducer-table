@@ -4,7 +4,7 @@
 mkdir -p doc/ref
 
 # react-docgen
-react-docgen src/Table.js src/Pagination.js \
+npx react-docgen src/Table.js src/Pagination.js \
  -o stories/docgen.json  --resolver=findAllComponentDefinitions
 
 # react-docgen to md 

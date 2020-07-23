@@ -14,6 +14,7 @@ The table will trigger the following action to ask the reducer to alter its stat
 | COLUMN_RESIZING   | `<ColumnsType>` | Triggered when the user resizes a column   |
 | SELECTING   | `<SelectionType>` | Triggered when the user changes the row selection |
 | SORTING   | `<SortType>` | Triggered when the user changes table sorting |
+| VSCROLL | `<VScrollType>` | Triggered when the table body is scrolled vertically |
 
 `<PagingType>`
 
@@ -39,6 +40,12 @@ The table will trigger the following action to ask the reducer to alter its stat
 | Key        | Type         | Description                                                                        |
 |------------|--------------|--------------------------|
 | sort  | `<string>` | The column id used for sorting, prefixed by '+' for ascending sort or '-' for descending sort (used only for sorting)|
+
+`<VScrollType>`
+
+| Key        | Type         | Description                                                                        |
+|------------|--------------|--------------------------|
+| scrollTop  | `<number>` | the offset to the top of the table body element |
 
 Props
 -----

@@ -15,7 +15,7 @@ limitations under the License.
 */
 import React, { useContext, useCallback } from 'react'
 import Row from './Row'
-import { TableDispatch, SELECTING } from './actions'
+import { TableDispatch, SELECTING, VSCROLL } from './actions'
 import PropTypes from 'prop-types'
 import {
   TableStateType,
@@ -47,8 +47,15 @@ const Body = props => {
     },
     [selectedIds, dispatch]
   )
+  const handleScroll = useCallback(event => {
+    dispatch({ type: VSCROLL, scrollTop: event.target.scrollTop })
+  }, [])
   return (
-    <div className='rrt-tbody' onChange={handleCellCheckChange}>
+    <div
+      className='rrt-tbody'
+      onChange={handleCellCheckChange}
+      onScroll={handleScroll}
+    >
       {data.map((row, index) => {
         // console.log('row', row)
         const id = row[rowIdAttr]

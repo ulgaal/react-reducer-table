@@ -20,6 +20,7 @@ import {
   COLUMN_RESIZING,
   SELECTING,
   SORTING,
+  VSCROLL,
   TableDispatch
 } from './actions'
 import { decode, DESC } from './orders'
@@ -33,6 +34,7 @@ export {
   COLUMN_RESIZING,
   SELECTING,
   SORTING,
+  VSCROLL,
   TableDispatch,
   decode,
   DESC,

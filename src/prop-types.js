@@ -81,5 +81,6 @@ export const IconType = PropTypes.oneOf([
   'previous',
   'next',
   'last',
-  'cancel'
+  'cancel',
+  'sortable'
 ])
