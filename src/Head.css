@@ -50,6 +50,6 @@ limitations under the License.
 }
 
 /* Deactivate hover when resizing */
-.rrt-table:not(.rtf-resizing) .rrt-th:hover {
+.rrt-table:not(.rtf-resizing) .rrt-thead .rrt-th:hover {
   background-color: #e4e4e4;
 }
