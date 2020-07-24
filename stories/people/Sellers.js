@@ -33,12 +33,11 @@ import ProductsCell from './ProductsCell'
 import SellerTip from './SellerTip'
 import ProductTip from './ProductTip'
 import NameFilter from './NameFilter'
+import { FiltersContext } from './People'
 import './Cell.css'
 
-export const FiltersContext = React.createContext({ filter: null, query: null })
-
 export const tableInit = value => {
-  console.log('tableInit', value)
+  // console.log('tableInit', value)
   return {
     columns: [
       {
@@ -82,7 +81,7 @@ const Sellers = props => {
     tips: []
   }
   const [state, dispatch] = useReducer(tableReducer, initialArg, tableInit)
-  console.log('Sellers', props, state)
+  // console.log('Sellers', props, state)
   const { pageIndex, pageSize, sort, filter, query } = state
 
   useEffect(() => {
@@ -96,10 +95,10 @@ const Sellers = props => {
     })
   }, [pageIndex, pageSize, sort, filter, query, database])
 
-  const { people, countries } = database
+  const { people } = database
   const filters = useMemo(() => {
-    return { filter, query, countries }
-  }, [filter, query, countries])
+    return { query }
+  }, [query])
 
   const handleTip = useCallback(
     (tipid, pinned) => {
@@ -141,7 +140,6 @@ const Sellers = props => {
     }),
     []
   )
-
   return (
     <div className='sellers'>
       <MergingConfigProvider value={config}>

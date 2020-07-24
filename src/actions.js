@@ -19,4 +19,5 @@ export const COLUMN_REORDERING = 'COLUMN_REORDERING'
 export const COLUMN_RESIZING = 'COLUMN_RESIZING'
 export const SELECTING = 'SELECTING'
 export const SORTING = 'SORTING'
+export const VSCROLL = 'VSCROLL'
 export const TableDispatch = React.createContext(null)

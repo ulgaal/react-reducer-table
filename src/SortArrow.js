@@ -17,9 +17,11 @@ import React from 'react'
 import Icon from './Icon'
 
 const SortArrow = props => {
-  const { sorted } = props
-  return sorted !== undefined ? (
-    sorted ? (
+  const { sortable, sorted } = props
+  return sortable ? (
+    sorted === undefined ? (
+      <Icon icon='sortable' className='rrt-header-icon' />
+    ) : sorted ? (
       <Icon icon='down' className='rrt-header-icon' />
     ) : (
       <Icon icon='up' className='rrt-header-icon' />

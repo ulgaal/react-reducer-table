@@ -23,6 +23,7 @@ import Previous from './svg/rewind'
 import Next from './svg/fast-forward'
 import Last from './svg/skip-forward'
 import Cancel from './svg/x'
+import Sortable from './svg/sortable'
 import './Icon.css'
 
 const Icon = props => {
@@ -49,6 +50,9 @@ const Icon = props => {
       break
     case 'cancel':
       component = Cancel
+      break
+    case 'sortable':
+      component = Sortable
       break
   }
   return (

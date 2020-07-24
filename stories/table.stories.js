@@ -63,6 +63,8 @@ storiesOf('Tables', module)
                   : column
               )
             }
+          default:
+            return state
         }
       }
 
@@ -72,11 +74,13 @@ storiesOf('Tables', module)
           columns: [
             {
               id: 'firstName',
-              label: 'First name'
+              label: 'First name',
+              sortable: false
             },
             {
               id: 'lastName',
-              label: 'Last name'
+              label: 'Last name',
+              sortable: false
             }
           ],
           data: [
@@ -165,6 +169,8 @@ storiesOf('Tables', module)
               )
             }
           }
+          default:
+            return state
         }
       }
 
@@ -184,11 +190,13 @@ storiesOf('Tables', module)
           columns: [
             {
               id: 'firstName',
-              label: 'First name'
+              label: 'First name',
+              sortable: false
             },
             {
               id: 'lastName',
-              label: 'Last name'
+              label: 'Last name',
+              sortable: false
             }
           ],
           pageIndex: 0,

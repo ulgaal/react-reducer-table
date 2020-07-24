@@ -47,7 +47,7 @@ const Header = props => {
       >
         <div className='rrt-header-label'>{label}</div>
         <div className='rrt-header-arrow'>
-          <SortArrow sorted={sorted} />
+          <SortArrow sortable={sortable} sorted={sorted} />
         </div>
       </div>
       {resizable ? (

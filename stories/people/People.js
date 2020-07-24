@@ -39,7 +39,7 @@ import './Cell.css'
 export const FiltersContext = React.createContext({ filter: null, query: null })
 
 export const tableInit = value => {
-  console.log('tableInit', value)
+  // console.log('tableInit', value)
   return {
     columns: [
       {
@@ -99,7 +99,7 @@ const People = props => {
     query: ''
   }
   const [state, dispatch] = useReducer(tableReducer, initialArg, tableInit)
-  console.log('People', props, state)
+  // console.log('People', props, state)
   const { pageIndex, pageSize, sort, filter, query, canDelete } = state
 
   useEffect(() => {
