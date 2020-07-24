@@ -15,4 +15,6 @@ limitations under the License.
 */
 .country-filter {
   padding: 2px 2px;
+  font-size: 11px;
+  height: 100%;
 }

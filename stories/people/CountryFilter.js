@@ -20,6 +20,12 @@ import { FiltersContext } from './People'
 import { FILTERING } from './peopleReducer'
 import Select from './Select'
 
+const customStyles = {
+  input: () => ({
+    height: 20
+  })
+}
+
 const CountryFilter = props => {
   const { filter, countries } = useContext(FiltersContext)
   const dispatch = useContext(TableDispatch)
@@ -42,6 +48,7 @@ const CountryFilter = props => {
           dispatch({ type: FILTERING, filter: country && country.value })
         }}
         menuPlacement='auto'
+        styles={customStyles}
       />
     </div>
   )

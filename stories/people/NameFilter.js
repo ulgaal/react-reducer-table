@@ -20,7 +20,9 @@ import { FiltersContext } from './People'
 import { QUERYING } from './peopleReducer'
 
 const NameFilter = props => {
-  const { query } = useContext(FiltersContext)
+  const filters = useContext(FiltersContext)
+  const { query } = filters
+  console.log('NameFilter', filters)
   const dispatch = useContext(TableDispatch)
   const [timeoutId, setTimeoutId] = useState(0)
   const [value, setValue] = useState(query || '')
@@ -40,17 +42,15 @@ const NameFilter = props => {
   )
   return (
     <div className='name-filter'>
-      <div className='name-filter-field'>
-        <input
-          type='text'
-          placeholder='Type people naming pattern to filter table...'
-          value={value}
-          onChange={event => {
-            handleChange(event.target.value)
-            dispatch({ type: QUERYING, query: event.target.value })
-          }}
-        />
-      </div>
+      <input
+        type='text'
+        placeholder='Type people naming pattern to filter table...'
+        value={value}
+        onChange={event => {
+          handleChange(event.target.value)
+          dispatch({ type: QUERYING, query: event.target.value })
+        }}
+      />
       {query ? (
         <Icon
           icon='cancel'

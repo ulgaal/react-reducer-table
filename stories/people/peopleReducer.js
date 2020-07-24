@@ -20,8 +20,7 @@ import {
   COLUMN_REORDERING,
   COLUMN_RESIZING,
   SELECTING,
-  SORTING,
-  VSCROLL
+  SORTING
 } from '../../src'
 
 export const RESET = 'RESET'
