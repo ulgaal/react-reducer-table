@@ -17,6 +17,7 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 <span class="hljs-keyword">import</span> Next <span class="hljs-keyword">from</span> <span class="hljs-string">'./svg/fast-forward'</span>
 <span class="hljs-keyword">import</span> Last <span class="hljs-keyword">from</span> <span class="hljs-string">'./svg/skip-forward'</span>
 <span class="hljs-keyword">import</span> Cancel <span class="hljs-keyword">from</span> <span class="hljs-string">'./svg/x'</span>
+<span class="hljs-keyword">import</span> Sortable <span class="hljs-keyword">from</span> <span class="hljs-string">'./svg/sortable'</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./Icon.css'</span>
 
 const Icon = props =&gt; {
@@ -43,6 +44,9 @@ const Icon = props =&gt; {
       break
     case <span class="hljs-string">'cancel'</span>:
       component = Cancel
+      break
+    case <span class="hljs-string">'sortable'</span>:
+      component = Sortable
       break
   }
   return (

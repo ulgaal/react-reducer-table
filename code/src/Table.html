@@ -80,6 +80,11 @@ It receives a reducer state (as a prop) and dispatcher (through the
 <td><code>&lt;SortType&gt;</code></td>
 <td>Triggered when the user changes table sorting</td>
 </tr>
+<tr>
+<td>VSCROLL</td>
+<td><code>&lt;VScrollType&gt;</code></td>
+<td>Triggered when the table body is scrolled vertically</td>
+</tr>
 </tbody>
 </table>
 <p><code>&lt;PagingType&gt;</code></p>
@@ -152,6 +157,23 @@ It receives a reducer state (as a prop) and dispatcher (through the
 <td>sort</td>
 <td><code>&lt;string&gt;</code></td>
 <td>The column id used for sorting, prefixed by &#39;+&#39; for ascending sort or &#39;-&#39; for descending sort (used only for sorting)</td>
+</tr>
+</tbody>
+</table>
+<p><code>&lt;VScrollType&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>scrollTop</td>
+<td><code>&lt;number&gt;</code></td>
+<td>the offset to the top of the table body element</td>
 </tr>
 </tbody>
 </table></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">const</span> Table = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Table&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> {
@@ -299,6 +321,11 @@ Table.propTypes = {</div></div></div><div class="segment"><div class="comments "
 <td><code>&lt;bool&gt;</code></td>
 <td>True if the table is loading its data</td>
 </tr>
+<tr>
+<td>scrollTop</td>
+<td><code>&lt;number&gt;</code></td>
+<td>The scrolling offset to apply initially to the table body</td>
+</tr>
 </tbody>
 </table>
 <p><code>&lt;ColumnType&gt;</code> is an object, which contains the following keys:</p>
@@ -323,32 +350,32 @@ Table.propTypes = {</div></div></div><div class="segment"><div class="comments "
 </tr>
 <tr>
 <td>resizable</td>
-<td>`<bool></td>
+<td><code>&lt;bool&gt;</code></td>
 <td>True if the column can be resized</td>
 </tr>
 <tr>
 <td>sortable</td>
-<td>`<bool></td>
+<td><code>&lt;bool&gt;</code></td>
 <td>True if the column can be sorted</td>
 </tr>
 <tr>
 <td>minWidth</td>
-<td>`<number></td>
+<td><code>&lt;number&gt;</code></td>
 <td>The min width of the column (in pixels)</td>
 </tr>
 <tr>
 <td>width</td>
-<td>`<number></td>
+<td><code>&lt;number&gt;</code></td>
 <td>The default width of the column (in pixels)</td>
 </tr>
 <tr>
 <td>Cell</td>
-<td>`<elementType></td>
+<td><code>&lt;elementType&gt;</code></td>
 <td>The React component to use for cells corresponding to this column</td>
 </tr>
 <tr>
 <td>Filter</td>
-<td>`<elementType></td>
+<td><code>&lt;elementType&gt;</code></td>
 <td>A React component to use to specify a filter is the column can be filtered</td>
 </tr>
 </tbody>

@@ -11,9 +11,11 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 <span class="hljs-keyword">import</span> Icon <span class="hljs-keyword">from</span> <span class="hljs-string">'./Icon'</span>
 
 const SortArrow = props =&gt; {
-  const { sorted } = props
-  return sorted !== undefined ? (
-    sorted ? (
+  const { sortable, sorted } = props
+  return sortable ? (
+    sorted === undefined ? (
+      &lt;Icon icon=<span class="hljs-string">'sortable'</span> className=<span class="hljs-string">'rrt-header-icon'</span> /&gt;
+    ) : sorted ? (
       &lt;Icon icon=<span class="hljs-string">'down'</span> className=<span class="hljs-string">'rrt-header-icon'</span> /&gt;
     ) : (
       &lt;Icon icon=<span class="hljs-string">'up'</span> className=<span class="hljs-string">'rrt-header-icon'</span> /&gt;

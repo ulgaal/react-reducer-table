@@ -25,18 +25,19 @@ const HeaderResizer = props =&gt; {
   const dispatch = useContext(ResizerContext)
   const handleMouseDown = useCallback(
     event =&gt; {
-      const x0 = event.clientX
-      let x1
-      let clampedWidth
       event.stopPropagation()
-      event.preventDefault()</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>current column width</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">const</span> { width } = event.target.closest(<span class="hljs-string">'.rrt-th'</span>).getBoundingClientRect()
+      event.preventDefault()
+      const table = event.target.closest(<span class="hljs-string">'.rrt-container'</span>)
+      const { left } = table.getBoundingClientRect()
+      const x0 = event.clientX - left
+      let x1
+      let clampedWidth</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>current column width</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">const</span> { width } = event.target.closest(<span class="hljs-string">'.rrt-th'</span>).getBoundingClientRect()
       dispatch({ type: START_RESIZING, x: x0 })
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'handleMouseDown'</span>, width)
       <span class="hljs-keyword">const</span> handlers = {
         handleMouseMove: event =&gt; {
           event.stopPropagation()
           event.preventDefault()
-          <span class="hljs-keyword">const</span> dx = event.clientX - x0
+          <span class="hljs-keyword">const</span> dx = event.clientX - left - x0
           clampedWidth = <span class="hljs-built_in">Math</span>.max(minWidth, width + dx)
           x1 = x0 + clampedWidth - width
           dispatch({ type: RESIZE, x: x1 })

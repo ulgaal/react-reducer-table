@@ -7,7 +7,13 @@ You may obtain a copy of the License at</p>
 distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> React, { useMemo, useRef, useLayoutEffect, useState } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> React, {
+  useMemo,
+  useRef,
+  useLayoutEffect,
+  useState,
+  useEffect
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
 <span class="hljs-keyword">import</span> Head <span class="hljs-keyword">from</span> <span class="hljs-string">'./Head'</span>
 <span class="hljs-keyword">import</span> Filters <span class="hljs-keyword">from</span> <span class="hljs-string">'./Filters'</span>
 <span class="hljs-keyword">import</span> Body <span class="hljs-keyword">from</span> <span class="hljs-string">'./Body'</span>
@@ -36,10 +42,18 @@ const Data = props =&gt; {</div></div></div><div class="segment"><div class="com
       }
       <span class="hljs-keyword">return</span> layouts
     }, {})
-  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>To keep head and body columns align when body Y scroller appears.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> [overflow, setOverflow] = useState(<span class="hljs-literal">false</span>)
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Update column width if they were externally resized</p></div></div><div class="code"><div class="wrapper">  useEffect(() =&gt; {
+    columns.forEach(({ id, width }) =&gt; {
+      <span class="hljs-keyword">const</span> { style } = layouts.current[id].rule
+      <span class="hljs-keyword">const</span> ruleWidth = <span class="hljs-built_in">parseInt</span>(style.width)
+      <span class="hljs-keyword">if</span> (width &amp;&amp; ruleWidth !== width) {
+        style.width = <span class="hljs-string">`<span class="hljs-subst">${width}</span>px`</span>
+      }
+    })
+  }, [columns])</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>To keep head and body columns align when body Y scroller appears.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> [overflow, setOverflow] = useState(<span class="hljs-literal">false</span>)
   <span class="hljs-keyword">const</span> ref = useRef(<span class="hljs-literal">null</span>)
   useLayoutEffect(() =&gt; {
-    <span class="hljs-keyword">const</span> node = ref.current
+    <span class="hljs-keyword">const</span> node = ref.current.querySelector(<span class="hljs-string">'.rrt-tbody'</span>)
     setOverflow(node.scrollHeight &gt; node.clientHeight)
   })
 
@@ -50,7 +64,7 @@ const Data = props =&gt; {</div></div></div><div class="segment"><div class="com
   ])
 
   <span class="hljs-keyword">return</span> (
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-data'</span>&gt;</span>
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-data'</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">{ref}</span>&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-title">Head</span>
         <span class="hljs-attribute">state</span>=<span class="hljs-value">{state}</span>
         <span class="hljs-attribute">components</span>=<span class="hljs-value">{components}</span>
@@ -68,7 +82,6 @@ const Data = props =&gt; {</div></div></div><div class="segment"><div class="com
         /&gt;</span>
       )</span> : <span class="hljs-literal">null</span>}
       &lt;Body
-        ref={ref}
         state={state}
         components={components}
         layouts={layouts.current}

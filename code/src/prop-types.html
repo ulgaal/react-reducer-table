@@ -38,7 +38,8 @@ export const TableStateType = PropTypes.shape({
   total: PropTypes.number,
   loading: PropTypes.bool,
   sort: PropTypes.string,
-  selectedIds: PropTypes.object
+  selectedIds: PropTypes.object,
+  scrollTop: PropTypes.number
 })
 
 export const LabelsType = PropTypes.shape({
@@ -75,5 +76,6 @@ export const IconType = PropTypes.oneOf([
   <span class="hljs-string">'previous'</span>,
   <span class="hljs-string">'next'</span>,
   <span class="hljs-string">'last'</span>,
-  <span class="hljs-string">'cancel'</span>
+  <span class="hljs-string">'cancel'</span>,
+  <span class="hljs-string">'sortable'</span>
 ])</div></div></div></div></body></html>
