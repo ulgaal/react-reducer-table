@@ -19,6 +19,7 @@ import { TableDispatch, SELECTING, VSCROLL } from './actions'
 import PropTypes from 'prop-types'
 import {
   TableStateType,
+  ColumnsType,
   ComponentsType,
   LayoutsType,
   LabelsType
@@ -27,8 +28,16 @@ import './Body.css'
 
 const Body = props => {
   console.log('Body', props)
-  const { state, components, layouts, colOrder, labels, rowIdAttr } = props
-  const { data, columns, selectedIds, scrollTop = 0 } = state
+  const {
+    state,
+    columns,
+    components,
+    layouts,
+    colOrder,
+    labels,
+    rowIdAttr
+  } = props
+  const { data, selectedIds, scrollTop = 0 } = state
   const dispatch = useContext(TableDispatch)
   const handleCellCheckChange = useCallback(
     event => {
@@ -89,6 +98,7 @@ const Body = props => {
 
 Body.propTypes = {
   state: TableStateType,
+  columns: ColumnsType,
   components: ComponentsType,
   layouts: LayoutsType,
   colOrder: PropTypes.string,

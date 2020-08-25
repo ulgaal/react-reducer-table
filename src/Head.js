@@ -19,6 +19,7 @@ import HeadContent from './HeadContent'
 import PropTypes from 'prop-types'
 import {
   TableStateType,
+  ColumnsType,
   ComponentsType,
   LayoutsType,
   LabelsType
@@ -27,7 +28,15 @@ import './Head.css'
 
 const Head = props => {
   // console.log('Head', props)
-  const { state, components, layouts, overflow, rowIdAttr, labels } = props
+  const {
+    state,
+    columns,
+    components,
+    layouts,
+    overflow,
+    rowIdAttr,
+    labels
+  } = props
   return (
     <div className='rrt-thead'>
       {
@@ -41,6 +50,7 @@ const Head = props => {
           ) : null}
           <HeadContent
             state={state}
+            columns={columns}
             components={components}
             layouts={layouts}
           />
@@ -52,6 +62,7 @@ const Head = props => {
 
 Head.propTypes = {
   state: TableStateType,
+  columns: ColumnsType,
   components: ComponentsType,
   layouts: LayoutsType,
   rowIdAttr: PropTypes.string,
@@ -63,7 +74,7 @@ export const areEqual = (prev, next) => {
   const prevState = prev.state
   const nextState = next.state
   const areEqual =
-    prevState.columns === nextState.columns &&
+    prev.columns === next.columns &&
     prevState.selectedIds === nextState.selectedIds &&
     prevState.sort === next.sort &&
     prevState.data === next.data &&

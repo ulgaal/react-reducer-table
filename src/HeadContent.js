@@ -16,15 +16,20 @@ limitations under the License.
 import React, { useContext, useCallback } from 'react'
 import { decode, DESC } from './orders'
 import { TableDispatch, COLUMN_REORDERING } from './actions'
-import { TableStateType, ComponentsType, LayoutsType } from './prop-types'
+import {
+  TableStateType,
+  ColumnsType,
+  ComponentsType,
+  LayoutsType
+} from './prop-types'
 
 const HeadContent = props => {
   // console.log('HeadContent', props)
-  const { state, components, layouts } = props
+  const { state, columns, components, layouts } = props
   const dispatch = useContext(TableDispatch)
   const { header } = components
 
-  const { columns, sort } = state
+  const { sort } = state
   const { order, name } = decode(sort)
 
   const handleDragStart = useCallback(event => {
@@ -88,6 +93,7 @@ const HeadContent = props => {
 
 HeadContent.propTypes = {
   state: TableStateType,
+  columns: ColumnsType,
   components: ComponentsType,
   layouts: LayoutsType
 }
@@ -96,7 +102,7 @@ export const areEqual = (prev, next) => {
   const prevState = prev.state
   const nextState = next.state
   const areEqual =
-    prevState.columns === nextState.columns && prevState.sort === nextState.sort
+    prev.columns === next.columns && prevState.sort === nextState.sort
   /* if (!areEqual) {
     console.log('!HeadContent.areEqual')
   } */

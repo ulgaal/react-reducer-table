@@ -87,6 +87,7 @@ const Data = props => {
     <div className='rrt-data' ref={ref}>
       <Head
         state={state}
+        columns={columns}
         components={components}
         layouts={layouts.current}
         labels={labels}
@@ -96,6 +97,7 @@ const Data = props => {
       {hasFilters ? (
         <Filters
           state={state}
+          columns={columns}
           layouts={layouts.current}
           rowIdAttr={rowIdAttr}
           overflow={overflow}
@@ -103,6 +105,7 @@ const Data = props => {
       ) : null}
       <Body
         state={state}
+        columns={columns}
         components={components}
         layouts={layouts.current}
         colOrder={colOrder}

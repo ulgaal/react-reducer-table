@@ -16,12 +16,11 @@ limitations under the License.
 import React from 'react'
 import './Filters.css'
 import PropTypes from 'prop-types'
-import { TableStateType, LayoutsType } from './prop-types'
+import { TableStateType, ColumnsType, LayoutsType } from './prop-types'
 
 const Filters = props => {
   // console.log('Filters', props)
-  const { layouts, overflow, state, rowIdAttr } = props
-  const { columns } = state
+  const { columns, layouts, overflow, state, rowIdAttr } = props
 
   return (
     <div className='rrt-filters'>
@@ -55,16 +54,15 @@ const Filters = props => {
 
 Filters.propTypes = {
   state: TableStateType,
+  columns: ColumnsType,
   layouts: LayoutsType,
   rowIdAttr: PropTypes.string,
   overflow: PropTypes.bool
 }
 
 export const areEqual = (prev, next) => {
-  const prevState = prev.state
-  const nextState = next.state
   const areEqual =
-    prevState.columns === nextState.columns && prev.overflow === next.overflow
+    prev.columns === next.columns && prev.overflow === next.overflow
   /*if (!areEqual) {
     console.log('!Filters.areEqual')
   }*/
