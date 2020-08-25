@@ -17,7 +17,7 @@ export const getProperty = (obj, path, defaultValue = null) =>
   (path || '').split('.').reduce((obj, prop, index, array) => {
     if (obj) {
       const [, key, item] = /([^[]*)(.*)/.exec(prop)
-      if (obj.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
         if (item) {
           const [, index] = /\[(\d+)\]/.exec(item)
           return obj[key][index]
