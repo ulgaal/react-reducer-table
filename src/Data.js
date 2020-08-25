@@ -37,13 +37,13 @@ const Data = props => {
 
   const { columns } = state
 
-  // Create one rule-set per table instance nad instance creation time
+  // Create one rule-set per table instance at instance creation time
   const dataId = useId()
   const layouts = useRef(null)
   if (layouts.current === null) {
     layouts.current = columns.reduce((layouts, column) => {
       const { id, minWidth = 80, width = 250 } = column
-      const className = `rrt-${dataId.current}-${id}`
+      const className = `rrt-${dataId.current}-${id.replace('.', '_')}`
       layouts[id] = {
         className,
         rule: stylesheet.createRule(
