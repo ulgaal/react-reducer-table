@@ -13,26 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React from 'react'
+import React, { useContext } from 'react'
+import { ConfigContext } from './Table'
 import CellCheckbox from './CellCheckbox'
 import RowContent from './RowContent'
 import PropTypes from 'prop-types'
-import { ColumnsType, LayoutsType, ComponentsType } from './prop-types'
+import { ColumnsType, LayoutsType } from './prop-types'
 import './Row.css'
 
 const Row = props => {
   // console.log('Row', props)
-  const {
-    components,
-    row,
-    layouts,
-    colOrder,
-    columns,
-    selected,
-    id,
-    rowIdAttr,
-    labels
-  } = props
+  const { labels, components, rowIdAttr } = useContext(ConfigContext)
+  const { row, layouts, colOrder, columns, selected, id } = props
   const { tr } = components
   const rowProps = {
     className: `rrt-tr${selected ? ' rtf-selected' : ''}`,
@@ -59,7 +51,6 @@ Row.propTypes = {
   columns: ColumnsType,
   layouts: LayoutsType,
   colOrder: PropTypes.string,
-  components: ComponentsType,
   row: PropTypes.object,
   selected: PropTypes.bool
 }

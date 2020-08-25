@@ -25,10 +25,9 @@ const GenericCell = props => {
 }
 
 export const areEqual = (prev, next) => {
-  const {
-    column: { id }
-  } = prev
-  const areEqual = getProperty(prev.row, id) === getProperty(next.row, id)
+  const areEqual =
+    getProperty(prev.row, prev.column.id) ===
+    getProperty(next.row, next.column.id)
   /* if (!areEqual) {
       console.log('!GenericCell.areEqual')
     } */

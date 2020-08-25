@@ -15,17 +15,14 @@ limitations under the License.
 */
 import React, { useContext, useCallback } from 'react'
 import { decode, DESC } from './orders'
+import { ConfigContext } from './Table'
 import { TableDispatch, COLUMN_REORDERING } from './actions'
-import {
-  TableStateType,
-  ColumnsType,
-  ComponentsType,
-  LayoutsType
-} from './prop-types'
+import { TableStateType, ColumnsType, LayoutsType } from './prop-types'
 
 const HeadContent = props => {
   // console.log('HeadContent', props)
-  const { state, columns, components, layouts } = props
+  const { components } = useContext(ConfigContext)
+  const { state, columns, layouts } = props
   const dispatch = useContext(TableDispatch)
   const { header } = components
 
@@ -94,7 +91,6 @@ const HeadContent = props => {
 HeadContent.propTypes = {
   state: TableStateType,
   columns: ColumnsType,
-  components: ComponentsType,
   layouts: LayoutsType
 }
 

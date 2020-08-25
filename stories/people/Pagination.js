@@ -18,12 +18,13 @@ import { Button } from 'react-bootstrap'
 import { styles } from './styles'
 import Select from './Select'
 import isEqual from 'lodash.isequal'
-import { TableDispatch, PAGING, Icon, subst } from '../../src'
+import { TableDispatch, ConfigContext, PAGING, Icon, subst } from '../../src'
 import './Pagination.css'
 
 const Pagination = props => {
   // console.log('Pagination', props)
-  const { state, pageSizes, components, labels } = props
+  const { labels, components } = useContext(ConfigContext)
+  const { state, pageSizes } = props
   const { paginationExtra } = components
   const { pageIndex, pageSize, pageCount, total } = state
   const dispatch = useContext(TableDispatch)
@@ -138,12 +139,7 @@ export default React.memo(Pagination, (prev, next) => {
     prevState.pageIndex === nextState.pageIndex &&
     prevState.pageSize === nextState.pageSize &&
     prevState.pageCount === nextState.pageCount &&
-    prevState.total === nextState.total &&
-    (!prev.components.paginationExtra ||
-      isEqual(
-        prev.components.paginationExtra.props,
-        next.components.paginationExtra.props
-      ))
+    prevState.total === nextState.total
 
   /*if (!areEqual) {
     console.log('!Pagination.areEqual')

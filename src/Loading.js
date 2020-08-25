@@ -13,11 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React from 'react'
+import React, { useContext } from 'react'
+import { ConfigContext } from './Table'
 import './Loading.css'
 
 const Loading = props => {
-  const { labels } = props
+  const { labels } = useContext(ConfigContext)
   return (
     <div className='rrt-loading'>
       <div className='rrt-loading-mask' />

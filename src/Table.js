@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { useContext, useReducer, useMemo } from 'react'
+import React, { useContext, useReducer, useMemo, createContext } from 'react'
 import PropTypes from 'prop-types'
 import { TableStateType, LabelsType, ComponentsType } from './prop-types'
 import Header from './Header'
@@ -30,6 +30,8 @@ import {
   ResizerContext
 } from './HeaderResizer'
 import './Table.css'
+
+export const ConfigContext = createContext(null)
 
 const resizerReducer = (state, action) => {
   switch (action.type) {
@@ -98,63 +100,58 @@ const resizerReducer = (state, action) => {
  */
 const Table = props => {
   // console.log('Table', props)
-  const {
-    state,
-    rowIdAttr,
-    components: components_ = {},
-    labels: labels_
-  } = props
+  const { state, rowIdAttr, components = {}, labels } = props
 
-  const components = useMemo(() => {
+  const config = useMemo(() => {
     return {
-      header: { type: Header, props: {} },
-      tr: { type: 'div', props: {} },
-      pagination: {
-        type: Pagination,
-        props: {
-          pageSizes: [
-            10,
-            20,
-            30,
-            40,
-            50,
-            60,
-            70,
-            80,
-            90,
-            100,
-            200,
-            300,
-            400,
-            500
-          ]
-        }
+      components: {
+        header: { type: Header, props: {} },
+        tr: { type: 'div', props: {} },
+        pagination: {
+          type: Pagination,
+          props: {
+            pageSizes: [
+              10,
+              20,
+              30,
+              40,
+              50,
+              60,
+              70,
+              80,
+              90,
+              100,
+              200,
+              300,
+              400,
+              500
+            ]
+          }
+        },
+        paginationExtra: null,
+        ...components
       },
-      paginationExtra: null,
-      ...components_
+      labels: {
+        loading: 'Loading...',
+        noData: 'No rows found',
+        toggle: 'Toggle people selected',
+        toggleAll: 'Toggle all people selected',
+        // eslint-disable-next-line no-template-curly-in-string
+        rows: '${value} rows',
+        page: 'Page',
+        // eslint-disable-next-line no-template-curly-in-string
+        ofPages: 'of ${pages}',
+        // eslint-disable-next-line no-template-curly-in-string
+        range: 'View ${first}-${last} of ${total}',
+        firstPage: 'First page',
+        lastPage: 'Last page',
+        nextPage: 'Next page',
+        previousPage: 'Previous page',
+        ...labels
+      },
+      rowIdAttr
     }
-  }, [components_])
-
-  const labels = useMemo(() => {
-    return {
-      loading: 'Loading...',
-      noData: 'No rows found',
-      toggle: 'Toggle people selected',
-      toggleAll: 'Toggle all people selected',
-      // eslint-disable-next-line no-template-curly-in-string
-      rows: '${value} rows',
-      page: 'Page',
-      // eslint-disable-next-line no-template-curly-in-string
-      ofPages: 'of ${pages}',
-      // eslint-disable-next-line no-template-curly-in-string
-      range: 'View ${first}-${last} of ${total}',
-      firstPage: 'First page',
-      lastPage: 'Last page',
-      nextPage: 'Next page',
-      previousPage: 'Previous page',
-      ...labels_
-    }
-  }, [labels_])
+  }, [components, labels, rowIdAttr])
 
   const [resizerState, resizerDispatch] = useReducer(resizerReducer, {
     resizing: false,
@@ -163,34 +160,32 @@ const Table = props => {
   })
 
   const { loading, data, pageCount, pageIndex } = state
+  const {
+    components: { pagination }
+  } = config
   return (
-    <ResizerContext.Provider value={resizerDispatch}>
-      <div className='rrt-container'>
-        <div
-          className={`rrt-table${resizerState.resizing ? ' rtf-resizing' : ''}`}
-        >
-          <Data
-            state={state}
-            components={components}
-            rowIdAttr={rowIdAttr}
-            labels={labels}
-          />
-          {resizerState.resizing ? <ResizeBar x={resizerState.barX} /> : null}
-          {loading ? <Loading labels={labels} /> : null}
-          {!loading && (!data || data.length === 0) ? (
-            <Empty title={labels.noData} />
-          ) : null}
+    <ConfigContext.Provider value={config}>
+      <ResizerContext.Provider value={resizerDispatch}>
+        <div className='rrt-container'>
+          <div
+            className={`rrt-table${
+              resizerState.resizing ? ' rtf-resizing' : ''
+            }`}
+          >
+            <Data state={state} />
+            {resizerState.resizing ? <ResizeBar x={resizerState.barX} /> : null}
+            {loading ? <Loading /> : null}
+            {!loading && (!data || data.length === 0) ? <Empty /> : null}
+          </div>
+          {pageCount !== undefined && pageIndex !== undefined
+            ? React.createElement(pagination.type, {
+                state,
+                ...pagination.props
+              })
+            : null}
         </div>
-        {pageCount !== undefined && pageIndex !== undefined
-          ? React.createElement(components.pagination.type, {
-              state,
-              components,
-              labels,
-              ...components.pagination.props
-            })
-          : null}
-      </div>
-    </ResizerContext.Provider>
+      </ResizerContext.Provider>
+    </ConfigContext.Provider>
   )
 }
 

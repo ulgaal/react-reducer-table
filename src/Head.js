@@ -13,47 +13,24 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React from 'react'
+import React, { useContext } from 'react'
+import { ConfigContext } from './Table'
 import HeaderCheckbox from './HeaderCheckbox'
 import HeadContent from './HeadContent'
 import PropTypes from 'prop-types'
-import {
-  TableStateType,
-  ColumnsType,
-  ComponentsType,
-  LayoutsType,
-  LabelsType
-} from './prop-types'
+import { TableStateType, ColumnsType, LayoutsType } from './prop-types'
 import './Head.css'
 
 const Head = props => {
   // console.log('Head', props)
-  const {
-    state,
-    columns,
-    components,
-    layouts,
-    overflow,
-    rowIdAttr,
-    labels
-  } = props
+  const { rowIdAttr } = useContext(ConfigContext)
+  const { state, columns, layouts, overflow } = props
   return (
     <div className='rrt-thead'>
       {
         <div className={`rrt-tr${overflow ? ' overflow' : ''}`}>
-          {rowIdAttr ? (
-            <HeaderCheckbox
-              state={state}
-              rowIdAttr={rowIdAttr}
-              labels={labels}
-            />
-          ) : null}
-          <HeadContent
-            state={state}
-            columns={columns}
-            components={components}
-            layouts={layouts}
-          />
+          {rowIdAttr ? <HeaderCheckbox state={state} /> : null}
+          <HeadContent state={state} columns={columns} layouts={layouts} />
         </div>
       }
     </div>
@@ -63,11 +40,8 @@ const Head = props => {
 Head.propTypes = {
   state: TableStateType,
   columns: ColumnsType,
-  components: ComponentsType,
   layouts: LayoutsType,
-  rowIdAttr: PropTypes.string,
-  overflow: PropTypes.bool,
-  labels: LabelsType
+  overflow: PropTypes.bool
 }
 
 export const areEqual = (prev, next) => {

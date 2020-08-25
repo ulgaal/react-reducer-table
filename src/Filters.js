@@ -13,14 +13,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React from 'react'
+import React, { useContext } from 'react'
+import { ConfigContext } from './Table'
 import './Filters.css'
 import PropTypes from 'prop-types'
 import { TableStateType, ColumnsType, LayoutsType } from './prop-types'
 
 const Filters = props => {
   // console.log('Filters', props)
-  const { columns, layouts, overflow, state, rowIdAttr } = props
+  const { rowIdAttr } = useContext(ConfigContext)
+  const { columns, layouts, overflow, state } = props
 
   return (
     <div className='rrt-filters'>
@@ -56,7 +58,6 @@ Filters.propTypes = {
   state: TableStateType,
   columns: ColumnsType,
   layouts: LayoutsType,
-  rowIdAttr: PropTypes.string,
   overflow: PropTypes.bool
 }
 

@@ -15,28 +15,16 @@ limitations under the License.
 */
 import React, { useContext, useCallback, useRef, useEffect } from 'react'
 import Row from './Row'
+import { ConfigContext } from './Table'
 import { TableDispatch, SELECTING, VSCROLL } from './actions'
 import PropTypes from 'prop-types'
-import {
-  TableStateType,
-  ColumnsType,
-  ComponentsType,
-  LayoutsType,
-  LabelsType
-} from './prop-types'
+import { TableStateType, ColumnsType, LayoutsType } from './prop-types'
 import './Body.css'
 
 const Body = props => {
-  console.log('Body', props)
-  const {
-    state,
-    columns,
-    components,
-    layouts,
-    colOrder,
-    labels,
-    rowIdAttr
-  } = props
+  // console.log('Body', props)
+  const { rowIdAttr } = useContext(ConfigContext)
+  const { state, columns, layouts, colOrder } = props
   const { data, selectedIds, scrollTop = 0 } = state
   const dispatch = useContext(TableDispatch)
   const handleCellCheckChange = useCallback(
@@ -83,12 +71,9 @@ const Body = props => {
             columns={columns}
             layouts={layouts}
             colOrder={colOrder}
-            components={components}
             id={id}
             row={row}
-            rowIdAttr={rowIdAttr}
             selected={selected}
-            labels={labels}
           />
         )
       })}
@@ -99,11 +84,8 @@ const Body = props => {
 Body.propTypes = {
   state: TableStateType,
   columns: ColumnsType,
-  components: ComponentsType,
   layouts: LayoutsType,
-  colOrder: PropTypes.string,
-  rowIdAttr: PropTypes.string,
-  labels: LabelsType
+  colOrder: PropTypes.string
 }
 
 export const areEqual = (prev, next) => {

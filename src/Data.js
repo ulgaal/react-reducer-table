@@ -26,14 +26,13 @@ import Body from './Body'
 import { useId } from './hooks/useId'
 import stylesheet from './stylesheet'
 import './Data.css'
-import PropTypes from 'prop-types'
-import { TableStateType, ComponentsType, LabelsType } from './prop-types'
+import { TableStateType } from './prop-types'
 
 const styleSheet = stylesheet.createStyleSheet()
 
 const Data = props => {
   // console.log('Data', props)
-  const { state, components, rowIdAttr, labels } = props
+  const { state } = props
 
   const { columns } = state
 
@@ -88,10 +87,7 @@ const Data = props => {
       <Head
         state={state}
         columns={columns}
-        components={components}
         layouts={layouts.current}
-        labels={labels}
-        rowIdAttr={rowIdAttr}
         overflow={overflow}
       />
       {hasFilters ? (
@@ -99,28 +95,21 @@ const Data = props => {
           state={state}
           columns={columns}
           layouts={layouts.current}
-          rowIdAttr={rowIdAttr}
           overflow={overflow}
         />
       ) : null}
       <Body
         state={state}
         columns={columns}
-        components={components}
         layouts={layouts.current}
         colOrder={colOrder}
-        rowIdAttr={rowIdAttr}
-        labels={labels}
       />
     </div>
   )
 }
 
 Data.propTypes = {
-  state: TableStateType,
-  rowIdAttr: PropTypes.string,
-  components: ComponentsType,
-  labels: LabelsType
+  state: TableStateType
 }
 
 export const areEqual = (prev, next) => {

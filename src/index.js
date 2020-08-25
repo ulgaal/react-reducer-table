@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import Table from './Table'
+import Table, { ConfigContext } from './Table'
 import {
   PAGING,
   COLUMN_REORDERING,
@@ -29,6 +29,7 @@ import { subst, getProperty } from './utils'
 
 export {
   Table,
+  ConfigContext,
   PAGING,
   COLUMN_REORDERING,
   COLUMN_RESIZING,
