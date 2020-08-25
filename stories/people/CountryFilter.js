@@ -16,7 +16,7 @@ limitations under the License.
 import React, { useContext, useMemo } from 'react'
 import './CountryFilter.css'
 import { TableDispatch } from '../../src'
-import { FiltersContext } from './People'
+import { FiltersContext } from './contexts'
 import { FILTERING } from './peopleReducer'
 import Select from './Select'
 

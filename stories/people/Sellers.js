@@ -28,12 +28,12 @@ import { createDatabase } from './model'
 import { tableReducer, LOADING, RESET } from './peopleReducer'
 import './Sellers.css'
 import SellerCell from './SellerCell'
-import PhoneCell from './PhoneCell'
+import GenericCell from './GenericCell'
 import ProductsCell from './ProductsCell'
 import SellerTip from './SellerTip'
 import ProductTip from './ProductTip'
 import NameFilter from './NameFilter'
-import { FiltersContext } from './People'
+import { FiltersContext } from './contexts'
 import './Cell.css'
 
 export const tableInit = value => {
@@ -48,7 +48,7 @@ export const tableInit = value => {
       },
       {
         id: 'phone',
-        Cell: PhoneCell,
+        Cell: GenericCell,
         label: 'Phone'
       },
       {

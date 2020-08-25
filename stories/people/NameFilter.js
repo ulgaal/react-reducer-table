@@ -16,7 +16,7 @@ limitations under the License.
 import React, { useContext, useState, useCallback } from 'react'
 import './NameFilter.css'
 import { TableDispatch, Icon } from '../../src'
-import { FiltersContext } from './People'
+import { FiltersContext } from './contexts'
 import { QUERYING } from './peopleReducer'
 
 const NameFilter = props => {

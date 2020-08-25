@@ -13,29 +13,26 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { useContext } from 'react'
-import { highlight } from './utils'
-import { FiltersContext } from './contexts'
+import React from 'react'
+import { getProperty } from '../../src'
 
-export const NameCell = props => {
-  const { query } = useContext(FiltersContext)
-  return (
-    <div className='cell'>
-      {highlight(query, props.row.name).map(({ text, highlight }, index) => (
-        <span key={index} {...(highlight ? { className: 'highlighted' } : {})}>
-          {text}
-        </span>
-      ))}
-    </div>
-  )
+const GenericCell = props => {
+  const {
+    column: { id },
+    row
+  } = props
+  return <div className='cell'>{getProperty(row, id)}</div>
 }
 
 export const areEqual = (prev, next) => {
-  const areEqual = prev.row.name === next.row.name
+  const {
+    column: { id }
+  } = prev
+  const areEqual = getProperty(prev.row, id) === getProperty(next.row, id)
   /* if (!areEqual) {
-      console.log('!NameCell.areEqual')
+      console.log('!GenericCell.areEqual')
     } */
   return areEqual
 }
 
-export default React.memo(NameCell, areEqual)
+export default React.memo(GenericCell, areEqual)

@@ -15,7 +15,7 @@ limitations under the License.
 */
 import React, { useContext } from 'react'
 import { highlight } from './utils'
-import { FiltersContext } from './People'
+import { FiltersContext } from './contexts'
 import { Source } from '@ulgaal/react-infotip'
 
 export const SellerCell = props => {
