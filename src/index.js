@@ -25,7 +25,7 @@ import {
 } from './actions'
 import { decode, DESC } from './orders'
 import Icon from './Icon'
-import { subst } from './utils'
+import { subst, getProperty } from './utils'
 
 export {
   Table,
@@ -39,5 +39,6 @@ export {
   decode,
   DESC,
   Icon,
-  subst
+  subst,
+  getProperty
 }
