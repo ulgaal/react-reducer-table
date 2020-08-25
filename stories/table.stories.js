@@ -24,6 +24,7 @@ import BasicReadme from './md/basic.md'
 import CompleteReadme from './md/complete.md'
 import TooltipsReadme from './md/tooltips.md'
 import AutoresizeReadme from './md/autoresize.md'
+import FixedColsReadme from './md/fixedcols.md'
 import { addReadme } from 'storybook-readme'
 import faker from 'faker'
 
@@ -37,6 +38,7 @@ import {
 
 import People from './people/People'
 import Sellers from './people/Sellers'
+import Users from './people/Users'
 
 import './table.stories.css'
 import { seq } from './people/utils'
@@ -228,6 +230,23 @@ storiesOf('Tables', module)
     {
       readme: {
         content: AutoresizeReadme,
+        sidebar: TableReadme
+      }
+    }
+  )
+  .add(
+    'Table with fixed cols',
+    () => {
+      return (
+        <div className='people-table'>
+          <Users />
+        </div>
+      )
+    },
+    {
+      decorators: [withKnobs, serverDecorator],
+      readme: {
+        content: FixedColsReadme,
         sidebar: TableReadme
       }
     }
