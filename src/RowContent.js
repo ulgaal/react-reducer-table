@@ -15,7 +15,7 @@ limitations under the License.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { ColumnsType, LayoutsType } from './prop-types'
+import { ColumnsType } from './prop-types'
 import DefaultCell from './DefaultCell'
 import './Row.css'
 
@@ -44,7 +44,6 @@ const RowContent = props => {
 
 RowContent.propTypes = {
   columns: ColumnsType,
-  layouts: LayoutsType,
   colOrder: PropTypes.string,
   row: PropTypes.object
 }

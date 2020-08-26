@@ -18,19 +18,19 @@ import { ConfigContext } from './Table'
 import HeaderCheckbox from './HeaderCheckbox'
 import HeadContent from './HeadContent'
 import PropTypes from 'prop-types'
-import { TableStateType, ColumnsType, LayoutsType } from './prop-types'
+import { TableStateType, ColumnsType } from './prop-types'
 import './Head.css'
 
 const Head = props => {
   // console.log('Head', props)
   const { rowIdAttr } = useContext(ConfigContext)
-  const { state, columns, layouts, overflow } = props
+  const { state, columns, overflow } = props
   return (
     <div className='rrt-thead'>
       {
         <div className={`rrt-tr${overflow ? ' overflow' : ''}`}>
           {rowIdAttr ? <HeaderCheckbox state={state} /> : null}
-          <HeadContent state={state} columns={columns} layouts={layouts} />
+          <HeadContent state={state} columns={columns} />
         </div>
       }
     </div>
@@ -40,7 +40,6 @@ const Head = props => {
 Head.propTypes = {
   state: TableStateType,
   columns: ColumnsType,
-  layouts: LayoutsType,
   overflow: PropTypes.bool
 }
 

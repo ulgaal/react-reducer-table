@@ -17,12 +17,12 @@ import React, { useContext } from 'react'
 import { ConfigContext } from './Table'
 import './Filters.css'
 import PropTypes from 'prop-types'
-import { TableStateType, ColumnsType, LayoutsType } from './prop-types'
+import { TableStateType, ColumnsType } from './prop-types'
 
 const Filters = props => {
   // console.log('Filters', props)
-  const { rowIdAttr } = useContext(ConfigContext)
-  const { columns, layouts, overflow, state } = props
+  const { layouts, rowIdAttr } = useContext(ConfigContext)
+  const { columns, overflow, state } = props
 
   return (
     <div className='rrt-filters'>
@@ -57,7 +57,6 @@ const Filters = props => {
 Filters.propTypes = {
   state: TableStateType,
   columns: ColumnsType,
-  layouts: LayoutsType,
   overflow: PropTypes.bool
 }
 

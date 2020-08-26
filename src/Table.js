@@ -13,8 +13,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { useContext, useReducer, useMemo, createContext } from 'react'
+import React, {
+  useContext,
+  useEffect,
+  useReducer,
+  useMemo,
+  useRef,
+  createContext
+} from 'react'
 import PropTypes from 'prop-types'
+import { useId } from './hooks/useId'
+import stylesheet from './stylesheet'
 import { TableStateType, LabelsType, ComponentsType } from './prop-types'
 import Header from './Header'
 import Pagination from './Pagination'
@@ -32,6 +41,8 @@ import {
 import './Table.css'
 
 export const ConfigContext = createContext(null)
+
+const styleSheet = stylesheet.createStyleSheet()
 
 const resizerReducer = (state, action) => {
   switch (action.type) {
@@ -101,6 +112,35 @@ const resizerReducer = (state, action) => {
 const Table = props => {
   // console.log('Table', props)
   const { state, rowIdAttr, components = {}, labels } = props
+  const { columns } = state
+
+  // Create one rule-set per table instance at instance creation time
+  const dataId = useId()
+  const layouts = useRef(null)
+  if (layouts.current === null) {
+    layouts.current = columns.reduce((layouts, column) => {
+      const { id, minWidth = 80, width = 250 } = column
+      const className = `rrt-${dataId.current}-${id.replace('.', '_')}`
+      layouts[id] = {
+        className,
+        rule: stylesheet.createRule(
+          styleSheet,
+          `.${className} { min-width: ${minWidth}px; width: ${width}px; }`
+        )
+      }
+      return layouts
+    }, {})
+  }
+  // Update column width if they were externally resized
+  useEffect(() => {
+    columns.forEach(({ id, width }) => {
+      const { style } = layouts.current[id].rule
+      const ruleWidth = parseInt(style.width)
+      if (width && ruleWidth !== width) {
+        style.width = `${width}px`
+      }
+    })
+  }, [columns])
 
   const config = useMemo(() => {
     return {
@@ -149,9 +189,10 @@ const Table = props => {
         previousPage: 'Previous page',
         ...labels
       },
+      layouts: layouts.current,
       rowIdAttr
     }
-  }, [components, labels, rowIdAttr])
+  }, [components, labels, layouts.current, rowIdAttr])
 
   const [resizerState, resizerDispatch] = useReducer(resizerReducer, {
     resizing: false,

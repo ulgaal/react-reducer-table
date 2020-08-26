@@ -13,57 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, {
-  useMemo,
-  useRef,
-  useLayoutEffect,
-  useState,
-  useEffect
-} from 'react'
+import React, { useMemo, useRef, useLayoutEffect, useState } from 'react'
 import Head from './Head'
 import Filters from './Filters'
 import Body from './Body'
-import { useId } from './hooks/useId'
-import stylesheet from './stylesheet'
 import './Data.css'
 import { TableStateType } from './prop-types'
-
-const styleSheet = stylesheet.createStyleSheet()
 
 const Data = props => {
   // console.log('Data', props)
   const { state } = props
 
   const { columns } = state
-
-  // Create one rule-set per table instance at instance creation time
-  const dataId = useId()
-  const layouts = useRef(null)
-  if (layouts.current === null) {
-    layouts.current = columns.reduce((layouts, column) => {
-      const { id, minWidth = 80, width = 250 } = column
-      const className = `rrt-${dataId.current}-${id.replace('.', '_')}`
-      layouts[id] = {
-        className,
-        rule: stylesheet.createRule(
-          styleSheet,
-          `.${className} { min-width: ${minWidth}px; width: ${width}px; }`
-        )
-      }
-      return layouts
-    }, {})
-  }
-
-  // Update column width if they were externally resized
-  useEffect(() => {
-    columns.forEach(({ id, width }) => {
-      const { style } = layouts.current[id].rule
-      const ruleWidth = parseInt(style.width)
-      if (width && ruleWidth !== width) {
-        style.width = `${width}px`
-      }
-    })
-  }, [columns])
 
   // To keep head and body columns align when body Y scroller appears.
   const [overflow, setOverflow] = useState(false)
@@ -84,26 +45,11 @@ const Data = props => {
 
   return (
     <div className='rrt-data' ref={ref}>
-      <Head
-        state={state}
-        columns={columns}
-        layouts={layouts.current}
-        overflow={overflow}
-      />
+      <Head state={state} columns={columns} overflow={overflow} />
       {hasFilters ? (
-        <Filters
-          state={state}
-          columns={columns}
-          layouts={layouts.current}
-          overflow={overflow}
-        />
+        <Filters state={state} columns={columns} overflow={overflow} />
       ) : null}
-      <Body
-        state={state}
-        columns={columns}
-        layouts={layouts.current}
-        colOrder={colOrder}
-      />
+      <Body state={state} columns={columns} colOrder={colOrder} />
     </div>
   )
 }

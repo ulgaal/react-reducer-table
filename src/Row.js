@@ -18,13 +18,13 @@ import { ConfigContext } from './Table'
 import CellCheckbox from './CellCheckbox'
 import RowContent from './RowContent'
 import PropTypes from 'prop-types'
-import { ColumnsType, LayoutsType } from './prop-types'
+import { ColumnsType } from './prop-types'
 import './Row.css'
 
 const Row = props => {
   // console.log('Row', props)
-  const { labels, components, rowIdAttr } = useContext(ConfigContext)
-  const { row, layouts, colOrder, columns, selected, id } = props
+  const { labels, components, layouts, rowIdAttr } = useContext(ConfigContext)
+  const { row, colOrder, columns, selected, id } = props
   const { tr } = components
   const rowProps = {
     className: `rrt-tr${selected ? ' rtf-selected' : ''}`,
@@ -49,7 +49,6 @@ const Row = props => {
 
 Row.propTypes = {
   columns: ColumnsType,
-  layouts: LayoutsType,
   colOrder: PropTypes.string,
   row: PropTypes.object,
   selected: PropTypes.bool

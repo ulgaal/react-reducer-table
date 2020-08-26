@@ -18,13 +18,13 @@ import Row from './Row'
 import { ConfigContext } from './Table'
 import { TableDispatch, SELECTING, VSCROLL } from './actions'
 import PropTypes from 'prop-types'
-import { TableStateType, ColumnsType, LayoutsType } from './prop-types'
+import { TableStateType, ColumnsType } from './prop-types'
 import './Body.css'
 
 const Body = props => {
   // console.log('Body', props)
   const { rowIdAttr } = useContext(ConfigContext)
-  const { state, columns, layouts, colOrder } = props
+  const { state, columns, colOrder } = props
   const { data, selectedIds, scrollTop = 0 } = state
   const dispatch = useContext(TableDispatch)
   const handleCellCheckChange = useCallback(
@@ -69,7 +69,6 @@ const Body = props => {
           <Row
             key={index}
             columns={columns}
-            layouts={layouts}
             colOrder={colOrder}
             id={id}
             row={row}
@@ -84,7 +83,6 @@ const Body = props => {
 Body.propTypes = {
   state: TableStateType,
   columns: ColumnsType,
-  layouts: LayoutsType,
   colOrder: PropTypes.string
 }
 
