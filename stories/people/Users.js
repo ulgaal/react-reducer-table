@@ -34,6 +34,7 @@ import NameFilter from './NameFilter'
 import CountryFilter from './CountryFilter'
 import { FiltersContext } from './contexts'
 import './Cell.css'
+import './Users.css'
 
 export const tableInit = value => {
   // console.log('tableInit', value)
@@ -164,26 +165,28 @@ const Users = props => {
   }, [filter, query, countries])
 
   return (
-    <TableDispatch.Provider value={dispatch}>
-      <FiltersContext.Provider value={filters}>
-        <Table
-          state={state}
-          rowIdAttr='name'
-          labels={{
-            toggle: 'Toggle people selected',
-            toggleAll: 'Toggle all people selected'
-          }}
-          components={{
-            pagination: {
-              type: Pagination,
-              props: {
-                pageSizes: [10, 20, 30, 50, 100, 200, 300, 500]
+    <div className='users-table'>
+      <TableDispatch.Provider value={dispatch}>
+        <FiltersContext.Provider value={filters}>
+          <Table
+            state={state}
+            rowIdAttr='name'
+            labels={{
+              toggle: 'Toggle people selected',
+              toggleAll: 'Toggle all people selected'
+            }}
+            components={{
+              pagination: {
+                type: Pagination,
+                props: {
+                  pageSizes: [10, 20, 30, 50, 100, 200, 300, 500]
+                }
               }
-            }
-          }}
-        />
-      </FiltersContext.Provider>
-    </TableDispatch.Provider>
+            }}
+          />
+        </FiltersContext.Provider>
+      </TableDispatch.Provider>
+    </div>
   )
 }
 

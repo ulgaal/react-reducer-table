@@ -17,18 +17,20 @@ import React, { useContext } from 'react'
 import { ConfigContext } from './Table'
 import './Filters.css'
 import PropTypes from 'prop-types'
-import { TableStateType, ColumnsType } from './prop-types'
+import { TableStateType, ColumnsType, Modes, ModeType } from './prop-types'
 
 const Filters = props => {
   // console.log('Filters', props)
   const { layouts, rowIdAttr } = useContext(ConfigContext)
-  const { columns, overflow, state } = props
+  const { columns, overflow, state, mode } = props
 
   return (
     <div className='rrt-filters'>
       {
         <div className={`rrt-tr${overflow ? ' overflow' : ''}`}>
-          {rowIdAttr ? <div className='rrt-th selection' /> : null}
+          {rowIdAttr && mode !== Modes.scrollable ? (
+            <div className='rrt-th selection' />
+          ) : null}
           {columns.map((column, index) => {
             const { id, Filter, resizable = true } = column
             const layout = layouts[id]
@@ -57,7 +59,8 @@ const Filters = props => {
 Filters.propTypes = {
   state: TableStateType,
   columns: ColumnsType,
-  overflow: PropTypes.bool
+  overflow: PropTypes.bool,
+  mode: ModeType
 }
 
 export const areEqual = (prev, next) => {

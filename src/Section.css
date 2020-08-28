@@ -13,16 +13,25 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-.rrt-data {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
+.rrt-section {
   display: flex;
-  align-items: stretch;
-  justify-items: stretch;
-  overflow-x: auto;
+  flex-direction: column;
   overflow-y: hidden;
   border: 1px solid gray;
+}
+.rrt-section-stretch {
+  flex-grow: 1;
+  align-items: stretch;
+}
+.rrt-section-fixed {
+  position: sticky;
+  left: 0;
+  align-items: flex-start;
+  flex-shrink: 0;
+  overflow-x: hidden;
+}
+.rrt-section-scrollable {
+  flex-shrink: 0;
+  align-items: stretch;
+  overflow-x: auto;
 }

@@ -1,0 +1,5 @@
+.users-table .cell {
+  height: 22px;
+  vertical-align: middle;
+  display: table-cell;
+}

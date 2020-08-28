@@ -18,13 +18,13 @@ import { ConfigContext } from './Table'
 import CellCheckbox from './CellCheckbox'
 import RowContent from './RowContent'
 import PropTypes from 'prop-types'
-import { ColumnsType } from './prop-types'
+import { ColumnsType, Modes, ModeType } from './prop-types'
 import './Row.css'
 
 const Row = props => {
   // console.log('Row', props)
   const { labels, components, layouts, rowIdAttr } = useContext(ConfigContext)
-  const { row, colOrder, columns, selected, id } = props
+  const { row, colOrder, columns, selected, id, mode } = props
   const { tr } = components
   const rowProps = {
     className: `rrt-tr${selected ? ' rtf-selected' : ''}`,
@@ -32,7 +32,7 @@ const Row = props => {
     ...tr.props
   }
   return React.createElement(tr.type, rowProps, [
-    rowIdAttr ? (
+    rowIdAttr && mode !== Modes.scrollable ? (
       <div key='selection' className='rrt-td selection'>
         <CellCheckbox id={id} selected={selected} title={labels.toggle} />
       </div>
@@ -51,7 +51,8 @@ Row.propTypes = {
   columns: ColumnsType,
   colOrder: PropTypes.string,
   row: PropTypes.object,
-  selected: PropTypes.bool
+  selected: PropTypes.bool,
+  mode: ModeType
 }
 
 export const areEqual = (prev, next) => {

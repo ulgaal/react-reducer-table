@@ -1,0 +1,23 @@
+.rrt-vscroller {
+  position: sticky;
+  top: 0px;
+  right: 1px;
+  flex-shrink: 0;
+  width: 14px;
+}
+.rrt-vscroller-bar {
+  background-color: #eff0f1;
+  position: relative;
+  border-bottom: 1px solid #808080;
+}
+.rrt-vscroller-thumb {
+  position: absolute;
+  left: 5px;
+  right: 2px;
+  background-color: #8f9395;
+  border-radius: 3px 3px;
+}
+.rrt-vscroller-thumb:hover,
+.rrt-vscroller-thumb-active {
+  background-color: #80d5e6;
+}

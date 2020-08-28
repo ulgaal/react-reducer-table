@@ -13,12 +13,51 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { useMemo, useRef, useLayoutEffect, useState } from 'react'
-import Head from './Head'
-import Filters from './Filters'
-import Body from './Body'
+import React, {
+  useMemo,
+  useRef,
+  useLayoutEffect,
+  useState,
+  createContext,
+  useReducer
+} from 'react'
+import Section from './Section'
+import Scroller from './Scroller'
+import { TableStateType, Modes } from './prop-types'
 import './Data.css'
-import { TableStateType } from './prop-types'
+
+export const ScrollerDispatch = createContext(null)
+export const SCROLLABLE = 'SCROLLABLE'
+export const FIXED = 'FIXED'
+export const RESIZE = 'RESIZE'
+export const SCROLL = 'SCROLL'
+
+const scrollerReducer = (state, action) => {
+  // console.log('scrollerReducer', state, action)
+  const { type } = action
+  switch (type) {
+    case SCROLLABLE: {
+      const { scrollableBody } = action
+      return { ...state, scrollableBody }
+    }
+    case FIXED: {
+      const { fixedBody } = action
+      return { ...state, fixedBody }
+    }
+    case RESIZE: {
+      const { scrollerHeight } = action
+      return { ...state, scrollerHeight }
+    }
+    case SCROLL: {
+      const { scrollTop, scrolling } = action
+      return scrolling
+        ? { ...state, scrolling, scrollTop }
+        : { ...state, scrolling: false }
+    }
+    default:
+      throw new Error(`Unknown action: ${action.type}`)
+  }
+}
 
 const Data = props => {
   // console.log('Data', props)
@@ -34,22 +73,69 @@ const Data = props => {
     setOverflow(node.scrollHeight > node.clientHeight)
   })
 
-  const hasFilters = useMemo(() => columns.some(({ Filter }) => !!Filter), [
-    columns
-  ])
+  const { fixedCols, cols, hasFilters, colOrder } = useMemo(() => {
+    const { ids, ...rest } = columns.reduce(
+      (acc, col) => {
+        const { id, fixed, Filter } = col
+        const { fixedCols, cols, ids } = acc
+        ids.push(id)
+        if (fixed) {
+          if (cols.length) {
+            throw new Error(
+              `fixed column ${id} must be declared before non-fixed columns`
+            )
+          }
+          fixedCols.push(col)
+        } else {
+          cols.push(col)
+        }
+        if (Filter) {
+          acc.hasFilters = true
+        }
+        return acc
+      },
+      {
+        fixedCols: [],
+        cols: [],
+        hasFilters: false,
+        ids: []
+      }
+    )
+    return { colOrder: ids.join(','), ...rest }
+  }, [columns])
 
-  // Keep track of the order of columns
-  const colOrder = useMemo(() => columns.map(({ id }) => id).join(','), [
-    columns
-  ])
+  const hasFixedCols = fixedCols.length > 0
+  const [scrollerState, dispatch] = useReducer(scrollerReducer, {
+    scrolling: false,
+    scrollTop: 0,
+    scrollerHeight: 0,
+    bodyHeight: 0,
+    rowsHeight: 0
+  })
 
   return (
     <div className='rrt-data' ref={ref}>
-      <Head state={state} columns={columns} overflow={overflow} />
-      {hasFilters ? (
-        <Filters state={state} columns={columns} overflow={overflow} />
-      ) : null}
-      <Body state={state} columns={columns} colOrder={colOrder} />
+      <ScrollerDispatch.Provider value={dispatch}>
+        {hasFixedCols ? (
+          <Section
+            mode={Modes.fixed}
+            state={state}
+            columns={fixedCols}
+            hasFilters={hasFilters}
+            colOrder={colOrder}
+            overflow={false}
+          />
+        ) : null}
+        <Section
+          mode={hasFixedCols ? Modes.scrollable : Modes.stretch}
+          state={state}
+          columns={cols}
+          hasFilters={hasFilters}
+          colOrder={colOrder}
+          overflow={overflow}
+        />
+        {hasFixedCols ? <Scroller {...scrollerState} /> : null}
+      </ScrollerDispatch.Provider>
     </div>
   )
 }

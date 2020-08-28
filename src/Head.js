@@ -18,18 +18,20 @@ import { ConfigContext } from './Table'
 import HeaderCheckbox from './HeaderCheckbox'
 import HeadContent from './HeadContent'
 import PropTypes from 'prop-types'
-import { TableStateType, ColumnsType } from './prop-types'
+import { TableStateType, ColumnsType, Modes, ModeType } from './prop-types'
 import './Head.css'
 
 const Head = props => {
   // console.log('Head', props)
   const { rowIdAttr } = useContext(ConfigContext)
-  const { state, columns, overflow } = props
+  const { state, columns, overflow, mode } = props
   return (
     <div className='rrt-thead'>
       {
         <div className={`rrt-tr${overflow ? ' overflow' : ''}`}>
-          {rowIdAttr ? <HeaderCheckbox state={state} /> : null}
+          {rowIdAttr && mode !== Modes.scrollable ? (
+            <HeaderCheckbox state={state} />
+          ) : null}
           <HeadContent state={state} columns={columns} />
         </div>
       }
@@ -40,7 +42,8 @@ const Head = props => {
 Head.propTypes = {
   state: TableStateType,
   columns: ColumnsType,
-  overflow: PropTypes.bool
+  overflow: PropTypes.bool,
+  mode: ModeType
 }
 
 export const areEqual = (prev, next) => {

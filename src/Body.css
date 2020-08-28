@@ -19,6 +19,10 @@ limitations under the License.
   overflow-y: auto;
   overflow-x: hidden;
 }
+.rrt-section-fixed .rrt-tbody,
+.rrt-section-scrollable .rrt-tbody {
+  overflow-y: hidden;
+}
 
 /* to customize */
 .rrt-tbody {

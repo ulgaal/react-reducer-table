@@ -85,3 +85,11 @@ export const IconType = PropTypes.oneOf([
   'cancel',
   'sortable'
 ])
+
+export const Modes = {
+  fixed: 'fixed',
+  scrollable: 'scrollable',
+  stretch: 'stretch'
+}
+
+export const ModeType = PropTypes.oneOf(Modes)

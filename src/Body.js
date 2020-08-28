@@ -18,13 +18,15 @@ import Row from './Row'
 import { ConfigContext } from './Table'
 import { TableDispatch, SELECTING, VSCROLL } from './actions'
 import PropTypes from 'prop-types'
-import { TableStateType, ColumnsType } from './prop-types'
+import { TableStateType, ColumnsType, Modes } from './prop-types'
 import './Body.css'
+import { SCROLLABLE, FIXED, ScrollerDispatch } from './Data'
 
 const Body = props => {
   // console.log('Body', props)
   const { rowIdAttr } = useContext(ConfigContext)
-  const { state, columns, colOrder } = props
+  const scrollerDispatch = useContext(ScrollerDispatch)
+  const { state, columns, colOrder, mode } = props
   const { data, selectedIds, scrollTop = 0 } = state
   const dispatch = useContext(TableDispatch)
   const handleCellCheckChange = useCallback(
@@ -50,8 +52,21 @@ const Body = props => {
   const ref = useRef(null)
   useEffect(() => {
     const { current } = ref
-    if (scrollTop > 0 && current) {
-      current.scrollTop = scrollTop
+    if (current) {
+      // For table with fixed cols, take measurements
+      // to power parallel vertical scrolling of the two sections if needed
+      if (mode === Modes.scrollable) {
+        scrollerDispatch({
+          type: SCROLLABLE,
+          scrollableBody: current
+        })
+      } else if (mode === Modes.fixed) {
+        scrollerDispatch({ type: FIXED, fixedBody: current })
+      }
+      // Programmatic control of the vertical scrolling
+      if (scrollTop > 0) {
+        current.scrollTop = scrollTop
+      }
     }
   })
   return (
@@ -61,21 +76,24 @@ const Body = props => {
       onChange={handleCellCheckChange}
       onScroll={handleScroll}
     >
-      {data.map((row, index) => {
-        // console.log('row', row)
-        const id = row[rowIdAttr]
-        const selected = rowIdAttr && selectedIds.has(id)
-        return (
-          <Row
-            key={index}
-            columns={columns}
-            colOrder={colOrder}
-            id={id}
-            row={row}
-            selected={selected}
-          />
-        )
-      })}
+      <div className='rrt-tbody-rows'>
+        {data.map((row, index) => {
+          // console.log('row', row)
+          const id = row[rowIdAttr]
+          const selected = rowIdAttr && selectedIds.has(id)
+          return (
+            <Row
+              key={index}
+              columns={columns}
+              colOrder={colOrder}
+              id={id}
+              row={row}
+              selected={selected}
+              mode={mode}
+            />
+          )
+        })}
+      </div>
     </div>
   )
 }
