@@ -26,6 +26,7 @@ import {
 import { decode, DESC } from './orders'
 import Icon from './Icon'
 import { subst, getProperty } from './utils'
+import { ColumnsType } from './prop-types'
 
 export {
   Table,
@@ -41,5 +42,6 @@ export {
   DESC,
   Icon,
   subst,
-  getProperty
+  getProperty,
+  ColumnsType
 }

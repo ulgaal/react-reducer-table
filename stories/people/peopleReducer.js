@@ -29,6 +29,10 @@ export const END_LOADING = 'END_LOADING'
 export const FILTERING = 'FILTERING'
 export const DELETING = 'DELETING'
 export const QUERYING = 'QUERYING'
+export const CHOOSE_COLUMNS = 'CHOOSE_COLUMNS'
+export const CHOOSE_COLUMNS_OK = 'CHOOSE_COLUMNS_OK'
+export const CHOOSE_COLUMNS_CANCEL = 'CHOOSE_COLUMNS_CANCEL'
+export const CHOOSE_COLUMNS_APPLY = 'CHOOSE_COLUMNS_APPLY'
 
 export const tableReducer = (state, action) => {
   // console.log('tableReducer', state, action)
@@ -93,6 +97,21 @@ export const tableReducer = (state, action) => {
       return { ...state, selectedIds, canDelete: selectedIds.size > 0 }
     case RESET: {
       return action.state
+    }
+    case CHOOSE_COLUMNS: {
+      return { ...state, displaySelectColumns: true }
+    }
+    case CHOOSE_COLUMNS_OK:
+    case CHOOSE_COLUMNS_APPLY: {
+      const { columns } = action
+      return {
+        ...state,
+        columns,
+        displaySelectColumns: type === CHOOSE_COLUMNS_APPLY
+      }
+    }
+    case CHOOSE_COLUMNS_CANCEL: {
+      return { ...state, displaySelectColumns: false }
     }
     default:
       return state

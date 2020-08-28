@@ -35,91 +35,93 @@ import CountryFilter from './CountryFilter'
 import { FiltersContext } from './contexts'
 import './Cell.css'
 import './Users.css'
+import ColumnChooser from './ColumnChooser'
 
+const allColumns = [
+  {
+    id: 'name',
+    Cell: NameCell,
+    label: 'Name',
+    Filter: NameFilter,
+    fixed: true
+  },
+  {
+    id: 'username',
+    Cell: GenericCell,
+    label: 'User Name',
+    fixed: true
+  },
+  {
+    id: 'image',
+    Cell: ImageCell,
+    minWidth: 20,
+    width: 20,
+    sortable: false,
+    resizable: false,
+    label: 'Photo',
+    fixed: true
+  },
+  {
+    id: 'country',
+    Cell: CountryCell,
+    label: 'Country',
+    Filter: CountryFilter
+  },
+  {
+    id: 'phone',
+    Cell: GenericCell,
+    label: 'Phone'
+  },
+  {
+    id: 'website',
+    Cell: GenericCell,
+    label: 'Web site'
+  },
+  {
+    id: 'email',
+    Cell: GenericCell,
+    label: 'E-mail'
+  },
+  {
+    id: 'company.name',
+    Cell: GenericCell,
+    label: 'Company'
+  },
+  {
+    id: 'address.street',
+    Cell: GenericCell,
+    label: 'Street'
+  },
+  {
+    id: 'address.suite',
+    Cell: GenericCell,
+    label: 'Suite'
+  },
+  {
+    id: 'address.city',
+    Cell: GenericCell,
+    label: 'City'
+  },
+  {
+    id: 'address.zipcode',
+    Cell: GenericCell,
+    label: 'Zip code'
+  },
+  {
+    id: 'address.geo.lat',
+    Cell: GenericCell,
+    label: 'Lattitude'
+  },
+  {
+    id: 'address.geo.lng',
+    Cell: GenericCell,
+    label: 'Longitude'
+  }
+]
 export const tableInit = value => {
   // console.log('tableInit', value)
   return {
-    columns: [
-      {
-        id: 'name',
-        Cell: NameCell,
-        label: 'Name',
-        Filter: NameFilter,
-        fixed: true
-      },
-      {
-        id: 'username',
-        Cell: GenericCell,
-        label: 'User Name',
-        fixed: true
-      },
-      {
-        id: 'image',
-        Cell: ImageCell,
-        minWidth: 20,
-        width: 20,
-        sortable: false,
-        resizable: false,
-        label: 'Photo',
-        fixed: true
-      },
-      {
-        id: 'country',
-        Cell: CountryCell,
-        label: 'Country',
-        Filter: CountryFilter
-      },
-      {
-        id: 'phone',
-        Cell: GenericCell,
-        label: 'Phone'
-      },
-      {
-        id: 'website',
-        Cell: GenericCell,
-        label: 'Web site'
-      },
-      {
-        id: 'email',
-        Cell: GenericCell,
-        label: 'E-mail'
-      },
-      {
-        id: 'company.name',
-        Cell: GenericCell,
-        label: 'Company'
-      },
-      {
-        id: 'address.street',
-        Cell: GenericCell,
-        label: 'Street'
-      },
-      {
-        id: 'address.suite',
-        Cell: GenericCell,
-        label: 'Suite'
-      },
-      {
-        id: 'address.city',
-        Cell: GenericCell,
-        label: 'City'
-      },
-      {
-        id: 'address.zipcode',
-        Cell: GenericCell,
-        label: 'Zip code'
-      },
-      {
-        id: 'address.geo.lat',
-        Cell: GenericCell,
-        label: 'Lattitude'
-      },
-      {
-        id: 'address.geo.lng',
-        Cell: GenericCell,
-        label: 'Longitude'
-      }
-    ],
+    columns: [...allColumns],
     selectedIds: new Set(),
     canDelete: false,
     ...value
@@ -142,11 +144,20 @@ const Users = props => {
     loading: false,
     sort: '+name',
     filter: null,
-    query: ''
+    query: '',
+    displaySelectColumns: false
   }
   const [state, dispatch] = useReducer(tableReducer, initialArg, tableInit)
   // console.log('Users', props, state)
-  const { pageIndex, pageSize, sort, filter, query } = state
+  const {
+    columns,
+    pageIndex,
+    pageSize,
+    sort,
+    filter,
+    query,
+    displaySelectColumns
+  } = state
 
   useEffect(() => {
     dispatch({ type: RESET, state: tableInit(initialArg) })
@@ -186,6 +197,9 @@ const Users = props => {
           />
         </FiltersContext.Provider>
       </TableDispatch.Provider>
+      {displaySelectColumns ? (
+        <ColumnChooser columns={allColumns} visible={columns} />
+      ) : null}
     </div>
   )
 }

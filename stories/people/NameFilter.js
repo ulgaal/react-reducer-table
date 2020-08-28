@@ -22,7 +22,6 @@ import { QUERYING } from './peopleReducer'
 const NameFilter = props => {
   const filters = useContext(FiltersContext)
   const { query } = filters
-  console.log('NameFilter', filters)
   const dispatch = useContext(TableDispatch)
   const [timeoutId, setTimeoutId] = useState(0)
   const [value, setValue] = useState(query || '')

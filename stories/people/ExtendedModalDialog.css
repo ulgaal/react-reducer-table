@@ -13,26 +13,32 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-.rrt-vscroller {
-  position: sticky;
-  top: 0px;
-  right: 0px;
-  flex-shrink: 0;
-  width: 14px;
-  border-bottom: 1px solid #808080;
+
+.react-resizable {
+  pointer-events: all;
 }
-.rrt-vscroller-bar {
-  background-color: #eff0f1;
-  position: relative;
-}
-.rrt-vscroller-thumb {
+.modal-content {
+  justify-content: stretch;
   position: absolute;
-  left: 5px;
-  right: 3px;
-  background-color: #8f9395;
-  border-radius: 3px 3px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
-.rrt-vscroller-thumb:hover,
-.rrt-vscroller-thumb-active {
-  background-color: #80d5e6;
+
+.modal-body {
+  flex-grow: 1;
+  flex-shrink: 1;
+  min-height: 100px;
+  position: relative;
+  overflow-y: auto;
+}
+
+.modal-title {
+  user-select: none;
+  cursor: pointer;
+}
+
+.modal {
+  overflow: visible !important;
 }

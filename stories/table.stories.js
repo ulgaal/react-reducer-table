@@ -27,6 +27,8 @@ import AutoresizeReadme from './md/autoresize.md'
 import FixedColsReadme from './md/fixedcols.md'
 import { addReadme } from 'storybook-readme'
 import faker from 'faker'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'react-resizable/css/styles.css'
 
 import {
   COLUMN_REORDERING,
