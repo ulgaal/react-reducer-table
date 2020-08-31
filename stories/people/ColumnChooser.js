@@ -153,6 +153,7 @@ const ColumnChooser = props => {
               columns: columns.filter(({ id }) => visible.has(id))
             })
           }}
+          disabled={visible.size === 0}
         >
           Ok
         </Button>
@@ -170,6 +171,7 @@ const ColumnChooser = props => {
               columns: columns.filter(({ id }) => visible.has(id))
             })
           }}
+          disabled={visible.size === 0}
         >
           Apply
         </Button>

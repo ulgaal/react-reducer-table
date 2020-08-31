@@ -3,3 +3,6 @@
   vertical-align: middle;
   display: table-cell;
 }
+.users-table .rrt-filters .rrt-tr {
+  height: 43px;
+}

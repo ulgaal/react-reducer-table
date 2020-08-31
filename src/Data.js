@@ -117,24 +117,35 @@ const Data = props => {
     <div className='rrt-data' ref={ref}>
       <ScrollerDispatch.Provider value={dispatch}>
         {hasFixedCols ? (
+          <>
+            <Section
+              mode={Modes.fixed}
+              state={state}
+              columns={fixedCols}
+              hasFilters={hasFilters}
+              colOrder={colOrder}
+              overflow={false}
+            />
+            <Section
+              mode={Modes.scrollable}
+              state={state}
+              columns={cols}
+              hasFilters={hasFilters}
+              colOrder={colOrder}
+              overflow={false}
+            />
+            <Scroller {...scrollerState} />
+          </>
+        ) : (
           <Section
-            mode={Modes.fixed}
+            mode={Modes.stretch}
             state={state}
-            columns={fixedCols}
+            columns={cols}
             hasFilters={hasFilters}
             colOrder={colOrder}
-            overflow={false}
+            overflow={overflow}
           />
-        ) : null}
-        <Section
-          mode={hasFixedCols ? Modes.scrollable : Modes.stretch}
-          state={state}
-          columns={cols}
-          hasFilters={hasFilters}
-          colOrder={colOrder}
-          overflow={overflow}
-        />
-        {hasFixedCols ? <Scroller {...scrollerState} /> : null}
+        )}
       </ScrollerDispatch.Provider>
     </div>
   )

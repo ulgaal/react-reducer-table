@@ -33,9 +33,10 @@ import GenericCell from './GenericCell'
 import NameFilter from './NameFilter'
 import CountryFilter from './CountryFilter'
 import { FiltersContext } from './contexts'
+import { UserControls } from './UserControls'
+import ColumnChooser from './ColumnChooser'
 import './Cell.css'
 import './Users.css'
-import ColumnChooser from './ColumnChooser'
 
 const allColumns = [
   {
@@ -192,14 +193,17 @@ const Users = props => {
                 props: {
                   pageSizes: [10, 20, 30, 50, 100, 200, 300, 500]
                 }
+              },
+              paginationExtra: {
+                type: UserControls
               }
             }}
           />
         </FiltersContext.Provider>
+        {displaySelectColumns ? (
+          <ColumnChooser columns={allColumns} visible={columns} />
+        ) : null}
       </TableDispatch.Provider>
-      {displaySelectColumns ? (
-        <ColumnChooser columns={allColumns} visible={columns} />
-      ) : null}
     </div>
   )
 }

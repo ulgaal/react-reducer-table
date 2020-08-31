@@ -13,26 +13,23 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-.rrt-section {
-  display: flex;
-  flex-direction: column;
-  overflow-y: hidden;
-  border: 1px solid gray;
-}
-.rrt-section-stretch {
-  flex-grow: 1;
-  align-items: stretch;
-}
-.rrt-section-fixed {
-  position: sticky;
-  left: 0;
-  align-items: flex-start;
-  flex-shrink: 0;
-  overflow-x: hidden;
-}
-.rrt-section-scrollable {
-  flex-shrink: 0;
-  flex-grow: 1;
-  align-items: stretch;
-  overflow-x: auto;
+import React, { useContext } from 'react'
+import './UserControls.css'
+import { CHOOSE_COLUMNS } from './peopleReducer'
+import { TableDispatch } from '../../src'
+
+export const UserControls = props => {
+  // console.log('UserControls', props)
+  const dispatch = useContext(TableDispatch)
+  return (
+    <div className='user-controls'>
+      <button
+        onClick={() => {
+          dispatch({ type: CHOOSE_COLUMNS })
+        }}
+      >
+        Select columns...
+      </button>
+    </div>
+  )
 }

@@ -43,9 +43,9 @@ const Scroller = props => {
   })
   let bodyHeight = 0
   let rowsHeight = 0
-  if (scrollableBody) {
-    bodyHeight = scrollableBody.getBoundingClientRect().height
-    rowsHeight = scrollableBody.firstChild.getBoundingClientRect().height
+  if (fixedBody) {
+    bodyHeight = fixedBody.getBoundingClientRect().height
+    rowsHeight = fixedBody.firstChild.getBoundingClientRect().height
   }
 
   const visible = rowsHeight > bodyHeight

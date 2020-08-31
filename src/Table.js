@@ -120,7 +120,7 @@ const Table = props => {
   if (layouts.current === null) {
     layouts.current = columns.reduce((layouts, column) => {
       const { id, minWidth = 80, width = 250 } = column
-      const className = `rrt-${dataId.current}-${id.replace('.', '_')}`
+      const className = `rrt-${dataId.current}-${id.replaceAll('.', '_')}`
       layouts[id] = {
         className,
         rule: stylesheet.createRule(

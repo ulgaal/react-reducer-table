@@ -66,28 +66,30 @@ const ModalDialog = React.forwardRef(
     const dialogClass = `${bsPrefix}-dialog`
 
     return (
-      <Draggable handle='.modal-title' position={position} onStop={onStop}>
-        <div
-          {...props}
-          ref={ref}
-          className={classNames(
-            dialogClass,
-            className,
-            size && `${bsPrefix}-${size}`,
-            centered && `${dialogClass}-centered`,
-            scrollable && `${dialogClass}-scrollable`
-          )}
-        >
-          <ResizableBox
-            width={width}
-            height={height}
-            minConstraints={minConstraints}
-            onResize={onResize}
+      <div className='modal-container'>
+        <Draggable handle='.modal-title' position={position} onStop={onStop}>
+          <div
+            {...props}
+            ref={ref}
+            className={classNames(
+              dialogClass,
+              className,
+              size && `${bsPrefix}-${size}`,
+              centered && `${dialogClass}-centered`,
+              scrollable && `${dialogClass}-scrollable`
+            )}
           >
-            <div className={`${bsPrefix}-content`}>{children}</div>
-          </ResizableBox>
-        </div>
-      </Draggable>
+            <ResizableBox
+              width={width}
+              height={height}
+              minConstraints={minConstraints}
+              onResize={onResize}
+            >
+              <div className={`${bsPrefix}-content`}>{children}</div>
+            </ResizableBox>
+          </div>
+        </Draggable>
+      </div>
     )
   }
 )
