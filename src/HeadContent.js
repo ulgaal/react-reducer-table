@@ -30,29 +30,36 @@ const HeadContent = props => {
   const { order, name } = decode(sort)
 
   const handleDragStart = useCallback(event => {
-    event.dataTransfer.setData('text/plain', event.target.dataset.id)
+    const th = event.target.closest('.rrt-th')
+    const id = th.dataset.id
+    event.dataTransfer.setDragImage(th, 0, 0)
+    event.dataTransfer.setData('text/plain', id)
   }, [])
-  const handleDragOver = useCallback(event => {
-    event.preventDefault()
-    event.dataTransfer.dropEffect = 'move'
-  }, [])
+  const handleDragOver = useCallback(
+    event => {
+      event.preventDefault()
+      event.dataTransfer.dropEffect = 'move'
+    },
+    [columns]
+  )
   const handleDrop = useCallback(
     event => {
+      const allColumns = state.columns
       const ida = event.target.closest('.rrt-th').dataset.id
       const idb = event.dataTransfer.getData('text/plain')
-      if (ida !== idb) {
+      if (ida !== idb && columns.findIndex(({ id }) => id === idb) !== -1) {
         // console.log('handleDrop', { ida, idb })
-        const newColumns = [...columns]
-        const ixa = columns.findIndex(({ id }) => id === ida)
-        const ixb = columns.findIndex(({ id }) => id === idb)
-        newColumns[ixa] = columns[ixb]
-        newColumns[ixb] = columns[ixa]
+        const newColumns = [...allColumns]
+        const ixa = allColumns.findIndex(({ id }) => id === ida)
+        const ixb = allColumns.findIndex(({ id }) => id === idb)
+        newColumns[ixa] = allColumns[ixb]
+        newColumns[ixb] = allColumns[ixa]
         dispatch({ type: COLUMN_REORDERING, columns: newColumns })
       }
       event.preventDefault()
       event.stopPropagation()
     },
-    [columns, dispatch]
+    [state.columns, dispatch]
   )
 
   return (
