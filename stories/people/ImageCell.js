@@ -14,10 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import React from 'react'
+import './ImageCell.css'
 
 export const ImageCell = props => {
   const { name, image } = props.row
-  return <img src={image} className='people-img' alt={name} />
+  return <img src={image} className='image-cell' alt={name} />
 }
 
 export const areEqual = (prev, next) => {

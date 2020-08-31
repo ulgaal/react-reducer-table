@@ -6,3 +6,13 @@
 .users-table .rrt-filters .rrt-tr {
   height: 43px;
 }
+.users-table .rrt-tbody-rows .rrt-tr {
+  height: 30px;
+  display: flex;
+  align-items: stretch;
+}
+.users-table .rrt-tbody-rows .rrt-td:not(.selection) {
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
+}

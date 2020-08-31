@@ -54,8 +54,8 @@ const allColumns = [
   {
     id: 'image',
     Cell: ImageCell,
-    minWidth: 20,
-    width: 20,
+    minWidth: 28,
+    width: 28,
     sortable: false,
     resizable: false,
     label: 'Photo',
