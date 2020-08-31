@@ -13,18 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useMemo, useCallback } from 'react'
 import './CountryFilter.css'
-import { TableDispatch } from '../../src'
+import { TableDispatch, Icon } from '../../src'
 import { FiltersContext } from './contexts'
 import { FILTERING } from './peopleReducer'
-import Select from './Select'
-
-const customStyles = {
-  input: () => ({
-    height: 20
-  })
-}
 
 const CountryFilter = props => {
   const { filter, countries } = useContext(FiltersContext)
@@ -37,19 +30,35 @@ const CountryFilter = props => {
       })),
     [countries]
   )
+  const handleChange = useCallback(event => {
+    const value = event.target.value
+    if (value !== -1) {
+      dispatch({ type: FILTERING, filter: value })
+    }
+  }, [])
+  const selectedValue =
+    filterOptions.find(({ value }) => value === filter) || null
   return (
     <div className='country-filter'>
-      <Select
-        isSearchable
-        isClearable
-        options={filterOptions}
-        value={filterOptions.find(({ value }) => value === filter) || null}
-        onChange={country => {
-          dispatch({ type: FILTERING, filter: country && country.value })
-        }}
-        menuPlacement='auto'
-        styles={customStyles}
-      />
+      <select onChange={handleChange}>
+        <option key='nosel' value={-1}>
+          Select...
+        </option>
+        {filterOptions.map(({ value, label }, index) => (
+          <option key={index} value={value} selected={value === selectedValue}>
+            {label}
+          </option>
+        ))}
+      </select>
+      {selectedValue ? (
+        <Icon
+          icon='cancel'
+          title='Clear'
+          onClick={event => {
+            dispatch({ type: FILTERING, filter: null })
+          }}
+        />
+      ) : null}
     </div>
   )
 }

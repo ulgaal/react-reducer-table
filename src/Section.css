@@ -17,11 +17,11 @@ limitations under the License.
   display: flex;
   flex-direction: column;
   overflow-y: hidden;
-  border: 1px solid gray;
 }
 .rrt-section-stretch {
   flex-grow: 1;
   align-items: stretch;
+  border: 1px solid gray;
 }
 .rrt-section-fixed {
   position: sticky;
@@ -29,6 +29,7 @@ limitations under the License.
   align-items: flex-start;
   flex-shrink: 0;
   overflow-x: hidden;
+  border: 1px solid gray;
 }
 .rrt-section-scrollable {
   flex-shrink: 0;
