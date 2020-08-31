@@ -15,13 +15,14 @@ limitations under the License.
 */
 import React from 'react'
 import { getProperty } from '../../src'
+import './GenericCell.css'
 
 const GenericCell = props => {
   const {
     column: { id },
     row
   } = props
-  return <div className='cell'>{getProperty(row, id)}</div>
+  return <div className='generic-cell'>{getProperty(row, id)}</div>
 }
 
 export const areEqual = (prev, next) => {

@@ -33,7 +33,6 @@ import CountryCell from './CountryCell'
 import GenericCell from './GenericCell'
 import NameFilter from './NameFilter'
 import CountryFilter from './CountryFilter'
-import './Cell.css'
 import './People.css'
 
 export const tableInit = value => {

@@ -35,7 +35,6 @@ import CountryFilter from './CountryFilter'
 import { FiltersContext } from './contexts'
 import { UserControls } from './UserControls'
 import ColumnChooser from './ColumnChooser'
-import './Cell.css'
 import './Users.css'
 
 const allColumns = [

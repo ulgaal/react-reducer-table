@@ -34,7 +34,6 @@ import SellerTip from './SellerTip'
 import ProductTip from './ProductTip'
 import NameFilter from './NameFilter'
 import { FiltersContext } from './contexts'
-import './Cell.css'
 
 export const tableInit = value => {
   // console.log('tableInit', value)

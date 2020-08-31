@@ -1,0 +1,6 @@
+.generic-cell {
+  padding: 1px 5px 1px 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
