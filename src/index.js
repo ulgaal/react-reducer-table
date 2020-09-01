@@ -21,7 +21,8 @@ import {
   SELECTING,
   SORTING,
   VSCROLL,
-  TableDispatch
+  TableDispatch,
+  DefaultCell
 } from './actions'
 import { decode, DESC } from './orders'
 import Icon from './Icon'
@@ -43,5 +44,6 @@ export {
   Icon,
   subst,
   getProperty,
-  ColumnsType
+  ColumnsType,
+  DefaultCell
 }
