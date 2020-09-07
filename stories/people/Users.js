@@ -41,7 +41,7 @@ import AddressTip from './AddressTip'
 import { Storage, MergingConfigProvider, Pinnable } from '@ulgaal/react-infotip'
 import './Users.css'
 
-const allColumns = [
+const columns = [
   {
     id: 'name',
     Cell: NameCell,
@@ -79,7 +79,8 @@ const allColumns = [
   {
     id: 'website',
     Cell: GenericCell,
-    label: 'Web site'
+    label: 'Web site',
+    visible: false
   },
   {
     id: 'email',
@@ -125,7 +126,7 @@ const allColumns = [
 export const tableInit = value => {
   // console.log('tableInit', value)
   return {
-    columns: [...allColumns],
+    columns: [...columns],
     selectedIds: new Set(),
     canDelete: false,
     ...value
@@ -243,9 +244,7 @@ const Users = props => {
                 }}
               />
             </FiltersContext.Provider>
-            {displaySelectColumns ? (
-              <ColumnChooser columns={allColumns} visible={columns} />
-            ) : null}
+            {displaySelectColumns ? <ColumnChooser columns={columns} /> : null}
           </TableDispatch.Provider>
         </Storage>
       </MergingConfigProvider>

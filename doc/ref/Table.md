@@ -130,6 +130,8 @@ The current state of the table, as computed by the reducer
 | width           | `<number>`        | The default width of the column (in pixels)
 | Cell            | `<elementType>`   | The React component to use for cells corresponding to this column
 | Filter          | `<elementType>`   | A React component to use to specify a filter is the column can be filtered
+| fixed           | `<bool>`          | True if the column remains fixed horizontally, false (default) otherwise (fixed columns cannot be preceded by a non-fixed column)
+| visible         | `<bool>`          | True if the column is visible (default), false otherwise
 
 type: `custom`
 

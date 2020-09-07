@@ -74,7 +74,8 @@ const Data = props => {
   })
 
   const { fixedCols, cols, hasFilters, colOrder } = useMemo(() => {
-    const { ids, ...rest } = columns.reduce(
+    const visibleCols = columns.filter(col => col.visible !== false)
+    const { ids, ...rest } = visibleCols.reduce(
       (acc, col) => {
         const { id, fixed, Filter } = col
         const { fixedCols, cols, ids } = acc

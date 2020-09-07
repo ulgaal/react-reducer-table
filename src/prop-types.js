@@ -23,7 +23,9 @@ export const ColumnType = PropTypes.shape({
   minWidth: PropTypes.number,
   width: PropTypes.number,
   Cell: PropTypes.elementType,
-  Filter: PropTypes.elementType
+  Filter: PropTypes.elementType,
+  fixed: PropTypes.bool,
+  visible: PropTypes.bool
 })
 
 export const ColumnsType = PropTypes.arrayOf(ColumnType)
@@ -92,4 +94,4 @@ export const Modes = {
   stretch: 'stretch'
 }
 
-export const ModeType = PropTypes.oneOf(Modes)
+export const ModeType = PropTypes.oneOf(Object.keys(Modes))

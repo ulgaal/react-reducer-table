@@ -33,8 +33,8 @@ const chooserReducer = (state, action) => {
   const { type } = action
   switch (type) {
     case SELECT_COLUMNS: {
-      const { visible } = action
-      return { ...state, visible }
+      const { columns } = action
+      return { ...state, columns }
     }
     case POSITION: {
       const { position } = action
@@ -56,38 +56,41 @@ const ColumnChooser = props => {
   const dispatch = useContext(TableDispatch)
 
   const [state, chooserDispatch] = useReducer(chooserReducer, {
-    columns: props.columns,
-    visible: new Set(props.visible.map(({ id }) => id)),
+    columns: props.columns.map(col => ({ ...col })),
     position: { x: 0, y: 0 },
     size: defaultSize
   })
-  const { columns, visible, position, size } = state
+  const { columns, position, size } = state
+  const visibleCount = columns.reduce((acc, { visible }) => {
+    return acc + visible !== false ? 1 : 0
+  }, 0)
   const showColumn = useCallback(
-    id => {
-      const newVisible = new Set(
-        visible.has(id)
-          ? [...visible].filter(colid => colid !== id)
-          : [...visible, id]
-      )
+    index => {
+      const column = columns[index]
+      const newColumns = [...columns]
+      newColumns[index] = {
+        ...column,
+        visible: column.visible === false
+      }
       chooserDispatch({
         type: SELECT_COLUMNS,
-        visible: newVisible
+        columns: newColumns
       })
     },
-    [visible]
+    [columns]
   )
 
   const handleSelectAll = useCallback(() => {
     chooserDispatch({
       type: SELECT_COLUMNS,
-      visible: new Set(columns.map(({ id }) => id))
+      columns: [...columns.map(col => ({ ...col, visible: true }))]
     })
   }, [columns])
 
   const handleDeselectAll = useCallback(() => {
     chooserDispatch({
       type: SELECT_COLUMNS,
-      visible: new Set()
+      columns: [...columns.map(col => ({ ...col, visible: false }))]
     })
   }, [columns])
 
@@ -132,12 +135,12 @@ const ColumnChooser = props => {
             <Button onClick={handleDeselectAll}>Deselect all</Button>
           </div>
           <div className='column-chooser-cols'>
-            {columns.map(({ id, label }, index) => (
+            {columns.map(({ id, label, visible }, index) => (
               <Form.Check
                 key={index}
-                checked={visible.has(id)}
+                checked={visible !== false}
                 onChange={() => {
-                  showColumn(id)
+                  showColumn(index)
                 }}
                 label={label}
               />
@@ -150,10 +153,10 @@ const ColumnChooser = props => {
           onClick={() => {
             dispatch({
               type: CHOOSE_COLUMNS_OK,
-              columns: columns.filter(({ id }) => visible.has(id))
+              columns
             })
           }}
-          disabled={visible.size === 0}
+          disabled={visibleCount === 0}
         >
           Ok
         </Button>
@@ -168,10 +171,10 @@ const ColumnChooser = props => {
           onClick={() => {
             dispatch({
               type: CHOOSE_COLUMNS_APPLY,
-              columns: columns.filter(({ id }) => visible.has(id))
+              columns
             })
           }}
-          disabled={visible.size === 0}
+          disabled={visibleCount === 0}
         >
           Apply
         </Button>
