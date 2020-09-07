@@ -18,7 +18,8 @@ import React, {
   useEffect,
   useReducer,
   useMemo,
-  useContext
+  useContext,
+  useCallback
 } from 'react'
 import { Table, TableDispatch } from '../../src'
 import { ServerContext } from '../decorators'
@@ -30,11 +31,14 @@ import ImageCell from './ImageCell'
 import NameCell from './NameCell'
 import CountryCell from './CountryCell'
 import GenericCell from './GenericCell'
+import AddressCell from './AddressCell'
 import NameFilter from './NameFilter'
 import CountryFilter from './CountryFilter'
 import { FiltersContext } from './contexts'
 import { UserControls } from './UserControls'
 import ColumnChooser from './ColumnChooser'
+import AddressTip from './AddressTip'
+import { Storage, MergingConfigProvider, Pinnable } from '@ulgaal/react-infotip'
 import './Users.css'
 
 const allColumns = [
@@ -89,7 +93,7 @@ const allColumns = [
   },
   {
     id: 'address.street',
-    Cell: GenericCell,
+    Cell: AddressCell,
     label: 'Street'
   },
   {
@@ -145,7 +149,8 @@ const Users = props => {
     sort: '+name',
     filter: null,
     query: '',
-    displaySelectColumns: false
+    displaySelectColumns: false,
+    tips: []
   }
   const [state, dispatch] = useReducer(tableReducer, initialArg, tableInit)
   // console.log('Users', props, state)
@@ -156,8 +161,45 @@ const Users = props => {
     sort,
     filter,
     query,
-    displaySelectColumns
+    displaySelectColumns,
+    tips
   } = state
+  const config = useMemo(
+    () => ({
+      position: {
+        container: '.users-table',
+        target: 'mouse',
+        adjust: {
+          method: {
+            flip: [
+              'top-left',
+              'center-left',
+              'bottom-left',
+              'top-right',
+              'bottom-right'
+            ]
+          }
+        }
+      },
+      show: {
+        delay: 200
+      },
+      hide: {
+        delay: 300
+      },
+      wrapper: Pinnable
+    }),
+    []
+  )
+  const { people } = database
+  const handleTip = useCallback(
+    (tipid, pinned) => {
+      const [, id] = /address@(.+)/.exec(tipid) || []
+      const { address } = people[id]
+      return <AddressTip address={address} />
+    },
+    [people]
+  )
 
   useEffect(() => {
     dispatch({ type: RESET, state: tableInit(initialArg) })
@@ -177,32 +219,36 @@ const Users = props => {
 
   return (
     <div className='users-table'>
-      <TableDispatch.Provider value={dispatch}>
-        <FiltersContext.Provider value={filters}>
-          <Table
-            state={state}
-            rowIdAttr='name'
-            labels={{
-              toggle: 'Toggle people selected',
-              toggleAll: 'Toggle all people selected'
-            }}
-            components={{
-              pagination: {
-                type: Pagination,
-                props: {
-                  pageSizes: [10, 20, 30, 50, 100, 200, 300, 500]
-                }
-              },
-              paginationExtra: {
-                type: UserControls
-              }
-            }}
-          />
-        </FiltersContext.Provider>
-        {displaySelectColumns ? (
-          <ColumnChooser columns={allColumns} visible={columns} />
-        ) : null}
-      </TableDispatch.Provider>
+      <MergingConfigProvider value={config}>
+        <Storage tips={tips} tip={handleTip}>
+          <TableDispatch.Provider value={dispatch}>
+            <FiltersContext.Provider value={filters}>
+              <Table
+                state={state}
+                rowIdAttr='name'
+                labels={{
+                  toggle: 'Toggle people selected',
+                  toggleAll: 'Toggle all people selected'
+                }}
+                components={{
+                  pagination: {
+                    type: Pagination,
+                    props: {
+                      pageSizes: [10, 20, 30, 50, 100, 200, 300, 500]
+                    }
+                  },
+                  paginationExtra: {
+                    type: UserControls
+                  }
+                }}
+              />
+            </FiltersContext.Provider>
+            {displaySelectColumns ? (
+              <ColumnChooser columns={allColumns} visible={columns} />
+            ) : null}
+          </TableDispatch.Provider>
+        </Storage>
+      </MergingConfigProvider>
     </div>
   )
 }

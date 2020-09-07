@@ -1,0 +1,7 @@
+.address-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: green;
+  font-weight: 600;
+}

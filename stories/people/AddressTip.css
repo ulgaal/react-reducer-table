@@ -1,0 +1,9 @@
+.address-tip {
+  text-align: left;
+  font-size: 0.7em;
+}
+.address-tip-key {
+  font-weight: bold;
+  margin-right: 10px;
+  vertical-align: top;
+}
