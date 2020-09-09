@@ -17,18 +17,4 @@ limitations under the License.
   padding: 2px 2px;
   font-size: 11px;
   height: 100%;
-  display: flex;
-  align-self: center;
-  justify-content: stretch;
-  align-items: stretch;
-}
-.country-filter select {
-  flex-grow: 1;
-  min-width: 100px;
-}
-.country-filter .rrt-icon {
-  margin-top: 7px;
-}
-.country-filter .rrt-icon:hover line {
-  stroke-width: 4px;
 }
