@@ -86,7 +86,7 @@ const Data = props => {
             colOrder={colOrder}
             overflow={false}
           />
-          <VScroller {...scrollerState} />
+          <VScroller state={scrollerState} />
         </>
       ) : (
         <Section

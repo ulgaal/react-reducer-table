@@ -203,7 +203,7 @@ const Table = props => {
               }`}
             >
               <Data state={state} scrollerState={scrollerState} />
-              <HScroller {...scrollerState} />
+              <HScroller state={scrollerState} />
               {resizerState.resizing ? (
                 <ResizeBar x={resizerState.barX} />
               ) : null}

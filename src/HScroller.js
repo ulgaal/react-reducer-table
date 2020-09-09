@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import React, { useContext, useCallback } from 'react'
+import { ScrollerStateType } from './prop-types'
 import { ScrollerDispatch, HSCROLL } from './scrollerReducer'
 import './HScroller.css'
 
@@ -21,7 +22,9 @@ const margin = 6
 
 const HScroller = props => {
   // console.log('Scroller', props)
-  const { scrolling, scrollLeft, scrollableBody } = props
+  const {
+    state: { scrolling, scrollLeft, scrollableBody }
+  } = props
   const scrollerDispatch = useContext(ScrollerDispatch)
 
   let section = null
@@ -97,6 +100,10 @@ const HScroller = props => {
       />
     </div>
   ) : null
+}
+
+HScroller.propTypes = {
+  state: ScrollerStateType
 }
 
 export default HScroller

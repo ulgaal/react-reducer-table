@@ -15,13 +15,16 @@ limitations under the License.
 */
 import React, { useContext, useCallback } from 'react'
 import { ScrollerDispatch, VSCROLL } from './scrollerReducer'
+import { ScrollerStateType } from './prop-types'
 import './VScroller.css'
 
 const margin = 6
 
 const VScroller = props => {
   // console.log('Scroller', props)
-  const { scrolling, scrollTop, scrollableBody, fixedBody } = props
+  const {
+    state: { scrolling, scrollTop, scrollableBody, fixedBody }
+  } = props
   const scrollerDispatch = useContext(ScrollerDispatch)
 
   let scrollerHeight = 0
@@ -107,6 +110,10 @@ const VScroller = props => {
       </div>
     </div>
   ) : null
+}
+
+VScroller.propTypes = {
+  state: ScrollerStateType
 }
 
 export default VScroller
