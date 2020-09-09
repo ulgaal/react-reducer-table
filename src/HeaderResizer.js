@@ -13,14 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { createContext, useCallback, useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
 import { ColumnType, LayoutType } from './prop-types'
+import {
+  ResizerContext,
+  START_RESIZING,
+  END_RESIZING,
+  RESIZE
+} from './resizerReducer'
 import './HeaderResizer.css'
-
-export const START_RESIZING = 'START_RESIZING'
-export const RESIZE = 'RESIZE'
-export const END_RESIZING = 'END_RESIZING'
-export const ResizerContext = createContext(null)
 
 const HeaderResizer = props => {
   const {
