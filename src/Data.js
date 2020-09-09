@@ -22,15 +22,15 @@ import React, {
   useReducer
 } from 'react'
 import Section from './Section'
-import Scroller from './Scroller'
+import VScroller from './VScroller'
 import { TableStateType, Modes } from './prop-types'
 import './Data.css'
 
 export const ScrollerDispatch = createContext(null)
 export const SCROLLABLE = 'SCROLLABLE'
 export const FIXED = 'FIXED'
-export const RESIZE = 'RESIZE'
-export const SCROLL = 'SCROLL'
+export const VRESIZE = 'VRESIZE'
+export const VSCROLL = 'VSCROLL'
 
 const scrollerReducer = (state, action) => {
   // console.log('scrollerReducer', state, action)
@@ -44,11 +44,11 @@ const scrollerReducer = (state, action) => {
       const { fixedBody } = action
       return { ...state, fixedBody }
     }
-    case RESIZE: {
+    case VRESIZE: {
       const { scrollerHeight } = action
       return { ...state, scrollerHeight }
     }
-    case SCROLL: {
+    case VSCROLL: {
       const { scrollTop, scrolling } = action
       return scrolling
         ? { ...state, scrolling, scrollTop }
@@ -135,7 +135,7 @@ const Data = props => {
               colOrder={colOrder}
               overflow={false}
             />
-            <Scroller {...scrollerState} />
+            <VScroller {...scrollerState} />
           </>
         ) : (
           <Section

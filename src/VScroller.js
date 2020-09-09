@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import React, { useContext, useRef, useEffect, useCallback } from 'react'
-import { ScrollerDispatch, RESIZE, SCROLL } from './Data'
-import './Scroller.css'
+import { ScrollerDispatch, VRESIZE, VSCROLL } from './Data'
+import './VScroller.css'
 
 const margin = 6
 
-const Scroller = props => {
+const VScroller = props => {
   // console.log('Scroller', props)
   const {
     scrolling,
@@ -37,7 +37,7 @@ const Scroller = props => {
     if (current) {
       const { height } = current.getBoundingClientRect()
       if (height !== scrollerHeight) {
-        scrollerDispatch({ type: RESIZE, scrollerHeight: height })
+        scrollerDispatch({ type: VRESIZE, scrollerHeight: height })
       }
     }
   })
@@ -73,7 +73,7 @@ const Scroller = props => {
           scrollerHeight_ - thumbHeight
         )
         scrollerDispatch({
-          type: SCROLL,
+          type: VSCROLL,
           scrolling: true,
           scrollTop: top1
         })
@@ -87,7 +87,7 @@ const Scroller = props => {
         event.stopPropagation()
         window.removeEventListener('mousemove', handlers.handleMouseMove, true)
         scrollerDispatch({
-          type: SCROLL,
+          type: VSCROLL,
           scrolling: false
         })
       }
@@ -124,4 +124,4 @@ const Scroller = props => {
   ) : null
 }
 
-export default Scroller
+export default VScroller
