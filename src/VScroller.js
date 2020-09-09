@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import React, { useContext, useRef, useEffect, useCallback } from 'react'
-import { ScrollerDispatch, VRESIZE, VSCROLL } from './Data'
+import { ScrollerDispatch, VRESIZE, VSCROLL } from './scrollerReducer'
 import './VScroller.css'
 
 const margin = 6
@@ -78,7 +78,6 @@ const VScroller = props => {
           scrollTop: top1
         })
         const newTop = (top1 * rowsHeight) / scrollerHeight_
-        console.log('NEWTOP', newTop)
         fixedBody.scrollTop = newTop
         scrollableBody.scrollTop = newTop
       }

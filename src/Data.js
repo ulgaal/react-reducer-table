@@ -18,7 +18,6 @@ import React, {
   useRef,
   useLayoutEffect,
   useState,
-  createContext,
   useReducer
 } from 'react'
 import Section from './Section'
@@ -26,38 +25,7 @@ import VScroller from './VScroller'
 import { TableStateType, Modes } from './prop-types'
 import './Data.css'
 
-export const ScrollerDispatch = createContext(null)
-export const SCROLLABLE = 'SCROLLABLE'
-export const FIXED = 'FIXED'
-export const VRESIZE = 'VRESIZE'
-export const VSCROLL = 'VSCROLL'
-
-const scrollerReducer = (state, action) => {
-  // console.log('scrollerReducer', state, action)
-  const { type } = action
-  switch (type) {
-    case SCROLLABLE: {
-      const { scrollableBody } = action
-      return { ...state, scrollableBody }
-    }
-    case FIXED: {
-      const { fixedBody } = action
-      return { ...state, fixedBody }
-    }
-    case VRESIZE: {
-      const { scrollerHeight } = action
-      return { ...state, scrollerHeight }
-    }
-    case VSCROLL: {
-      const { scrollTop, scrolling } = action
-      return scrolling
-        ? { ...state, scrolling, scrollTop }
-        : { ...state, scrolling: false }
-    }
-    default:
-      throw new Error(`Unknown action: ${action.type}`)
-  }
-}
+import { scrollerReducer, ScrollerDispatch } from './scrollerReducer'
 
 const Data = props => {
   // console.log('Data', props)
