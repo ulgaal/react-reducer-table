@@ -15,9 +15,16 @@ limitations under the License.
 */
 import React, { useContext, useMemo, useCallback } from 'react'
 import './CountryFilter.css'
-import { TableDispatch, Icon } from '../../src'
+import { TableDispatch } from '../../src'
 import { FiltersContext } from './contexts'
 import { FILTERING } from './peopleReducer'
+import Select from './Select'
+
+const customStyles = {
+  input: () => ({
+    height: 20
+  })
+}
 
 const CountryFilter = props => {
   const { filter, countries } = useContext(FiltersContext)
@@ -30,35 +37,20 @@ const CountryFilter = props => {
       })),
     [countries]
   )
-  const handleChange = useCallback(event => {
-    const value = event.target.value
-    if (value !== -1) {
-      dispatch({ type: FILTERING, filter: value })
-    }
-  }, [])
-  const selectedValue =
-    filterOptions.find(({ value }) => value === filter) || null
+  const handleChange = useCallback(country => {
+    dispatch({ type: FILTERING, filter: country && country.value })
+  })
   return (
     <div className='country-filter'>
-      <select onChange={handleChange}>
-        <option key='nosel' value={-1}>
-          Select...
-        </option>
-        {filterOptions.map(({ value, label }, index) => (
-          <option key={index} value={value} selected={value === selectedValue}>
-            {label}
-          </option>
-        ))}
-      </select>
-      {selectedValue ? (
-        <Icon
-          icon='cancel'
-          title='Clear'
-          onClick={event => {
-            dispatch({ type: FILTERING, filter: null })
-          }}
-        />
-      ) : null}
+      <Select
+        isSearchable
+        isClearable
+        options={filterOptions}
+        value={filterOptions.find(({ value }) => value === filter) || null}
+        onChange={handleChange}
+        menuPlacement='auto'
+        styles={customStyles}
+      />
     </div>
   )
 }

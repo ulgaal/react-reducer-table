@@ -31,36 +31,15 @@ import Data from './Data'
 import Loading from './Loading'
 import Empty from './Empty'
 import ResizeBar from './ResizeBar'
-import { TableDispatch, COLUMN_RESIZING } from './actions'
-import {
-  START_RESIZING,
-  RESIZE,
-  END_RESIZING,
-  ResizerContext
-} from './HeaderResizer'
+import { TableDispatch } from './actions'
+import { resizerReducer, ResizerContext } from './resizerReducer'
+import { scrollerReducer, ScrollerDispatch } from './scrollerReducer'
+import HScroller from './HScroller'
 import './Table.css'
 
 export const ConfigContext = createContext(null)
 
 const styleSheet = stylesheet.createStyleSheet()
-
-const resizerReducer = (state, action) => {
-  switch (action.type) {
-    case START_RESIZING:
-      return { ...state, barX: action.x, resizing: true }
-    case RESIZE:
-      return { ...state, barX: action.x }
-    case END_RESIZING:
-      state.dispatch({
-        type: COLUMN_RESIZING,
-        id: action.id,
-        width: action.width
-      })
-      return { ...state, resizing: false }
-    default:
-      throw new Error(`Unknown action: ${action.type}`)
-  }
-}
 
 /**
  * The `Table` component is the root component for this library.
@@ -201,32 +180,45 @@ const Table = props => {
     dispatch: useContext(TableDispatch)
   })
 
+  const [scrollerState, scrollerDispatch] = useReducer(scrollerReducer, {
+    scrolling: false,
+    scrollableBody: null,
+    fixedBody: null,
+    scrollTop: 0,
+    scrollLeft: 0
+  })
+
   const { loading, data, pageCount, pageIndex } = state
   const {
     components: { pagination }
   } = config
   return (
     <ConfigContext.Provider value={config}>
-      <ResizerContext.Provider value={resizerDispatch}>
-        <div className='rrt-container'>
-          <div
-            className={`rrt-table${
-              resizerState.resizing ? ' rtf-resizing' : ''
-            }`}
-          >
-            <Data state={state} />
-            {resizerState.resizing ? <ResizeBar x={resizerState.barX} /> : null}
-            {loading ? <Loading /> : null}
-            {!loading && (!data || data.length === 0) ? <Empty /> : null}
+      <ScrollerDispatch.Provider value={scrollerDispatch}>
+        <ResizerContext.Provider value={resizerDispatch}>
+          <div className='rrt-container'>
+            <div
+              className={`rrt-table${
+                resizerState.resizing ? ' rtf-resizing' : ''
+              }`}
+            >
+              <Data state={state} scrollerState={scrollerState} />
+              <HScroller state={scrollerState} />
+              {resizerState.resizing ? (
+                <ResizeBar x={resizerState.barX} />
+              ) : null}
+              {loading ? <Loading /> : null}
+              {!loading && (!data || data.length === 0) ? <Empty /> : null}
+            </div>
+            {pageCount !== undefined && pageIndex !== undefined
+              ? React.createElement(pagination.type, {
+                  state,
+                  ...pagination.props
+                })
+              : null}
           </div>
-          {pageCount !== undefined && pageIndex !== undefined
-            ? React.createElement(pagination.type, {
-                state,
-                ...pagination.props
-              })
-            : null}
-        </div>
-      </ResizerContext.Provider>
+        </ResizerContext.Provider>
+      </ScrollerDispatch.Provider>
     </ConfigContext.Provider>
   )
 }

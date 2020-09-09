@@ -13,55 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, {
-  useMemo,
-  useRef,
-  useLayoutEffect,
-  useState,
-  createContext,
-  useReducer
-} from 'react'
+import React, { useMemo, useRef, useLayoutEffect, useState } from 'react'
 import Section from './Section'
-import Scroller from './Scroller'
-import { TableStateType, Modes } from './prop-types'
+import VScroller from './VScroller'
+import { TableStateType, ScrollerStateType, Modes } from './prop-types'
 import './Data.css'
-
-export const ScrollerDispatch = createContext(null)
-export const SCROLLABLE = 'SCROLLABLE'
-export const FIXED = 'FIXED'
-export const RESIZE = 'RESIZE'
-export const SCROLL = 'SCROLL'
-
-const scrollerReducer = (state, action) => {
-  // console.log('scrollerReducer', state, action)
-  const { type } = action
-  switch (type) {
-    case SCROLLABLE: {
-      const { scrollableBody } = action
-      return { ...state, scrollableBody }
-    }
-    case FIXED: {
-      const { fixedBody } = action
-      return { ...state, fixedBody }
-    }
-    case RESIZE: {
-      const { scrollerHeight } = action
-      return { ...state, scrollerHeight }
-    }
-    case SCROLL: {
-      const { scrollTop, scrolling } = action
-      return scrolling
-        ? { ...state, scrolling, scrollTop }
-        : { ...state, scrolling: false }
-    }
-    default:
-      throw new Error(`Unknown action: ${action.type}`)
-  }
-}
 
 const Data = props => {
   // console.log('Data', props)
-  const { state } = props
+  const { state, scrollerState } = props
 
   const { columns } = state
 
@@ -106,54 +66,45 @@ const Data = props => {
   }, [columns])
 
   const hasFixedCols = fixedCols.length > 0
-  const [scrollerState, dispatch] = useReducer(scrollerReducer, {
-    scrolling: false,
-    scrollTop: 0,
-    scrollerHeight: 0,
-    bodyHeight: 0,
-    rowsHeight: 0
-  })
-
   return (
     <div className='rrt-data' ref={ref}>
-      <ScrollerDispatch.Provider value={dispatch}>
-        {hasFixedCols ? (
-          <>
-            <Section
-              mode={Modes.fixed}
-              state={state}
-              columns={fixedCols}
-              hasFilters={hasFilters}
-              colOrder={colOrder}
-              overflow={false}
-            />
-            <Section
-              mode={Modes.scrollable}
-              state={state}
-              columns={cols}
-              hasFilters={hasFilters}
-              colOrder={colOrder}
-              overflow={false}
-            />
-            <Scroller {...scrollerState} />
-          </>
-        ) : (
+      {hasFixedCols ? (
+        <>
           <Section
-            mode={Modes.stretch}
+            mode={Modes.fixed}
+            state={state}
+            columns={fixedCols}
+            hasFilters={hasFilters}
+            colOrder={colOrder}
+            overflow={false}
+          />
+          <Section
+            mode={Modes.scrollable}
             state={state}
             columns={cols}
             hasFilters={hasFilters}
             colOrder={colOrder}
-            overflow={overflow}
+            overflow={false}
           />
-        )}
-      </ScrollerDispatch.Provider>
+          <VScroller state={scrollerState} />
+        </>
+      ) : (
+        <Section
+          mode={Modes.stretch}
+          state={state}
+          columns={cols}
+          hasFilters={hasFilters}
+          colOrder={colOrder}
+          overflow={overflow}
+        />
+      )}
     </div>
   )
 }
 
 Data.propTypes = {
-  state: TableStateType
+  state: TableStateType,
+  scrollerState: ScrollerStateType
 }
 
 export const areEqual = (prev, next) => {
@@ -162,7 +113,8 @@ export const areEqual = (prev, next) => {
   const areEqual =
     prevState.columns === nextState.columns &&
     prevState.data === nextState.data &&
-    prevState.selectedIds === nextState.selectedIds
+    prevState.selectedIds === nextState.selectedIds &&
+    prev.scrollerState === next.scrollerState
   /* if (!areEqual) {
     console.log('!Data.areEqual')
   } */

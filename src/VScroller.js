@@ -13,37 +13,26 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { useContext, useRef, useEffect, useCallback } from 'react'
-import { ScrollerDispatch, RESIZE, SCROLL } from './Data'
-import './Scroller.css'
+import React, { useContext, useCallback } from 'react'
+import { ScrollerDispatch, VSCROLL } from './scrollerReducer'
+import { ScrollerStateType } from './prop-types'
+import './VScroller.css'
 
 const margin = 6
 
-const Scroller = props => {
+const VScroller = props => {
   // console.log('Scroller', props)
   const {
-    scrolling,
-    scrollerHeight,
-    scrollTop,
-    scrollableBody,
-    fixedBody
+    state: { scrolling, scrollTop, scrollableBody, fixedBody }
   } = props
   const scrollerDispatch = useContext(ScrollerDispatch)
 
-  // Measure the scrollbar
-  const ref = useRef(null)
-  useEffect(() => {
-    const current = ref.current
-    if (current) {
-      const { height } = current.getBoundingClientRect()
-      if (height !== scrollerHeight) {
-        scrollerDispatch({ type: RESIZE, scrollerHeight: height })
-      }
-    }
-  })
+  let scrollerHeight = 0
   let bodyHeight = 0
   let rowsHeight = 0
   if (fixedBody) {
+    scrollerHeight = fixedBody.closest('.rrt-section').getBoundingClientRect()
+      .height
     bodyHeight = fixedBody.getBoundingClientRect().height
     rowsHeight = fixedBody.firstChild.getBoundingClientRect().height
   }
@@ -73,12 +62,11 @@ const Scroller = props => {
           scrollerHeight_ - thumbHeight
         )
         scrollerDispatch({
-          type: SCROLL,
+          type: VSCROLL,
           scrolling: true,
           scrollTop: top1
         })
         const newTop = (top1 * rowsHeight) / scrollerHeight_
-        console.log('NEWTOP', newTop)
         fixedBody.scrollTop = newTop
         scrollableBody.scrollTop = newTop
       }
@@ -87,7 +75,7 @@ const Scroller = props => {
         event.stopPropagation()
         window.removeEventListener('mousemove', handlers.handleMouseMove, true)
         scrollerDispatch({
-          type: SCROLL,
+          type: VSCROLL,
           scrolling: false
         })
       }
@@ -105,7 +93,7 @@ const Scroller = props => {
     ]
   )
   return visible ? (
-    <div className='rrt-vscroller' ref={ref} onMouseDown={handleMouseDown}>
+    <div className='rrt-vscroller' onMouseDown={handleMouseDown}>
       <div
         className='rrt-vscroller-bar'
         style={{ height: `${bodyHeight}px`, marginTop: `${barTop}px` }}
@@ -124,4 +112,8 @@ const Scroller = props => {
   ) : null
 }
 
-export default Scroller
+VScroller.propTypes = {
+  state: ScrollerStateType
+}
+
+export default VScroller
