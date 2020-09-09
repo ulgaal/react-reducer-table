@@ -21,13 +21,13 @@ import {
   SELECTING,
   SORTING,
   VSCROLL,
-  TableDispatch,
-  DefaultCell
+  TableDispatch
 } from './actions'
 import { decode, DESC } from './orders'
 import Icon from './Icon'
 import { subst, getProperty } from './utils'
 import { ColumnsType } from './prop-types'
+import DefaultCell from './DefaultCell'
 
 export {
   Table,
