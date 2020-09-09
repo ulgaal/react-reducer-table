@@ -13,23 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, {
-  useMemo,
-  useRef,
-  useLayoutEffect,
-  useState,
-  useReducer
-} from 'react'
+import React, { useMemo, useRef, useLayoutEffect, useState } from 'react'
 import Section from './Section'
 import VScroller from './VScroller'
-import { TableStateType, Modes } from './prop-types'
+import { TableStateType, ScrollerStateType, Modes } from './prop-types'
 import './Data.css'
-
-import { scrollerReducer, ScrollerDispatch } from './scrollerReducer'
 
 const Data = props => {
   // console.log('Data', props)
-  const { state } = props
+  const { state, scrollerState } = props
 
   const { columns } = state
 
@@ -74,54 +66,45 @@ const Data = props => {
   }, [columns])
 
   const hasFixedCols = fixedCols.length > 0
-  const [scrollerState, dispatch] = useReducer(scrollerReducer, {
-    scrolling: false,
-    scrollTop: 0,
-    scrollerHeight: 0,
-    bodyHeight: 0,
-    rowsHeight: 0
-  })
-
   return (
     <div className='rrt-data' ref={ref}>
-      <ScrollerDispatch.Provider value={dispatch}>
-        {hasFixedCols ? (
-          <>
-            <Section
-              mode={Modes.fixed}
-              state={state}
-              columns={fixedCols}
-              hasFilters={hasFilters}
-              colOrder={colOrder}
-              overflow={false}
-            />
-            <Section
-              mode={Modes.scrollable}
-              state={state}
-              columns={cols}
-              hasFilters={hasFilters}
-              colOrder={colOrder}
-              overflow={false}
-            />
-            <VScroller {...scrollerState} />
-          </>
-        ) : (
+      {hasFixedCols ? (
+        <>
           <Section
-            mode={Modes.stretch}
+            mode={Modes.fixed}
+            state={state}
+            columns={fixedCols}
+            hasFilters={hasFilters}
+            colOrder={colOrder}
+            overflow={false}
+          />
+          <Section
+            mode={Modes.scrollable}
             state={state}
             columns={cols}
             hasFilters={hasFilters}
             colOrder={colOrder}
-            overflow={overflow}
+            overflow={false}
           />
-        )}
-      </ScrollerDispatch.Provider>
+          <VScroller {...scrollerState} />
+        </>
+      ) : (
+        <Section
+          mode={Modes.stretch}
+          state={state}
+          columns={cols}
+          hasFilters={hasFilters}
+          colOrder={colOrder}
+          overflow={overflow}
+        />
+      )}
     </div>
   )
 }
 
 Data.propTypes = {
-  state: TableStateType
+  state: TableStateType,
+  scrollerState: ScrollerStateType
 }
 
 export const areEqual = (prev, next) => {
@@ -130,7 +113,8 @@ export const areEqual = (prev, next) => {
   const areEqual =
     prevState.columns === nextState.columns &&
     prevState.data === nextState.data &&
-    prevState.selectedIds === nextState.selectedIds
+    prevState.selectedIds === nextState.selectedIds &&
+    prev.scrollerState === next.scrollerState
   /* if (!areEqual) {
     console.log('!Data.areEqual')
   } */

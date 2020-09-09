@@ -13,37 +13,23 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { useContext, useRef, useEffect, useCallback } from 'react'
-import { ScrollerDispatch, VRESIZE, VSCROLL } from './scrollerReducer'
+import React, { useContext, useCallback } from 'react'
+import { ScrollerDispatch, VSCROLL } from './scrollerReducer'
 import './VScroller.css'
 
 const margin = 6
 
 const VScroller = props => {
   // console.log('Scroller', props)
-  const {
-    scrolling,
-    scrollerHeight,
-    scrollTop,
-    scrollableBody,
-    fixedBody
-  } = props
+  const { scrolling, scrollTop, scrollableBody, fixedBody } = props
   const scrollerDispatch = useContext(ScrollerDispatch)
 
-  // Measure the scrollbar
-  const ref = useRef(null)
-  useEffect(() => {
-    const current = ref.current
-    if (current) {
-      const { height } = current.getBoundingClientRect()
-      if (height !== scrollerHeight) {
-        scrollerDispatch({ type: VRESIZE, scrollerHeight: height })
-      }
-    }
-  })
+  let scrollerHeight = 0
   let bodyHeight = 0
   let rowsHeight = 0
   if (fixedBody) {
+    scrollerHeight = fixedBody.closest('.rrt-section').getBoundingClientRect()
+      .height
     bodyHeight = fixedBody.getBoundingClientRect().height
     rowsHeight = fixedBody.firstChild.getBoundingClientRect().height
   }
@@ -104,7 +90,7 @@ const VScroller = props => {
     ]
   )
   return visible ? (
-    <div className='rrt-vscroller' ref={ref} onMouseDown={handleMouseDown}>
+    <div className='rrt-vscroller' onMouseDown={handleMouseDown}>
       <div
         className='rrt-vscroller-bar'
         style={{ height: `${bodyHeight}px`, marginTop: `${barTop}px` }}

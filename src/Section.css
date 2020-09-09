@@ -24,16 +24,15 @@ limitations under the License.
   border: 1px solid gray;
 }
 .rrt-section-fixed {
-  position: sticky;
-  left: 0;
   align-items: flex-start;
   flex-shrink: 0;
   overflow-x: hidden;
   border: 1px solid gray;
 }
 .rrt-section-scrollable {
-  flex-shrink: 0;
+  align-items: flex-start;
+  flex-shrink: 1;
+  min-width: 0;
   flex-grow: 1;
-  align-items: stretch;
-  overflow-x: auto;
+  overflow-x: hidden;
 }

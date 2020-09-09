@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+/* global Element */
 import PropTypes from 'prop-types'
 
 export const ColumnType = PropTypes.shape({
@@ -95,3 +96,18 @@ export const Modes = {
 }
 
 export const ModeType = PropTypes.oneOf(Object.keys(Modes))
+
+const DOMElementType = (props, propName, componentName) => {
+  const value = props[propName]
+  if (value !== null && value instanceof Element === false) {
+    return new Error(`Invalid prop ${propName} supplied to ${componentName}`)
+  }
+}
+
+export const ScrollerStateType = PropTypes.shape({
+  scrolling: PropTypes.bool,
+  scrollableBody: DOMElementType,
+  fixedBody: DOMElementType,
+  scrollTop: PropTypes.number,
+  scrollLeft: PropTypes.number
+})

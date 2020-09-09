@@ -17,8 +17,8 @@ import { createContext } from 'react'
 export const ScrollerDispatch = createContext(null)
 export const SCROLLABLE = 'SCROLLABLE'
 export const FIXED = 'FIXED'
-export const VRESIZE = 'VRESIZE'
 export const VSCROLL = 'VSCROLL'
+export const HSCROLL = 'HSCROLL'
 
 export const scrollerReducer = (state, action) => {
   // console.log('scrollerReducer', state, action)
@@ -32,14 +32,16 @@ export const scrollerReducer = (state, action) => {
       const { fixedBody } = action
       return { ...state, fixedBody }
     }
-    case VRESIZE: {
-      const { scrollerHeight } = action
-      return { ...state, scrollerHeight }
-    }
     case VSCROLL: {
       const { scrollTop, scrolling } = action
       return scrolling
         ? { ...state, scrolling, scrollTop }
+        : { ...state, scrolling: false }
+    }
+    case HSCROLL: {
+      const { scrollLeft, scrolling } = action
+      return scrolling
+        ? { ...state, scrolling, scrollLeft }
         : { ...state, scrolling: false }
     }
     default:
