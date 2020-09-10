@@ -122,6 +122,8 @@ const Table = props => {
     })
   }, [columns])
 
+  // The config stores characteristics of the table
+  // which seldom change during its lifetime
   const config = useMemo(() => {
     return {
       components: {

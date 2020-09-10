@@ -33,6 +33,9 @@ const Data = props => {
     setOverflow(node.scrollHeight > node.clientHeight)
   })
 
+  // Split columns into two sets (fixed and horizontally scrollable)
+  // Determine if there are any filters
+  // Compute the column order
   const { fixedCols, cols, hasFilters, colOrder } = useMemo(() => {
     const visibleCols = columns.filter(col => col.visible !== false)
     const { ids, ...rest } = visibleCols.reduce(
@@ -65,7 +68,36 @@ const Data = props => {
     return { colOrder: ids.join(','), ...rest }
   }, [columns])
 
-  const hasFixedCols = fixedCols.length > 0
+  // If there are fixed columns, the table uses two
+  // sections and a vertical scroller to scroll them in parallel
+  // Otherwise, there is just one section
+  const { hasFixedCols, fixedRange, range } = useMemo(() => {
+    // If there are fixed columns, split the cell range if necessary
+    const hasFixedCols = fixedCols.length > 0
+    let range = null
+    let fixedRange = null
+    if (hasFixedCols && state.cellRange) {
+      const xmid = fixedCols.length
+      const { col: x } = state.cellRange
+      const xmax = x + state.cellRange.width
+      if (xmax <= xmid) {
+        fixedRange = { ...state.cellRange, mode: Modes.stretch }
+      } else if (x >= xmid) {
+        range = { ...state.cellRange, col: x - xmid, mode: Modes.stretch }
+      } else {
+        fixedRange = { ...state.cellRange, width: xmid - x, mode: Modes.fixed }
+        range = {
+          ...state.cellRange,
+          col: 0,
+          width: xmax - xmid,
+          mode: Modes.scrollable
+        }
+      }
+    } else {
+      range = { ...state.cellRange, mode: Modes.stretch }
+    }
+    return { hasFixedCols, range, fixedRange }
+  }, [fixedCols, state.cellRange])
   return (
     <div className='rrt-data' ref={ref}>
       {hasFixedCols ? (
@@ -77,6 +109,7 @@ const Data = props => {
             hasFilters={hasFilters}
             colOrder={colOrder}
             overflow={false}
+            range={fixedRange}
           />
           <Section
             mode={Modes.scrollable}
@@ -85,6 +118,7 @@ const Data = props => {
             hasFilters={hasFilters}
             colOrder={colOrder}
             overflow={false}
+            range={range}
           />
           <VScroller state={scrollerState} />
         </>
@@ -96,6 +130,7 @@ const Data = props => {
           hasFilters={hasFilters}
           colOrder={colOrder}
           overflow={overflow}
+          range={range}
         />
       )}
     </div>

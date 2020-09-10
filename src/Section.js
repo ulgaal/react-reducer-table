@@ -17,11 +17,13 @@ import React from 'react'
 import Head from './Head'
 import Filters from './Filters'
 import Body from './Body'
+import { ModeType, ColumnsType, TableStateType, RangeType } from './prop-types'
+import PropTypes from 'prop-types'
 import './Section.css'
 
 const Section = props => {
   // console.log('Section', props)
-  const { mode, state, columns, overflow, hasFilters, colOrder } = props
+  const { mode, state, columns, overflow, hasFilters, colOrder, range } = props
   return (
     <div className={`rrt-section rrt-section-${mode}`}>
       <Head mode={mode} state={state} columns={columns} overflow={overflow} />
@@ -33,9 +35,24 @@ const Section = props => {
           overflow={overflow}
         />
       ) : null}
-      <Body mode={mode} state={state} columns={columns} colOrder={colOrder} />
+      <Body
+        mode={mode}
+        state={state}
+        columns={columns}
+        colOrder={colOrder}
+        range={range}
+      />
     </div>
   )
 }
 
+Section.propTypes = {
+  mode: ModeType,
+  state: TableStateType,
+  columns: ColumnsType,
+  overflow: PropTypes.bool,
+  hasFilters: PropTypes.bool,
+  colOrder: PropTypes.string,
+  range: RangeType
+}
 export default Section

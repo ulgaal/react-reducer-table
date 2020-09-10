@@ -15,9 +15,8 @@ limitations under the License.
 */
 import React, { useContext, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { TableStateType, LabelsType, ComponentsType } from './prop-types'
+import { TableStateType } from './prop-types'
 import Icon from './Icon'
-import isEqual from 'lodash.isequal'
 import { ConfigContext } from './Table'
 import { TableDispatch, PAGING } from './actions'
 import { subst } from './utils'
