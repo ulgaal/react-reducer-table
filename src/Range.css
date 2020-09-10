@@ -16,18 +16,16 @@ limitations under the License.
 .rrt-range {
   position: absolute;
   user-select: none;
+  pointer-events: none;
   opacity: 0.2;
-  border-top: 1px solid blue;
-  border-bottom: 1px solid blue;
+  border: 1px solid blue;
 }
 .rrt-range-surface {
   background-color: lightskyblue;
 }
-.rrt-range-fixed,
-.rrt-range-stretch {
-  border-left: 1px solid blue;
+.rrt-range.rrt-range-fixed {
+  border-right: none;
 }
-.rrt-range-scrollable,
-.rrt-range-stretch {
-  border-right: 1px solid blue;
+.rrt-range.rrt-range-scrollable {
+  border-left: none;
 }

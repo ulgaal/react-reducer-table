@@ -129,6 +129,12 @@ export const tableInit = value => {
     columns: [...columns],
     selectedIds: new Set(),
     canDelete: false,
+    cellRange: {
+      row: 4,
+      col: 1,
+      width: 3,
+      height: 2
+    },
     ...value
   }
 }

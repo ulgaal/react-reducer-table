@@ -50,7 +50,7 @@ export const RangeType = PropTypes.shape({
   col: PropTypes.number,
   width: PropTypes.number,
   height: PropTypes.number,
-  mode: PropTypes.ModeType
+  split: PropTypes.bool
 })
 
 export const TableStateType = PropTypes.shape({

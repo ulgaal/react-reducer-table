@@ -262,8 +262,8 @@ Table.propTypes = {
    *
    * | Key             | Type              | Description                                         |
    * |-----------------|-------------------|-----------------------------------------------------|
-   * | x               | `<number>`        | The column-index of the leftmost cell in the range
-   * | y               | `<number>`        | The row-index of the topmost cell in the range
+   * | col             | `<number>`        | The column-index of the leftmost cell in the range
+   * | row             | `<number>`        | The row-index of the topmost cell in the range
    * | width           | `<number>`        | The number of columns in the range. If zero, no cell is selected
    * | height          | `<number>`        | The number of rows in the range. If zero, no cell is selected
    */

@@ -47,9 +47,11 @@ const Body = props => {
     },
     [selectedIds, dispatch]
   )
+
   const handleScroll = useCallback(event => {
     dispatch({ type: VSCROLL, scrollTop: event.target.scrollTop })
   }, [])
+
   const ref = useRef(null)
   useEffect(() => {
     const { current } = ref
@@ -94,7 +96,7 @@ const Body = props => {
             />
           )
         })}
-        {range ? <Range range={range} /> : null}
+        {range ? <Range range={range} mode={mode} /> : null}
       </div>
     </div>
   )

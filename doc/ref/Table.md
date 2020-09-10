@@ -15,6 +15,7 @@ The table will trigger the following action to ask the reducer to alter its stat
 | SELECTING   | `<SelectionType>` | Triggered when the user changes the row selection |
 | SORTING   | `<SortType>` | Triggered when the user changes table sorting |
 | VSCROLL | `<VScrollType>` | Triggered when the table body is scrolled vertically |
+| CELL_RANGE | `<CellRangeType>` | Triggered when the user changes the cell range |
 
 `<PagingType>`
 
@@ -117,6 +118,7 @@ The current state of the table, as computed by the reducer
 | selectedIds | `<object>` | a Set of ids currently selected (used only for selection)
 | loading | `<bool>` | True if the table is loading its data
 | scrollTop | `<number>` | The scrolling offset to apply initially to the table body
+| cellRange | `<CellRangeType>` | The range of selected cells. When omitted, cell selection is disabled
 
 `<ColumnType>` is an object, which contains the following keys:
 
@@ -132,6 +134,15 @@ The current state of the table, as computed by the reducer
 | Filter          | `<elementType>`   | A React component to use to specify a filter is the column can be filtered
 | fixed           | `<bool>`          | True if the column remains fixed horizontally, false (default) otherwise (fixed columns cannot be preceded by a non-fixed column)
 | visible         | `<bool>`          | True if the column is visible (default), false otherwise
+
+`<CellRangeType>` is an object, which contains the following keys:
+
+| Key             | Type              | Description                                         |
+|-----------------|-------------------|-----------------------------------------------------|
+| col             | `<number>`        | The column-index of the leftmost cell in the range
+| row             | `<number>`        | The row-index of the topmost cell in the range
+| width           | `<number>`        | The number of columns in the range. If zero, no cell is selected
+| height          | `<number>`        | The number of rows in the range. If zero, no cell is selected
 
 type: `custom`
 

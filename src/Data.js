@@ -13,17 +13,29 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { useMemo, useRef, useLayoutEffect, useState } from 'react'
+import React, {
+  useContext,
+  useCallback,
+  useMemo,
+  useRef,
+  useLayoutEffect,
+  useState
+} from 'react'
 import Section from './Section'
 import VScroller from './VScroller'
 import { TableStateType, ScrollerStateType, Modes } from './prop-types'
+import { ConfigContext } from './Table'
+import { TableDispatch, CELL_RANGE } from './actions'
+import isEqual from 'lodash.isequal'
 import './Data.css'
 
 const Data = props => {
   // console.log('Data', props)
   const { state, scrollerState } = props
+  const { columns, cellRange } = state
 
-  const { columns } = state
+  const dispatch = useContext(TableDispatch)
+  const { rowIdAttr } = useContext(ConfigContext)
 
   // To keep head and body columns align when body Y scroller appears.
   const [overflow, setOverflow] = useState(false)
@@ -76,30 +88,120 @@ const Data = props => {
     const hasFixedCols = fixedCols.length > 0
     let range = null
     let fixedRange = null
-    if (hasFixedCols && state.cellRange) {
+    if (hasFixedCols && cellRange) {
       const xmid = fixedCols.length
-      const { col: x } = state.cellRange
-      const xmax = x + state.cellRange.width
+      const { col: x } = cellRange
+      const xmax = x + cellRange.width
       if (xmax <= xmid) {
-        fixedRange = { ...state.cellRange, mode: Modes.stretch }
+        fixedRange = { ...cellRange, split: false }
       } else if (x >= xmid) {
-        range = { ...state.cellRange, col: x - xmid, mode: Modes.stretch }
+        range = { ...cellRange, col: x - xmid, split: false }
       } else {
-        fixedRange = { ...state.cellRange, width: xmid - x, mode: Modes.fixed }
+        fixedRange = { ...cellRange, width: xmid - x, split: true }
         range = {
-          ...state.cellRange,
+          ...cellRange,
           col: 0,
           width: xmax - xmid,
-          mode: Modes.scrollable
+          split: true
         }
       }
     } else {
-      range = { ...state.cellRange, mode: Modes.stretch }
+      range = { ...cellRange, mode: Modes.stretch }
     }
     return { hasFixedCols, range, fixedRange }
-  }, [fixedCols, state.cellRange])
+  }, [fixedCols, cellRange])
+
+  const handleRange = useCallback(
+    event => {
+      console.log('handleRange', event)
+      if (cellRange) {
+        // Process events only if there is a call range
+        const getPosition = event => {
+          const cellElement = event.target.closest('.rrt-td')
+          if (!cellElement) {
+            return null
+          }
+          const rowElement = cellElement.parentNode
+          const rowsElement = rowElement.parentNode
+          const section = rowElement.closest('.rrt-section-scrollable')
+          const xmid = fixedCols.length
+          const dx = rowIdAttr ? 1 : 0
+          const row = Array.prototype.indexOf.call(
+            rowsElement.childNodes,
+            rowElement
+          )
+          const col = Array.prototype.indexOf.call(
+            rowElement.childNodes,
+            cellElement
+          )
+          return {
+            row,
+            col: section ? xmid + col : col - dx
+          }
+        }
+        const createRange = (pos1, pos2) => {
+          const col = Math.min(pos1.col, pos2.col)
+          const row = Math.min(pos1.row, pos2.row)
+          return {
+            col,
+            row,
+            width: Math.max(pos1.col, pos2.col) - col + 1,
+            height: Math.max(pos1.row, pos2.row) - row + 1
+          }
+        }
+        const pos1 = getPosition(event)
+        if (pos1) {
+          event.stopPropagation()
+          event.preventDefault()
+          // Process events only if a cell has been clicked
+          const range1 = { ...pos1, width: 1, height: 1 }
+          if (!isEqual(range1, cellRange)) {
+            dispatch({
+              type: CELL_RANGE,
+              cellRange: range1
+            })
+          }
+          const handlers = {
+            handleMouseMove: event => {
+              event.stopPropagation()
+              event.preventDefault()
+              const pos2 = getPosition(event)
+              if (pos2 && !isEqual(pos1, pos2)) {
+                const range2 = createRange(pos1, pos2)
+                if (!isEqual(range1, range2)) {
+                  dispatch({
+                    type: CELL_RANGE,
+                    cellRange: range2
+                  })
+                }
+              }
+            },
+            handleMouseUp: event => {
+              event.stopPropagation()
+              event.preventDefault()
+              window.removeEventListener(
+                'mousemove',
+                handlers.handleMouseMove,
+                true
+              )
+              window.removeEventListener(
+                'mouseup',
+                handlers.handleMouseUp,
+                true
+              )
+            }
+          }
+          // Position mouse handlers to create a modal drag loop
+          window.addEventListener('mousemove', handlers.handleMouseMove, true)
+          window.addEventListener('mouseup', handlers.handleMouseUp, true)
+        }
+      }
+    },
+    [cellRange, fixedCols, rowIdAttr]
+  )
+
   return (
-    <div className='rrt-data' ref={ref}>
+    <div className='rrt-data' ref={ref} onMouseDown={handleRange}>
       {hasFixedCols ? (
         <>
           <Section
@@ -149,6 +251,7 @@ export const areEqual = (prev, next) => {
     prevState.columns === nextState.columns &&
     prevState.data === nextState.data &&
     prevState.selectedIds === nextState.selectedIds &&
+    prevState.cellRange === nextState.cellRange &&
     prev.scrollerState === next.scrollerState
   /* if (!areEqual) {
     console.log('!Data.areEqual')
