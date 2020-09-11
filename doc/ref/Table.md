@@ -134,6 +134,7 @@ The current state of the table, as computed by the reducer
 | Filter          | `<elementType>`   | A React component to use to specify a filter is the column can be filtered
 | fixed           | `<bool>`          | True if the column remains fixed horizontally, false (default) otherwise (fixed columns cannot be preceded by a non-fixed column)
 | visible         | `<bool>`          | True if the column is visible (default), false otherwise
+| autoresize      | `<bool>`          | True if the column should autoresize
 
 `<CellRangeType>` is an object, which contains the following keys:
 
