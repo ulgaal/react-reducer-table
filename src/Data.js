@@ -19,23 +19,25 @@ import React, {
   useMemo,
   useRef,
   useLayoutEffect,
-  useState
+  useState,
+  useEffect
 } from 'react'
 import Section from './Section'
 import VScroller from './VScroller'
 import { TableStateType, ScrollerStateType, Modes } from './prop-types'
 import { ConfigContext } from './Table'
-import { TableDispatch, CELL_RANGE } from './actions'
+import { TableDispatch, CELL_RANGE, COLUMN_RESIZING } from './actions'
+import { measureCols } from './utils'
 import isEqual from 'lodash.isequal'
 import './Data.css'
 
 const Data = props => {
   // console.log('Data', props)
   const { state, scrollerState } = props
-  const { columns, cellRange } = state
+  const { data, columns, cellRange } = state
 
   const dispatch = useContext(TableDispatch)
-  const { rowIdAttr } = useContext(ConfigContext)
+  const { rowIdAttr, context } = useContext(ConfigContext)
 
   // To keep head and body columns align when body Y scroller appears.
   const [overflow, setOverflow] = useState(false)
@@ -48,11 +50,17 @@ const Data = props => {
   // Split columns into two sets (fixed and horizontally scrollable)
   // Determine if there are any filters
   // Compute the column order
-  const { fixedCols, cols, hasFilters, colOrder } = useMemo(() => {
+  const {
+    fixedCols,
+    cols,
+    hasFilters,
+    colOrder,
+    hasAutoresizeCols
+  } = useMemo(() => {
     const visibleCols = columns.filter(col => col.visible !== false)
     const { ids, ...rest } = visibleCols.reduce(
       (acc, col) => {
-        const { id, fixed, Filter } = col
+        const { id, fixed, autoresize, Filter } = col
         const { fixedCols, cols, ids } = acc
         ids.push(id)
         if (fixed) {
@@ -68,13 +76,17 @@ const Data = props => {
         if (Filter) {
           acc.hasFilters = true
         }
+        if (autoresize) {
+          acc.hasAutoresizeCols = true
+        }
         return acc
       },
       {
         fixedCols: [],
         cols: [],
         hasFilters: false,
-        ids: []
+        ids: [],
+        hasAutoresizeCols: false
       }
     )
     return { colOrder: ids.join(','), ...rest }
@@ -111,9 +123,10 @@ const Data = props => {
     return { hasFixedCols, range, fixedRange }
   }, [fixedCols, cellRange])
 
+  // Manage range selection by handling mouseDown bubbling on table cells
   const handleRange = useCallback(
     event => {
-      console.log('handleRange', event)
+      // console.log('handleRange', event)
       if (cellRange) {
         // Process events only if there is a call range
         const getPosition = event => {
@@ -199,6 +212,29 @@ const Data = props => {
     },
     [cellRange, fixedCols, rowIdAttr]
   )
+
+  useEffect(() => {
+    // When data changes, perform column autoresize computations
+    const { current } = ref
+    if (current && hasAutoresizeCols && data.length > 0) {
+      const section = current.firstChild
+      const metrics =
+        fixedCols.length > 0
+          ? [
+              ...measureCols(context, fixedCols, section, rowIdAttr),
+              ...measureCols(context, fixedCols, section.nextSibling, '')
+            ]
+          : measureCols(context, cols, section, rowIdAttr)
+      metrics.forEach(metric => {
+        const {
+          column: { id, width }
+        } = metric
+        if (metric.width !== width) {
+          dispatch({ type: COLUMN_RESIZING, id, width: metric.width })
+        }
+      })
+    }
+  }, [data, context, rowIdAttr])
 
   return (
     <div className='rrt-data' ref={ref} onMouseDown={handleRange}>

@@ -21,6 +21,7 @@ import {
   END_RESIZING,
   RESIZE
 } from './resizerReducer'
+import { DEFAULT_MIN_WIDTH } from './Table'
 import './HeaderResizer.css'
 
 const HeaderResizer = props => {
@@ -28,7 +29,7 @@ const HeaderResizer = props => {
     column,
     layout: { rule }
   } = props
-  const { id, minWidth = 80 } = column
+  const { id, minWidth = DEFAULT_MIN_WIDTH } = column
   const dispatch = useContext(ResizerContext)
   const handleMouseDown = useCallback(
     event => {
