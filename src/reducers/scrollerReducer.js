@@ -19,6 +19,7 @@ export const SCROLLABLE = 'SCROLLABLE'
 export const FIXED = 'FIXED'
 export const VSCROLL = 'VSCROLL'
 export const HSCROLL = 'HSCROLL'
+export const INVALIDATE = 'INVALIDATE'
 
 export const scrollerReducer = (state, action) => {
   // console.log('scrollerReducer', state, action)
@@ -43,6 +44,9 @@ export const scrollerReducer = (state, action) => {
       return scrolling
         ? { ...state, scrolling, scrollLeft }
         : { ...state, scrolling: false }
+    }
+    case INVALIDATE: {
+      return { ...state }
     }
     default:
       throw new Error(`Unknown action: ${action.type}`)

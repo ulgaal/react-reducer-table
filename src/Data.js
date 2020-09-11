@@ -29,6 +29,8 @@ import { ConfigContext } from './Table'
 import { TableDispatch, CELL_RANGE, COLUMN_RESIZING } from './actions'
 import { measureCols } from './utils'
 import isEqual from 'lodash.isequal'
+import useResizeObserver from './hooks/useResizeObserver'
+import { ScrollerDispatch, INVALIDATE } from './reducers/scrollerReducer'
 import './Data.css'
 
 const Data = props => {
@@ -38,6 +40,7 @@ const Data = props => {
 
   const dispatch = useContext(TableDispatch)
   const { rowIdAttr, context } = useContext(ConfigContext)
+  const scrollerDispatch = useContext(ScrollerDispatch)
 
   // To keep head and body columns align when body Y scroller appears.
   const [overflow, setOverflow] = useState(false)
@@ -235,6 +238,12 @@ const Data = props => {
       })
     }
   }, [data, context, rowIdAttr])
+
+  const handleResize = useCallback(() => {
+    // If the table resizes, force the scrollers to update
+    scrollerDispatch({ type: INVALIDATE })
+  }, [])
+  useResizeObserver(ref, handleResize)
 
   return (
     <div className='rrt-data' ref={ref} onMouseDown={handleRange}>
