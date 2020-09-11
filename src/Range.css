@@ -13,24 +13,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-.rrt-tbody {
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
+.rrt-range {
+  position: absolute;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.2;
+  border: 1px solid blue;
 }
-.rrt-section-fixed .rrt-tbody,
-.rrt-section-scrollable .rrt-tbody {
-  overflow-y: hidden;
+.rrt-range-surface {
+  background-color: lightskyblue;
 }
-
-/* to customize */
-.rrt-tbody {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 11px;
-  font-style: normal;
-  font-weight: 400;
+.rrt-range.rrt-range-fixed {
+  border-right: none;
 }
-.rrt-tbody-rows {
-  position: relative;
+.rrt-range.rrt-range-scrollable {
+  border-left: none;
 }

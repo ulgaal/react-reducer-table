@@ -21,6 +21,7 @@ import {
   SELECTING,
   SORTING,
   VSCROLL,
+  CELL_RANGE,
   TableDispatch
 } from './actions'
 import { decode, DESC } from './orders'
@@ -38,6 +39,7 @@ export {
   SELECTING,
   SORTING,
   VSCROLL,
+  CELL_RANGE,
   TableDispatch,
   decode,
   DESC,

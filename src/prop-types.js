@@ -38,6 +38,21 @@ export const LayoutType = PropTypes.shape({
 
 export const LayoutsType = PropTypes.objectOf(LayoutType)
 
+export const CellRangeType = PropTypes.shape({
+  row: PropTypes.number,
+  col: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number
+})
+
+export const RangeType = PropTypes.shape({
+  row: PropTypes.number,
+  col: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  split: PropTypes.bool
+})
+
 export const TableStateType = PropTypes.shape({
   data: PropTypes.arrayOf(PropTypes.object),
   columns: PropTypes.arrayOf(ColumnType),
@@ -48,7 +63,8 @@ export const TableStateType = PropTypes.shape({
   loading: PropTypes.bool,
   sort: PropTypes.string,
   selectedIds: PropTypes.object,
-  scrollTop: PropTypes.number
+  scrollTop: PropTypes.number,
+  cellRange: CellRangeType
 })
 
 export const LabelsType = PropTypes.shape({

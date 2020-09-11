@@ -15,10 +15,11 @@ limitations under the License.
 */
 import React, { useContext, useCallback, useRef, useEffect } from 'react'
 import Row from './Row'
+import Range from './Range'
 import { ConfigContext } from './Table'
 import { TableDispatch, SELECTING, VSCROLL } from './actions'
 import PropTypes from 'prop-types'
-import { TableStateType, ColumnsType, Modes } from './prop-types'
+import { TableStateType, ColumnsType, Modes, RangeType } from './prop-types'
 import { SCROLLABLE, FIXED, ScrollerDispatch } from './scrollerReducer'
 import './Body.css'
 
@@ -26,7 +27,7 @@ const Body = props => {
   // console.log('Body', props)
   const { rowIdAttr } = useContext(ConfigContext)
   const scrollerDispatch = useContext(ScrollerDispatch)
-  const { state, columns, colOrder, mode } = props
+  const { state, columns, colOrder, mode, range } = props
   const { data, selectedIds, scrollTop = 0 } = state
   const dispatch = useContext(TableDispatch)
   const handleCellCheckChange = useCallback(
@@ -46,9 +47,11 @@ const Body = props => {
     },
     [selectedIds, dispatch]
   )
+
   const handleScroll = useCallback(event => {
     dispatch({ type: VSCROLL, scrollTop: event.target.scrollTop })
   }, [])
+
   const ref = useRef(null)
   useEffect(() => {
     const { current } = ref
@@ -93,6 +96,7 @@ const Body = props => {
             />
           )
         })}
+        {range ? <Range range={range} mode={mode} /> : null}
       </div>
     </div>
   )
@@ -101,7 +105,8 @@ const Body = props => {
 Body.propTypes = {
   state: TableStateType,
   columns: ColumnsType,
-  colOrder: PropTypes.string
+  colOrder: PropTypes.string,
+  range: RangeType
 }
 
 export const areEqual = (prev, next) => {
@@ -109,6 +114,7 @@ export const areEqual = (prev, next) => {
   const nextState = next.state
   const areEqual =
     prev.colOrder === next.colOrder &&
+    prev.range === next.range &&
     prevState.data === nextState.data &&
     prevState.selectedIds === nextState.selectedIds &&
     prevState.scrollTop === nextState.scrollTop
