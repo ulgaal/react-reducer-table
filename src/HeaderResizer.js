@@ -21,7 +21,7 @@ import {
   START_RESIZING,
   END_RESIZING,
   RESIZE
-} from './resizerReducer'
+} from './reducers/resizerReducer'
 import { DEFAULT_MIN_WIDTH, ConfigContext } from './Table'
 import { measureCols } from './utils'
 import { TableDispatch, COLUMN_RESIZING } from './actions'

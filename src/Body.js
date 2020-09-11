@@ -20,7 +20,7 @@ import { ConfigContext } from './Table'
 import { TableDispatch, SELECTING, VSCROLL } from './actions'
 import PropTypes from 'prop-types'
 import { TableStateType, ColumnsType, Modes, RangeType } from './prop-types'
-import { SCROLLABLE, FIXED, ScrollerDispatch } from './scrollerReducer'
+import { SCROLLABLE, FIXED, ScrollerDispatch } from './reducers/scrollerReducer'
 import './Body.css'
 
 const Body = props => {

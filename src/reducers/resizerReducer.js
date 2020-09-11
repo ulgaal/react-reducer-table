@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import { createContext } from 'react'
-import { COLUMN_RESIZING } from './actions'
+import { COLUMN_RESIZING } from '../actions'
 
 export const START_RESIZING = 'START_RESIZING'
 export const RESIZE = 'RESIZE'

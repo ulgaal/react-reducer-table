@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import React, { useContext, useCallback } from 'react'
-import { ScrollerDispatch, VSCROLL } from './scrollerReducer'
+import { ScrollerDispatch, VSCROLL } from './reducers/scrollerReducer'
 import { ScrollerStateType } from './prop-types'
 import './VScroller.css'
 
