@@ -38,6 +38,7 @@ import HScroller from './HScroller'
 import './Table.css'
 
 export const ConfigContext = createContext(null)
+export const DEFAULT_MIN_WIDTH = 80
 
 const styleSheet = stylesheet.createStyleSheet()
 
@@ -99,7 +100,7 @@ const Table = props => {
   const layouts = useRef(null)
   if (layouts.current === null) {
     layouts.current = columns.reduce((layouts, column) => {
-      const { id, minWidth = 80, width = 250 } = column
+      const { id, minWidth = DEFAULT_MIN_WIDTH, width = 250 } = column
       const className = `rrt-${dataId.current}-${id.replaceAll('.', '_')}`
       layouts[id] = {
         className,
@@ -125,6 +126,9 @@ const Table = props => {
   // The config stores characteristics of the table
   // which seldom change during its lifetime
   const config = useMemo(() => {
+    // Create a canvas to invoke measureText for column autosizing
+    const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')
     return {
       components: {
         header: { type: Header, props: {} },
@@ -172,7 +176,8 @@ const Table = props => {
         ...labels
       },
       layouts: layouts.current,
-      rowIdAttr
+      rowIdAttr,
+      context
     }
   }, [components, labels, layouts.current, rowIdAttr])
 
@@ -257,6 +262,7 @@ Table.propTypes = {
    * | Filter          | `<elementType>`   | A React component to use to specify a filter is the column can be filtered
    * | fixed           | `<bool>`          | True if the column remains fixed horizontally, false (default) otherwise (fixed columns cannot be preceded by a non-fixed column)
    * | visible         | `<bool>`          | True if the column is visible (default), false otherwise
+   * | autoresize      | `<bool>`          | True if the column should autoresize
    *
    * `<CellRangeType>` is an object, which contains the following keys:
    *

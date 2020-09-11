@@ -71,6 +71,7 @@ const HeadContent = props => {
         const shouldFlex = resizable && index === columns.length - 1
         const sorted = sortable && name === id ? order === DESC : undefined
         const props = {
+          index,
           column,
           layout,
           sorted,

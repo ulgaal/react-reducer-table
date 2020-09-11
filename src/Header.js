@@ -24,7 +24,7 @@ import './Header.css'
 
 const Header = props => {
   // console.log('Header', props)
-  const { column, layout, sorted, resizable } = props
+  const { index, column, layout, sorted, resizable } = props
   const { id, label, sortable = true } = column
   const dispatch = useContext(TableDispatch)
 
@@ -52,7 +52,7 @@ const Header = props => {
       </div>
       {resizable ? (
         <div className='rrt-header-resizer'>
-          <HeaderResizer column={column} layout={layout} />
+          <HeaderResizer index={index} column={column} layout={layout} />
         </div>
       ) : null}
     </div>
@@ -60,6 +60,7 @@ const Header = props => {
 }
 
 Header.propTypes = {
+  index: PropTypes.number,
   column: ColumnType,
   layout: LayoutType,
   sorted: PropTypes.bool,
