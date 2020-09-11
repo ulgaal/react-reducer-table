@@ -113,10 +113,15 @@ export const measureCell = params => {
 export const measureCols = (context, cols, section, rowIdAttr) => {
   if (section) {
     const metrics = cols.reduce(
-      (acc, column, index) => {
-        const { autoresize, minWidth = DEFAULT_MIN_WIDTH } = column
+      (acc, column, colIndex) => {
+        const { autoresize, minWidth = DEFAULT_MIN_WIDTH, index } = column
         if (autoresize) {
-          acc.push({ column, index, width: minWidth, context })
+          acc.push({
+            column,
+            index: index !== undefined ? index : colIndex,
+            width: minWidth,
+            context
+          })
         }
         return acc
       },
