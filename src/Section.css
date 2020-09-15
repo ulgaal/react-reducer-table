@@ -27,7 +27,7 @@ limitations under the License.
   align-items: flex-start;
   flex-shrink: 0;
   overflow-x: hidden;
-  border: 1px solid gray;
+  border-right: 3px solid gray;
 }
 .rrt-section-scrollable {
   align-items: flex-start;

@@ -103,25 +103,27 @@ const Data = props => {
     const hasFixedCols = fixedCols.length > 0
     let range = null
     let fixedRange = null
-    if (hasFixedCols && cellRange) {
-      const xmid = fixedCols.length
-      const { col: x } = cellRange
-      const xmax = x + cellRange.width
-      if (xmax <= xmid) {
-        fixedRange = { ...cellRange, split: false }
-      } else if (x >= xmid) {
-        range = { ...cellRange, col: x - xmid, split: false }
-      } else {
-        fixedRange = { ...cellRange, width: xmid - x, split: true }
-        range = {
-          ...cellRange,
-          col: 0,
-          width: xmax - xmid,
-          split: true
+    if (cellRange) {
+      if (hasFixedCols) {
+        const xmid = fixedCols.length
+        const { col: x } = cellRange
+        const xmax = x + cellRange.width
+        if (xmax <= xmid) {
+          fixedRange = { ...cellRange, split: false }
+        } else if (x >= xmid) {
+          range = { ...cellRange, col: x - xmid, split: false }
+        } else {
+          fixedRange = { ...cellRange, width: xmid - x, split: true }
+          range = {
+            ...cellRange,
+            col: 0,
+            width: xmax - xmid,
+            split: true
+          }
         }
+      } else {
+        range = { ...cellRange, mode: Modes.stretch }
       }
-    } else {
-      range = { ...cellRange, mode: Modes.stretch }
     }
     return { hasFixedCols, range, fixedRange }
   }, [fixedCols, cellRange])
@@ -225,7 +227,7 @@ const Data = props => {
         fixedCols.length > 0
           ? [
               ...measureCols(context, fixedCols, section, rowIdAttr),
-              ...measureCols(context, fixedCols, section.nextSibling, '')
+              ...measureCols(context, cols, section.nextSibling, '')
             ]
           : measureCols(context, cols, section, rowIdAttr)
       metrics.forEach(metric => {

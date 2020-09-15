@@ -31,7 +31,9 @@ const HScroller = props => {
   let sectionWidth = 0
   let bodyWidth = 0
   let tableWidth = 0
-  if (scrollableBody) {
+  if (scrollableBody && scrollableBody.isConnected) {
+    // scrollableBody may be temporarily detached
+    // if one hides all previously fixed columns
     section = scrollableBody.closest('.rrt-section')
     sectionWidth = section.getBoundingClientRect().width
     bodyWidth = scrollableBody.getBoundingClientRect().width
