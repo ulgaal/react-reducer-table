@@ -127,3 +127,8 @@ export const ScrollerStateType = PropTypes.shape({
   scrollTop: PropTypes.number,
   scrollLeft: PropTypes.number
 })
+
+export const ResizerStateType = PropTypes.shape({
+  resizing: PropTypes.bool,
+  barX: PropTypes.number
+})

@@ -24,18 +24,24 @@ import React, {
 } from 'react'
 import Section from './Section'
 import VScroller from './VScroller'
-import { TableStateType, ScrollerStateType, Modes } from './prop-types'
+import {
+  TableStateType,
+  ScrollerStateType,
+  ResizerStateType,
+  Modes
+} from './prop-types'
 import { ConfigContext } from './Table'
 import { TableDispatch, CELL_RANGE, COLUMN_RESIZING } from './actions'
 import { measureCols } from './utils'
 import isEqual from 'lodash.isequal'
 import useResizeObserver from './hooks/useResizeObserver'
 import { ScrollerDispatch, INVALIDATE } from './reducers/scrollerReducer'
+import ResizeBar from './ResizeBar'
 import './Data.css'
 
 const Data = props => {
   // console.log('Data', props)
-  const { state, scrollerState } = props
+  const { state, scrollerState, resizerState } = props
   const { data, columns, cellRange } = state
 
   const dispatch = useContext(TableDispatch)
@@ -282,13 +288,15 @@ const Data = props => {
           range={range}
         />
       )}
+      {resizerState.resizing ? <ResizeBar x={resizerState.barX} /> : null}
     </div>
   )
 }
 
 Data.propTypes = {
   state: TableStateType,
-  scrollerState: ScrollerStateType
+  scrollerState: ScrollerStateType,
+  resizerState: ResizerStateType
 }
 
 export const areEqual = (prev, next) => {
@@ -299,7 +307,8 @@ export const areEqual = (prev, next) => {
     prevState.data === nextState.data &&
     prevState.selectedIds === nextState.selectedIds &&
     prevState.cellRange === nextState.cellRange &&
-    prev.scrollerState === next.scrollerState
+    prev.scrollerState === next.scrollerState &&
+    prev.resizerState === next.resizerState
   /* if (!areEqual) {
     console.log('!Data.areEqual')
   } */

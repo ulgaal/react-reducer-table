@@ -30,7 +30,6 @@ import Pagination from './Pagination'
 import Data from './Data'
 import Loading from './Loading'
 import Empty from './Empty'
-import ResizeBar from './ResizeBar'
 import { TableDispatch } from './actions'
 import { resizerReducer, ResizerContext } from './reducers/resizerReducer'
 import { scrollerReducer, ScrollerDispatch } from './reducers/scrollerReducer'
@@ -206,14 +205,15 @@ const Table = props => {
           <div className='rrt-container'>
             <div
               className={`rrt-table${
-                resizerState.resizing ? ' rtf-resizing' : ''
+                resizerState.resizing ? ' rrt-resizing' : ''
               }`}
             >
-              <Data state={state} scrollerState={scrollerState} />
+              <Data
+                state={state}
+                scrollerState={scrollerState}
+                resizerState={resizerState}
+              />
               <HScroller state={scrollerState} />
-              {resizerState.resizing ? (
-                <ResizeBar x={resizerState.barX} />
-              ) : null}
               {loading ? <Loading /> : null}
               {!loading && (!data || data.length === 0) ? <Empty /> : null}
             </div>
