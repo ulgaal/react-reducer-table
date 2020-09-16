@@ -49,7 +49,7 @@ export const ProductTip = props => {
             </td>
           </tr>
           <tr>
-            <td></td>
+            <td />
             <td>
               <button>Buy now</button>
             </td>

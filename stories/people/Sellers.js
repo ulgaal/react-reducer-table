@@ -105,9 +105,9 @@ const Sellers = props => {
       if (kind === 'prd') {
         const [, sellerId, productId] = /(\d+)-(\d+)/.exec(id) || []
         const product = people[sellerId].products[productId]
-        return <ProductTip product={product} />
+        return <ProductTip key={id} product={product} />
       } else if (kind === 'sel') {
-        return <SellerTip seller={people[id]} />
+        return <SellerTip key={id} seller={people[id]} />
       }
     },
     [people]
