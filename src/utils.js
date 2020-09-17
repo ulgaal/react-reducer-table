@@ -53,8 +53,6 @@ export const subst = params => {
 
 /**
  * Default function to measure cells for column autoresizing
- * @param {} params parameters specifying which cell to resize
- *
  * `<PagingType>`
  *
  * | Key        | Type             | Description                                                                        |
@@ -71,6 +69,8 @@ export const subst = params => {
  * | column     | `<ColumnType>`   | The column definition |
  * | index      | `<number>`       | The column index in its section |
  * | context    | `<CanvasRenderingContext2D>` | A canvas 2D context which can be used as a helper |
+ *
+ * @param {object} params parameters specifying which cell to resize
  */
 export const measureCell = params => {
   // console.log('measureCell', params)
