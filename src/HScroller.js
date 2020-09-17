@@ -46,10 +46,24 @@ const HScroller = props => {
 
   const handleMouseDown = useCallback(
     event => {
-      const left0 = scrollLeft
-      const x0 = event.clientX
       event.stopPropagation()
       event.preventDefault()
+      const x0 = event.clientX
+      const inThumb = event.target.closest('.rrt-hscroller-thumb') !== null
+      let left0 = scrollLeft
+      if (!inThumb) {
+        const { left } = event.target
+          .closest('.rrt-hscroller')
+          .getBoundingClientRect()
+        left0 = Math.min(x0 - left, scrollerWidth - thumbWidth)
+        scrollerDispatch({
+          type: HSCROLL,
+          scrolling: true,
+          scrollLeft: left0
+        })
+        const newLeft = (left0 * bodyWidth) / scrollerWidth
+        section.scrollLeft = newLeft
+      }
       const handlers = {}
       // Position mouse handlers to create a modal drag loop
       handlers.handleMouseMove = event => {

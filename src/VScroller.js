@@ -47,10 +47,25 @@ const VScroller = props => {
 
   const handleMouseDown = useCallback(
     event => {
-      const top0 = scrollTop
-      const y0 = event.clientY
       event.stopPropagation()
       event.preventDefault()
+      const y0 = event.clientY
+      const inThumb = event.target.closest('.rrt-vscroller-thumb') !== null
+      let top0 = scrollTop
+      if (!inThumb) {
+        const { top } = event.target
+          .closest('.rrt-vscroller-bar')
+          .getBoundingClientRect()
+        top0 = Math.min(y0 - top, scrollerHeight_ - thumbHeight)
+        scrollerDispatch({
+          type: VSCROLL,
+          scrolling: true,
+          scrollTop: top0
+        })
+        const newTop = (top0 * rowsHeight) / scrollerHeight_
+        fixedBody.scrollTop = newTop
+        scrollableBody.scrollTop = newTop
+      }
       const handlers = {}
       // Position mouse handlers to create a modal drag loop
       handlers.handleMouseMove = event => {
@@ -93,10 +108,11 @@ const VScroller = props => {
     ]
   )
   return visible ? (
-    <div className='rrt-vscroller' onMouseDown={handleMouseDown}>
+    <div className='rrt-vscroller'>
       <div
         className='rrt-vscroller-bar'
         style={{ height: `${bodyHeight}px`, marginTop: `${barTop}px` }}
+        onMouseDown={handleMouseDown}
       >
         <div
           className={`rrt-vscroller-thumb${
