@@ -203,7 +203,7 @@ const Users = props => {
     (tipid, pinned) => {
       const [, id] = /address@(.+)/.exec(tipid) || []
       const { address } = people[id]
-      return <AddressTip address={address} />
+      return <AddressTip key={id} address={address} />
     },
     [people]
   )
