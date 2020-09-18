@@ -8,96 +8,261 @@ distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> React, {
+  useContext,
+  useCallback,
   useMemo,
   useRef,
   useLayoutEffect,
   useState,
   useEffect
 } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
-<span class="hljs-keyword">import</span> Head <span class="hljs-keyword">from</span> <span class="hljs-string">'./Head'</span>
-<span class="hljs-keyword">import</span> Filters <span class="hljs-keyword">from</span> <span class="hljs-string">'./Filters'</span>
-<span class="hljs-keyword">import</span> Body <span class="hljs-keyword">from</span> <span class="hljs-string">'./Body'</span>
-<span class="hljs-keyword">import</span> { useId } <span class="hljs-keyword">from</span> <span class="hljs-string">'./hooks/useId'</span>
-<span class="hljs-keyword">import</span> stylesheet <span class="hljs-keyword">from</span> <span class="hljs-string">'./stylesheet'</span>
+<span class="hljs-keyword">import</span> Section <span class="hljs-keyword">from</span> <span class="hljs-string">'./Section'</span>
+<span class="hljs-keyword">import</span> VScroller <span class="hljs-keyword">from</span> <span class="hljs-string">'./VScroller'</span>
+<span class="hljs-keyword">import</span> {
+  TableStateType,
+  ScrollerStateType,
+  ResizerStateType,
+  Modes
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
+<span class="hljs-keyword">import</span> { ConfigContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'./Table'</span>
+<span class="hljs-keyword">import</span> { TableDispatch, CELL_RANGE, COLUMN_RESIZING } <span class="hljs-keyword">from</span> <span class="hljs-string">'./actions'</span>
+<span class="hljs-keyword">import</span> { measureCols } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
+<span class="hljs-keyword">import</span> isEqual <span class="hljs-keyword">from</span> <span class="hljs-string">'lodash.isequal'</span>
+<span class="hljs-keyword">import</span> useResizeObserver <span class="hljs-keyword">from</span> <span class="hljs-string">'./hooks/useResizeObserver'</span>
+<span class="hljs-keyword">import</span> { ScrollerDispatch, INVALIDATE } <span class="hljs-keyword">from</span> <span class="hljs-string">'./reducers/scrollerReducer'</span>
+<span class="hljs-keyword">import</span> ResizeBar <span class="hljs-keyword">from</span> <span class="hljs-string">'./ResizeBar'</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./Data.css'</span>
-<span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
-<span class="hljs-keyword">import</span> { TableStateType, ComponentsType, LabelsType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
 
-const styleSheet = stylesheet.createStyleSheet()
+const Data = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Data&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { state, scrollerState, resizerState } = props
+  <span class="hljs-keyword">const</span> { data, columns, cellRange } = state
 
-const Data = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Data&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { state, components, rowIdAttr, labels } = props
-
-  <span class="hljs-keyword">const</span> { columns } = state</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Create one rule-set per table instance nad instance creation time</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> dataId = useId()
-  <span class="hljs-keyword">const</span> layouts = useRef(<span class="hljs-literal">null</span>)
-  <span class="hljs-keyword">if</span> (layouts.current === <span class="hljs-literal">null</span>) {
-    layouts.current = columns.reduce((layouts, column) =&gt; {
-      <span class="hljs-keyword">const</span> { id, minWidth = <span class="hljs-number">80</span>, width = <span class="hljs-number">250</span> } = column
-      <span class="hljs-keyword">const</span> className = <span class="hljs-string">`rrt-<span class="hljs-subst">${dataId.current}</span>-<span class="hljs-subst">${id}</span>`</span>
-      layouts[id] = {
-        className,
-        rule: stylesheet.createRule(
-          styleSheet,
-          <span class="hljs-string">`.<span class="hljs-subst">${className}</span> { min-width: <span class="hljs-subst">${minWidth}</span>px; width: <span class="hljs-subst">${width}</span>px; }`</span>
-        )
-      }
-      <span class="hljs-keyword">return</span> layouts
-    }, {})
-  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Update column width if they were externally resized</p></div></div><div class="code"><div class="wrapper">  useEffect(() =&gt; {
-    columns.forEach(({ id, width }) =&gt; {
-      <span class="hljs-keyword">const</span> { style } = layouts.current[id].rule
-      <span class="hljs-keyword">const</span> ruleWidth = <span class="hljs-built_in">parseInt</span>(style.width)
-      <span class="hljs-keyword">if</span> (width &amp;&amp; ruleWidth !== width) {
-        style.width = <span class="hljs-string">`<span class="hljs-subst">${width}</span>px`</span>
-      }
-    })
-  }, [columns])</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>To keep head and body columns align when body Y scroller appears.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> [overflow, setOverflow] = useState(<span class="hljs-literal">false</span>)
+  <span class="hljs-keyword">const</span> dispatch = useContext(TableDispatch)
+  <span class="hljs-keyword">const</span> { rowIdAttr, context } = useContext(ConfigContext)
+  <span class="hljs-keyword">const</span> scrollerDispatch = useContext(ScrollerDispatch)</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>To keep head and body columns align when body Y scroller appears.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> [overflow, setOverflow] = useState(<span class="hljs-literal">false</span>)
   <span class="hljs-keyword">const</span> ref = useRef(<span class="hljs-literal">null</span>)
   useLayoutEffect(() =&gt; {
     <span class="hljs-keyword">const</span> node = ref.current.querySelector(<span class="hljs-string">'.rrt-tbody'</span>)
     setOverflow(node.scrollHeight &gt; node.clientHeight)
-  })
+  })</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Split columns into two sets (fixed and horizontally scrollable)
+Determine if there are any filters
+Compute the column order</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> {
+    fixedCols,
+    cols,
+    hasFilters,
+    colOrder,
+    hasAutoresizeCols
+  } = useMemo(() =&gt; {
+    <span class="hljs-keyword">const</span> visibleCols = columns.filter(col =&gt; col.visible !== <span class="hljs-literal">false</span>)
+    <span class="hljs-keyword">const</span> { ids, ...rest } = visibleCols.reduce(
+      (acc, col) =&gt; {
+        <span class="hljs-keyword">const</span> { id, fixed, autoresize, Filter } = col
+        <span class="hljs-keyword">const</span> { fixedCols, cols, ids } = acc
+        ids.push(id)
+        <span class="hljs-keyword">if</span> (fixed) {
+          <span class="hljs-keyword">if</span> (cols.length) {
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(
+              <span class="hljs-string">`fixed column <span class="hljs-subst">${id}</span> must be declared before non-fixed columns`</span>
+            )
+          }
+          fixedCols.push(col)
+        } <span class="hljs-keyword">else</span> {
+          cols.push(col)
+        }
+        <span class="hljs-keyword">if</span> (Filter) {
+          acc.hasFilters = <span class="hljs-literal">true</span>
+        }
+        <span class="hljs-keyword">if</span> (autoresize) {
+          acc.hasAutoresizeCols = <span class="hljs-literal">true</span>
+        }
+        <span class="hljs-keyword">return</span> acc
+      },
+      {
+        fixedCols: [],
+        cols: [],
+        hasFilters: <span class="hljs-literal">false</span>,
+        ids: [],
+        hasAutoresizeCols: <span class="hljs-literal">false</span>
+      }
+    )
+    <span class="hljs-keyword">return</span> { colOrder: ids.join(<span class="hljs-string">','</span>), ...rest }
+  }, [columns])</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If there are fixed columns, the table uses two
+sections and a vertical scroller to scroll them in parallel
+Otherwise, there is just one section</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { hasFixedCols, fixedRange, range } = useMemo(() =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If there are fixed columns, split the cell range if necessary</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">const</span> hasFixedCols = fixedCols.length &gt; <span class="hljs-number">0</span>
+    <span class="hljs-keyword">let</span> range = <span class="hljs-literal">null</span>
+    <span class="hljs-keyword">let</span> fixedRange = <span class="hljs-literal">null</span>
+    <span class="hljs-keyword">if</span> (cellRange) {
+      <span class="hljs-keyword">if</span> (hasFixedCols) {
+        <span class="hljs-keyword">const</span> xmid = fixedCols.length
+        <span class="hljs-keyword">const</span> { col: x } = cellRange
+        <span class="hljs-keyword">const</span> xmax = x + cellRange.width
+        <span class="hljs-keyword">if</span> (xmax &lt;= xmid) {
+          fixedRange = { ...cellRange, split: <span class="hljs-literal">false</span> }
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (x &gt;= xmid) {
+          range = { ...cellRange, col: x - xmid, split: <span class="hljs-literal">false</span> }
+        } <span class="hljs-keyword">else</span> {
+          fixedRange = { ...cellRange, width: xmid - x, split: <span class="hljs-literal">true</span> }
+          range = {
+            ...cellRange,
+            col: <span class="hljs-number">0</span>,
+            width: xmax - xmid,
+            split: <span class="hljs-literal">true</span>
+          }
+        }
+      } <span class="hljs-keyword">else</span> {
+        range = { ...cellRange, mode: Modes.stretch }
+      }
+    }
+    <span class="hljs-keyword">return</span> { hasFixedCols, range, fixedRange }
+  }, [fixedCols, cellRange])</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Manage range selection by handling mouseDown bubbling on table cells</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> handleRange = useCallback(
+    event =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;handleRange&#39;, event)</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">if</span> (cellRange) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Process events only if there is a call range</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">const</span> getPosition = event =&gt; {
+          <span class="hljs-keyword">const</span> cellElement = event.target.closest(<span class="hljs-string">'.rrt-td'</span>)
+          <span class="hljs-keyword">if</span> (!cellElement) {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>
+          }
+          <span class="hljs-keyword">const</span> rowElement = cellElement.parentNode
+          <span class="hljs-keyword">const</span> rowsElement = rowElement.parentNode
+          <span class="hljs-keyword">const</span> section = rowElement.closest(<span class="hljs-string">'.rrt-section-scrollable'</span>)
+          <span class="hljs-keyword">const</span> xmid = fixedCols.length
+          <span class="hljs-keyword">const</span> dx = rowIdAttr ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>
+          <span class="hljs-keyword">const</span> row = <span class="hljs-built_in">Array</span>.prototype.indexOf.call(
+            rowsElement.childNodes,
+            rowElement
+          )
+          <span class="hljs-keyword">const</span> col = <span class="hljs-built_in">Array</span>.prototype.indexOf.call(
+            rowElement.childNodes,
+            cellElement
+          )
+          <span class="hljs-keyword">return</span> {
+            row,
+            col: section ? xmid + col : col - dx
+          }
+        }
+        <span class="hljs-keyword">const</span> createRange = (pos1, pos2) =&gt; {
+          <span class="hljs-keyword">const</span> col = <span class="hljs-built_in">Math</span>.min(pos1.col, pos2.col)
+          <span class="hljs-keyword">const</span> row = <span class="hljs-built_in">Math</span>.min(pos1.row, pos2.row)
+          <span class="hljs-keyword">return</span> {
+            col,
+            row,
+            width: <span class="hljs-built_in">Math</span>.max(pos1.col, pos2.col) - col + <span class="hljs-number">1</span>,
+            height: <span class="hljs-built_in">Math</span>.max(pos1.row, pos2.row) - row + <span class="hljs-number">1</span>
+          }
+        }
+        <span class="hljs-keyword">const</span> pos1 = getPosition(event)
+        <span class="hljs-keyword">if</span> (pos1) {
+          event.stopPropagation()
+          event.preventDefault()</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Process events only if a cell has been clicked</p></div></div><div class="code"><div class="wrapper">          <span class="hljs-keyword">const</span> range1 = { ...pos1, width: <span class="hljs-number">1</span>, height: <span class="hljs-number">1</span> }
+          <span class="hljs-keyword">if</span> (!isEqual(range1, cellRange)) {
+            dispatch({
+              type: CELL_RANGE,
+              cellRange: range1
+            })
+          }
+          <span class="hljs-keyword">const</span> handlers = {
+            handleMouseMove: event =&gt; {
+              event.stopPropagation()
+              event.preventDefault()
+              <span class="hljs-keyword">const</span> pos2 = getPosition(event)
+              <span class="hljs-keyword">if</span> (pos2 &amp;&amp; !isEqual(pos1, pos2)) {
+                <span class="hljs-keyword">const</span> range2 = createRange(pos1, pos2)
+                <span class="hljs-keyword">if</span> (!isEqual(range1, range2)) {
+                  dispatch({
+                    type: CELL_RANGE,
+                    cellRange: range2
+                  })
+                }
+              }
+            },
+            handleMouseUp: event =&gt; {
+              event.stopPropagation()
+              event.preventDefault()
+              <span class="hljs-built_in">window</span>.removeEventListener(
+                <span class="hljs-string">'mousemove'</span>,
+                handlers.handleMouseMove,
+                <span class="hljs-literal">true</span>
+              )
+              <span class="hljs-built_in">window</span>.removeEventListener(
+                <span class="hljs-string">'mouseup'</span>,
+                handlers.handleMouseUp,
+                <span class="hljs-literal">true</span>
+              )
+            }
+          }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Position mouse handlers to create a modal drag loop</p></div></div><div class="code"><div class="wrapper">          <span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">'mousemove'</span>, handlers.handleMouseMove, <span class="hljs-literal">true</span>)
+          <span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">'mouseup'</span>, handlers.handleMouseUp, <span class="hljs-literal">true</span>)
+        }
+      }
+    },
+    [cellRange, fixedCols, rowIdAttr]
+  )
 
-  <span class="hljs-keyword">const</span> hasFilters = useMemo(() =&gt; columns.some(({ Filter }) =&gt; !!Filter), [
-    columns
-  ])</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Keep track of the order of columns</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> colOrder = useMemo(() =&gt; columns.map(({ id }) =&gt; id).join(<span class="hljs-string">','</span>), [
-    columns
-  ])
+  useEffect(() =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>When data changes, perform column autoresize computations</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">const</span> { current } = ref
+    <span class="hljs-keyword">if</span> (current &amp;&amp; hasAutoresizeCols &amp;&amp; data.length &gt; <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">const</span> section = current.firstChild
+      <span class="hljs-keyword">const</span> metrics =
+        fixedCols.length &gt; <span class="hljs-number">0</span>
+          ? [
+              ...measureCols(context, fixedCols, section, rowIdAttr),
+              ...measureCols(context, cols, section.nextSibling, <span class="hljs-string">''</span>)
+            ]
+          : measureCols(context, cols, section, rowIdAttr)
+      metrics.forEach(metric =&gt; {
+        <span class="hljs-keyword">const</span> {
+          column: { id, width }
+        } = metric
+        <span class="hljs-keyword">if</span> (metric.width !== width) {
+          dispatch({ type: COLUMN_RESIZING, id, width: metric.width })
+        }
+      })
+    }
+  }, [data, context, rowIdAttr])
+
+  <span class="hljs-keyword">const</span> handleResize = useCallback(() =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the table resizes, force the scrollers to update</p></div></div><div class="code"><div class="wrapper">    scrollerDispatch({ type: INVALIDATE })
+  }, [])
+  useResizeObserver(ref, handleResize)
 
   <span class="hljs-keyword">return</span> (
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-data'</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">{ref}</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-title">Head</span>
-        <span class="hljs-attribute">state</span>=<span class="hljs-value">{state}</span>
-        <span class="hljs-attribute">components</span>=<span class="hljs-value">{components}</span>
-        <span class="hljs-attribute">layouts</span>=<span class="hljs-value">{layouts.current}</span>
-        <span class="hljs-attribute">labels</span>=<span class="hljs-value">{labels}</span>
-        <span class="hljs-attribute">rowIdAttr</span>=<span class="hljs-value">{rowIdAttr}</span>
-        <span class="hljs-attribute">overflow</span>=<span class="hljs-value">{overflow}</span>
-      /&gt;</span>
-      {hasFilters ? (
-        <span class="hljs-tag">&lt;<span class="hljs-title">Filters</span>
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-data'</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">{ref}</span> <span class="hljs-attribute">onMouseDown</span>=<span class="hljs-value">{handleRange}</span>&gt;</span>
+      {hasFixedCols ? (
+        <span class="hljs-tag">&lt;&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">Section</span>
+            <span class="hljs-attribute">mode</span>=<span class="hljs-value">{Modes.fixed}</span>
+            <span class="hljs-attribute">state</span>=<span class="hljs-value">{state}</span>
+            <span class="hljs-attribute">columns</span>=<span class="hljs-value">{fixedCols}</span>
+            <span class="hljs-attribute">hasFilters</span>=<span class="hljs-value">{hasFilters}</span>
+            <span class="hljs-attribute">colOrder</span>=<span class="hljs-value">{colOrder}</span>
+            <span class="hljs-attribute">overflow</span>=<span class="hljs-value">{false}</span>
+            <span class="hljs-attribute">range</span>=<span class="hljs-value">{fixedRange}</span>
+          /&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">Section</span>
+            <span class="hljs-attribute">mode</span>=<span class="hljs-value">{Modes.scrollable}</span>
+            <span class="hljs-attribute">state</span>=<span class="hljs-value">{state}</span>
+            <span class="hljs-attribute">columns</span>=<span class="hljs-value">{cols}</span>
+            <span class="hljs-attribute">hasFilters</span>=<span class="hljs-value">{hasFilters}</span>
+            <span class="hljs-attribute">colOrder</span>=<span class="hljs-value">{colOrder}</span>
+            <span class="hljs-attribute">overflow</span>=<span class="hljs-value">{false}</span>
+            <span class="hljs-attribute">range</span>=<span class="hljs-value">{range}</span>
+          /&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">VScroller</span> <span class="hljs-attribute">state</span>=<span class="hljs-value">{scrollerState}</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/&gt;</span>
+      )</span> : (
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Section</span>
+          <span class="hljs-attribute">mode</span>=<span class="hljs-value">{Modes.stretch}</span>
           <span class="hljs-attribute">state</span>=<span class="hljs-value">{state}</span>
-          <span class="hljs-attribute">layouts</span>=<span class="hljs-value">{layouts.current}</span>
-          <span class="hljs-attribute">rowIdAttr</span>=<span class="hljs-value">{rowIdAttr}</span>
+          <span class="hljs-attribute">columns</span>=<span class="hljs-value">{cols}</span>
+          <span class="hljs-attribute">hasFilters</span>=<span class="hljs-value">{hasFilters}</span>
+          <span class="hljs-attribute">colOrder</span>=<span class="hljs-value">{colOrder}</span>
           <span class="hljs-attribute">overflow</span>=<span class="hljs-value">{overflow}</span>
+          <span class="hljs-attribute">range</span>=<span class="hljs-value">{range}</span>
         /&gt;</span>
-      )</span> : <span class="hljs-literal">null</span>}
-      &lt;Body
-        state={state}
-        components={components}
-        layouts={layouts.current}
-        colOrder={colOrder}
-        rowIdAttr={rowIdAttr}
-        labels={labels}
-      /&gt;
-    <span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+      )</span>}
+      {resizerState.resizing ? <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">ResizeBar</span> <span class="hljs-attribute">x</span>=<span class="hljs-value">{resizerState.barX}</span> /&gt;</span> : null}
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
   )</span>
 }
 
 Data.propTypes = {
   state: TableStateType,
-  rowIdAttr: PropTypes.string,
-  components: ComponentsType,
-  labels: LabelsType
+  scrollerState: ScrollerStateType,
+  resizerState: ResizerStateType
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> areEqual = (prev, next) =&gt; {
@@ -106,7 +271,10 @@ Data.propTypes = {
   <span class="hljs-keyword">const</span> areEqual =
     prevState.columns === nextState.columns &amp;&amp;
     prevState.data === nextState.data &amp;&amp;
-    prevState.selectedIds === nextState.selectedIds</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if (!areEqual) {
+    prevState.selectedIds === nextState.selectedIds &amp;&amp;
+    prevState.cellRange === nextState.cellRange &amp;&amp;
+    prev.scrollerState === next.scrollerState &amp;&amp;
+    prev.resizerState === next.resizerState</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if (!areEqual) {
   console.log(&#39;!Data.areEqual&#39;)
 } </p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">return</span> areEqual
 }

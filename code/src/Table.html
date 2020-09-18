@@ -7,42 +7,33 @@ You may obtain a copy of the License at</p>
 distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> React, { useContext, useReducer, useMemo } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> React, {
+  useContext,
+  useEffect,
+  useReducer,
+  useMemo,
+  useRef,
+  createContext
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { useId } <span class="hljs-keyword">from</span> <span class="hljs-string">'./hooks/useId'</span>
+<span class="hljs-keyword">import</span> stylesheet <span class="hljs-keyword">from</span> <span class="hljs-string">'./stylesheet'</span>
 <span class="hljs-keyword">import</span> { TableStateType, LabelsType, ComponentsType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
 <span class="hljs-keyword">import</span> Header <span class="hljs-keyword">from</span> <span class="hljs-string">'./Header'</span>
 <span class="hljs-keyword">import</span> Pagination <span class="hljs-keyword">from</span> <span class="hljs-string">'./Pagination'</span>
 <span class="hljs-keyword">import</span> Data <span class="hljs-keyword">from</span> <span class="hljs-string">'./Data'</span>
 <span class="hljs-keyword">import</span> Loading <span class="hljs-keyword">from</span> <span class="hljs-string">'./Loading'</span>
 <span class="hljs-keyword">import</span> Empty <span class="hljs-keyword">from</span> <span class="hljs-string">'./Empty'</span>
-<span class="hljs-keyword">import</span> ResizeBar <span class="hljs-keyword">from</span> <span class="hljs-string">'./ResizeBar'</span>
-<span class="hljs-keyword">import</span> { TableDispatch, COLUMN_RESIZING } <span class="hljs-keyword">from</span> <span class="hljs-string">'./actions'</span>
-<span class="hljs-keyword">import</span> {
-  START_RESIZING,
-  RESIZE,
-  END_RESIZING,
-  ResizerContext
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./HeaderResizer'</span>
+<span class="hljs-keyword">import</span> { TableDispatch } <span class="hljs-keyword">from</span> <span class="hljs-string">'./actions'</span>
+<span class="hljs-keyword">import</span> { resizerReducer, ResizerContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'./reducers/resizerReducer'</span>
+<span class="hljs-keyword">import</span> { scrollerReducer, ScrollerDispatch } <span class="hljs-keyword">from</span> <span class="hljs-string">'./reducers/scrollerReducer'</span>
+<span class="hljs-keyword">import</span> HScroller <span class="hljs-keyword">from</span> <span class="hljs-string">'./HScroller'</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./Table.css'</span>
 
-const resizerReducer = (state, action) =&gt; {
-  switch (action.type) {
-    case START_RESIZING:
-      return { ...state, barX: action.x, resizing: true }
-    case RESIZE:
-      return { ...state, barX: action.x }
-    case END_RESIZING:
-      state.dispatch({
-        type: COLUMN_RESIZING,
-        id: action.id,
-        width: action.width
-      })
-      return { ...state, resizing: false }
-    default:
-      throw new Error(`Unknown action: ${action.type}<span class="hljs-string">`)
-  }
-}
-</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The <code>Table</code> component is the root component for this library.
+export const ConfigContext = createContext(null)
+export const DEFAULT_MIN_WIDTH = 80
+
+const styleSheet = stylesheet.createStyleSheet()</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The <code>Table</code> component is the root component for this library.
 It receives a reducer state (as a prop) and dispatcher (through the
 <code>TableDispatch</code> React context).</p>
 <p>The table will trigger the following action to ask the reducer to alter its state.</p>
@@ -84,6 +75,11 @@ It receives a reducer state (as a prop) and dispatcher (through the
 <td>VSCROLL</td>
 <td><code>&lt;VScrollType&gt;</code></td>
 <td>Triggered when the table body is scrolled vertically</td>
+</tr>
+<tr>
+<td>CELL_RANGE</td>
+<td><code>&lt;CellRangeType&gt;</code></td>
+<td>Triggered when the user changes the cell range</td>
 </tr>
 </tbody>
 </table>
@@ -176,57 +172,78 @@ It receives a reducer state (as a prop) and dispatcher (through the
 <td>the offset to the top of the table body element</td>
 </tr>
 </tbody>
-</table></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">const</span> Table = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Table&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> {
-    state,
-    rowIdAttr,
-    components: components_ = {},
-    labels: labels_
-  } = props
-
-  <span class="hljs-keyword">const</span> components = useMemo(() =&gt; {
+</table></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">const</span> Table = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Table&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { state, rowIdAttr, components = {}, labels } = props
+  <span class="hljs-keyword">const</span> { columns } = state</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Create one rule-set per table instance at instance creation time</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> dataId = useId()
+  <span class="hljs-keyword">const</span> layouts = useRef(<span class="hljs-literal">null</span>)
+  <span class="hljs-keyword">if</span> (layouts.current === <span class="hljs-literal">null</span>) {
+    layouts.current = columns.reduce((layouts, column) =&gt; {
+      <span class="hljs-keyword">const</span> { id, minWidth = DEFAULT_MIN_WIDTH, width = <span class="hljs-number">250</span> } = column
+      <span class="hljs-keyword">const</span> className = <span class="hljs-string">`rrt-<span class="hljs-subst">${dataId.current}</span>-<span class="hljs-subst">${id.replaceAll('.', '_')}</span>`</span>
+      layouts[id] = {
+        className,
+        rule: stylesheet.createRule(
+          styleSheet,
+          <span class="hljs-string">`.<span class="hljs-subst">${className}</span> { min-width: <span class="hljs-subst">${minWidth}</span>px; width: <span class="hljs-subst">${width}</span>px; }`</span>
+        )
+      }
+      <span class="hljs-keyword">return</span> layouts
+    }, {})
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Update column width if they were externally resized</p></div></div><div class="code"><div class="wrapper">  useEffect(() =&gt; {
+    columns.forEach(({ id, width }) =&gt; {
+      <span class="hljs-keyword">const</span> { style } = layouts.current[id].rule
+      <span class="hljs-keyword">const</span> ruleWidth = <span class="hljs-built_in">parseInt</span>(style.width)
+      <span class="hljs-keyword">if</span> (width &amp;&amp; ruleWidth !== width) {
+        style.width = <span class="hljs-string">`<span class="hljs-subst">${width}</span>px`</span>
+      }
+    })
+  }, [columns])</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The config stores characteristics of the table
+which seldom change during its lifetime</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> config = useMemo(() =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Create a canvas to invoke measureText for column autosizing</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">const</span> canvas = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'canvas'</span>)
+    <span class="hljs-keyword">const</span> context = canvas.getContext(<span class="hljs-string">'2d'</span>)
     <span class="hljs-keyword">return</span> {
-      header: { type: Header, props: {} },
-      tr: { type: <span class="hljs-string">'div'</span>, props: {} },
-      pagination: {
-        type: Pagination,
-        props: {
-          pageSizes: [
-            <span class="hljs-number">10</span>,
-            <span class="hljs-number">20</span>,
-            <span class="hljs-number">30</span>,
-            <span class="hljs-number">40</span>,
-            <span class="hljs-number">50</span>,
-            <span class="hljs-number">60</span>,
-            <span class="hljs-number">70</span>,
-            <span class="hljs-number">80</span>,
-            <span class="hljs-number">90</span>,
-            <span class="hljs-number">100</span>,
-            <span class="hljs-number">200</span>,
-            <span class="hljs-number">300</span>,
-            <span class="hljs-number">400</span>,
-            <span class="hljs-number">500</span>
-          ]
-        }
+      components: {
+        header: { type: Header, props: {} },
+        tr: { type: <span class="hljs-string">'div'</span>, props: {} },
+        pagination: {
+          type: Pagination,
+          props: {
+            pageSizes: [
+              <span class="hljs-number">10</span>,
+              <span class="hljs-number">20</span>,
+              <span class="hljs-number">30</span>,
+              <span class="hljs-number">40</span>,
+              <span class="hljs-number">50</span>,
+              <span class="hljs-number">60</span>,
+              <span class="hljs-number">70</span>,
+              <span class="hljs-number">80</span>,
+              <span class="hljs-number">90</span>,
+              <span class="hljs-number">100</span>,
+              <span class="hljs-number">200</span>,
+              <span class="hljs-number">300</span>,
+              <span class="hljs-number">400</span>,
+              <span class="hljs-number">500</span>
+            ]
+          }
+        },
+        paginationExtra: <span class="hljs-literal">null</span>,
+        ...components
       },
-      paginationExtra: <span class="hljs-literal">null</span>,
-      ...components_
+      labels: {
+        loading: <span class="hljs-string">'Loading...'</span>,
+        noData: <span class="hljs-string">'No rows found'</span>,
+        toggle: <span class="hljs-string">'Toggle people selected'</span>,
+        toggleAll: <span class="hljs-string">'Toggle all people selected'</span>,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>eslint-disable-next-line no-template-curly-in-string</p></div></div><div class="code"><div class="wrapper">        rows: <span class="hljs-string">'${value} rows'</span>,
+        page: <span class="hljs-string">'Page'</span>,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>eslint-disable-next-line no-template-curly-in-string</p></div></div><div class="code"><div class="wrapper">        ofPages: <span class="hljs-string">'of ${pages}'</span>,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>eslint-disable-next-line no-template-curly-in-string</p></div></div><div class="code"><div class="wrapper">        range: <span class="hljs-string">'View ${first}-${last} of ${total}'</span>,
+        firstPage: <span class="hljs-string">'First page'</span>,
+        lastPage: <span class="hljs-string">'Last page'</span>,
+        nextPage: <span class="hljs-string">'Next page'</span>,
+        previousPage: <span class="hljs-string">'Previous page'</span>,
+        ...labels
+      },
+      layouts: layouts.current,
+      rowIdAttr,
+      context
     }
-  }, [components_])
-
-  <span class="hljs-keyword">const</span> labels = useMemo(() =&gt; {
-    <span class="hljs-keyword">return</span> {
-      loading: <span class="hljs-string">'Loading...'</span>,
-      noData: <span class="hljs-string">'No rows found'</span>,
-      toggle: <span class="hljs-string">'Toggle people selected'</span>,
-      toggleAll: <span class="hljs-string">'Toggle all people selected'</span>,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>eslint-disable-next-line no-template-curly-in-string</p></div></div><div class="code"><div class="wrapper">      rows: <span class="hljs-string">'${value} rows'</span>,
-      page: <span class="hljs-string">'Page'</span>,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>eslint-disable-next-line no-template-curly-in-string</p></div></div><div class="code"><div class="wrapper">      ofPages: <span class="hljs-string">'of ${pages}'</span>,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>eslint-disable-next-line no-template-curly-in-string</p></div></div><div class="code"><div class="wrapper">      range: <span class="hljs-string">'View ${first}-${last} of ${total}'</span>,
-      firstPage: <span class="hljs-string">'First page'</span>,
-      lastPage: <span class="hljs-string">'Last page'</span>,
-      nextPage: <span class="hljs-string">'Next page'</span>,
-      previousPage: <span class="hljs-string">'Previous page'</span>,
-      ...labels_
-    }
-  }, [labels_])
+  }, [components, labels, layouts.current, rowIdAttr])
 
   <span class="hljs-keyword">const</span> [resizerState, resizerDispatch] = useReducer(resizerReducer, {
     resizing: <span class="hljs-literal">false</span>,
@@ -234,35 +251,47 @@ It receives a reducer state (as a prop) and dispatcher (through the
     dispatch: useContext(TableDispatch)
   })
 
+  <span class="hljs-keyword">const</span> [scrollerState, scrollerDispatch] = useReducer(scrollerReducer, {
+    scrolling: <span class="hljs-literal">false</span>,
+    scrollableBody: <span class="hljs-literal">null</span>,
+    fixedBody: <span class="hljs-literal">null</span>,
+    scrollTop: <span class="hljs-number">0</span>,
+    scrollLeft: <span class="hljs-number">0</span>
+  })
+
   <span class="hljs-keyword">const</span> { loading, data, pageCount, pageIndex } = state
+  <span class="hljs-keyword">const</span> {
+    components: { pagination }
+  } = config
   <span class="hljs-keyword">return</span> (
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">ResizerContext.Provider</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{resizerDispatch}</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-container'</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">div</span>
-          <span class="hljs-attribute">className</span>=<span class="hljs-value">{`rrt-table${resizerState.resizing</span> ? ' <span class="hljs-attribute">rtf-resizing</span>' <span class="hljs-attribute">:</span> ''}`}
-        &gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-title">Data</span>
-            <span class="hljs-attribute">state</span>=<span class="hljs-value">{state}</span>
-            <span class="hljs-attribute">components</span>=<span class="hljs-value">{components}</span>
-            <span class="hljs-attribute">rowIdAttr</span>=<span class="hljs-value">{rowIdAttr}</span>
-            <span class="hljs-attribute">labels</span>=<span class="hljs-value">{labels}</span>
-          /&gt;</span>
-          {resizerState.resizing ? <span class="hljs-tag">&lt;<span class="hljs-title">ResizeBar</span> <span class="hljs-attribute">x</span>=<span class="hljs-value">{resizerState.barX}</span> /&gt;</span> : null}
-          {loading ? <span class="hljs-tag">&lt;<span class="hljs-title">Loading</span> <span class="hljs-attribute">labels</span>=<span class="hljs-value">{labels}</span> /&gt;</span> : null}
-          {!loading &amp;&amp; (!data || data.length === 0) ? (
-            <span class="hljs-tag">&lt;<span class="hljs-title">Empty</span> <span class="hljs-attribute">title</span>=<span class="hljs-value">{labels.noData}</span> /&gt;</span>
-          )</span> : <span class="hljs-literal">null</span>}
-        &lt;<span class="hljs-regexp">/div&gt;
-        {pageCount !== undefined &amp;&amp; pageIndex !== undefined
-          ? React.createElement(components.pagination.type, {
-              state,
-              components,
-              labels,
-              ...components.pagination.props
-            })
-          : null}
-      &lt;/</span>div&gt;
-    <span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-title">ResizerContext.Provider</span>&gt;</span>
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">ConfigContext.Provider</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{config}</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">ScrollerDispatch.Provider</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{scrollerDispatch}</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ResizerContext.Provider</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{resizerDispatch}</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-container'</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">div</span>
+              <span class="hljs-attribute">className</span>=<span class="hljs-value">{`rrt-table${</span>
+                <span class="hljs-attribute">resizerState.resizing</span> ? ' <span class="hljs-attribute">rrt-resizing</span>' <span class="hljs-attribute">:</span> ''
+              }`}
+            &gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">Data</span>
+                <span class="hljs-attribute">state</span>=<span class="hljs-value">{state}</span>
+                <span class="hljs-attribute">scrollerState</span>=<span class="hljs-value">{scrollerState}</span>
+                <span class="hljs-attribute">resizerState</span>=<span class="hljs-value">{resizerState}</span>
+              /&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">HScroller</span> <span class="hljs-attribute">state</span>=<span class="hljs-value">{scrollerState}</span> /&gt;</span>
+              {loading ? <span class="hljs-tag">&lt;<span class="hljs-title">Loading</span> /&gt;</span> : null}
+              {!loading &amp;&amp; (!data || data.length === 0) ? <span class="hljs-tag">&lt;<span class="hljs-title">Empty</span> /&gt;</span> : null}
+            <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+            {pageCount !== undefined &amp;&amp; pageIndex !== undefined
+              ? React.createElement(pagination.type, {
+                  state,
+                  ...pagination.props
+                })
+              : null}
+          <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">ResizerContext.Provider</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">ScrollerDispatch.Provider</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ConfigContext.Provider</span>&gt;</span>
   )</span>
 }
 
@@ -326,6 +355,11 @@ Table.propTypes = {</div></div></div><div class="segment"><div class="comments "
 <td><code>&lt;number&gt;</code></td>
 <td>The scrolling offset to apply initially to the table body</td>
 </tr>
+<tr>
+<td>cellRange</td>
+<td><code>&lt;CellRangeType&gt;</code></td>
+<td>The range of selected cells. When omitted, cell selection is disabled</td>
+</tr>
 </tbody>
 </table>
 <p><code>&lt;ColumnType&gt;</code> is an object, which contains the following keys:</p>
@@ -377,6 +411,53 @@ Table.propTypes = {</div></div></div><div class="segment"><div class="comments "
 <td>Filter</td>
 <td><code>&lt;elementType&gt;</code></td>
 <td>A React component to use to specify a filter is the column can be filtered</td>
+</tr>
+<tr>
+<td>fixed</td>
+<td><code>&lt;bool&gt;</code></td>
+<td>True if the column remains fixed horizontally, false (default) otherwise (fixed columns cannot be preceded by a non-fixed column)</td>
+</tr>
+<tr>
+<td>visible</td>
+<td><code>&lt;bool&gt;</code></td>
+<td>True if the column is visible (default), false otherwise</td>
+</tr>
+<tr>
+<td>autoresize</td>
+<td><code>&lt;bool&gt;</code></td>
+<td>True if the column should autoresize</td>
+</tr>
+</tbody>
+</table>
+<p><code>&lt;CellRangeType&gt;</code> is an object, which contains the following keys:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>col</td>
+<td><code>&lt;number&gt;</code></td>
+<td>The column-index of the leftmost cell in the range</td>
+</tr>
+<tr>
+<td>row</td>
+<td><code>&lt;number&gt;</code></td>
+<td>The row-index of the topmost cell in the range</td>
+</tr>
+<tr>
+<td>width</td>
+<td><code>&lt;number&gt;</code></td>
+<td>The number of columns in the range. If zero, no cell is selected</td>
+</tr>
+<tr>
+<td>height</td>
+<td><code>&lt;number&gt;</code></td>
+<td>The number of rows in the range. If zero, no cell is selected</td>
 </tr>
 </tbody>
 </table></div></div><div class="code"><div class="wrapper">  state: TableStateType,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Add this property to activate row selection. It specifies

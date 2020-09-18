@@ -7,24 +7,16 @@ You may obtain a copy of the License at</p>
 distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> React, { useContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> { ConfigContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'./Table'</span>
 <span class="hljs-keyword">import</span> CellCheckbox <span class="hljs-keyword">from</span> <span class="hljs-string">'./CellCheckbox'</span>
 <span class="hljs-keyword">import</span> RowContent <span class="hljs-keyword">from</span> <span class="hljs-string">'./RowContent'</span>
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
-<span class="hljs-keyword">import</span> { ColumnsType, LayoutsType, ComponentsType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
+<span class="hljs-keyword">import</span> { ColumnsType, Modes, ModeType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./Row.css'</span>
 
-const Row = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Row&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> {
-    components,
-    row,
-    layouts,
-    colOrder,
-    columns,
-    selected,
-    id,
-    rowIdAttr,
-    labels
-  } = props
+const Row = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Row&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { labels, components, layouts, rowIdAttr } = useContext(ConfigContext)
+  <span class="hljs-keyword">const</span> { row, colOrder, columns, selected, id, mode } = props
   <span class="hljs-keyword">const</span> { tr } = components
   <span class="hljs-keyword">const</span> rowProps = {
     className: <span class="hljs-string">`rrt-tr<span class="hljs-subst">${selected ? ' rtf-selected' : ''}</span>`</span>,
@@ -32,7 +24,7 @@ const Row = props =&gt; {</div></div></div><div class="segment"><div class="comm
     ...tr.props
   }
   <span class="hljs-keyword">return</span> React.createElement(tr.type, rowProps, [
-    rowIdAttr ? (
+    rowIdAttr &amp;&amp; mode !== Modes.scrollable ? (
       <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">'selection'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-td selection'</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">CellCheckbox</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">{id}</span> <span class="hljs-attribute">selected</span>=<span class="hljs-value">{selected}</span> <span class="hljs-attribute">title</span>=<span class="hljs-value">{labels.toggle}</span> /&gt;</span>
       <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
@@ -49,11 +41,10 @@ const Row = props =&gt; {</div></div></div><div class="segment"><div class="comm
 
 Row.propTypes = {
   columns: ColumnsType,
-  layouts: LayoutsType,
   colOrder: PropTypes.string,
-  components: ComponentsType,
   row: PropTypes.object,
-  selected: PropTypes.bool
+  selected: PropTypes.bool,
+  mode: ModeType
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> areEqual = (prev, next) =&gt; {

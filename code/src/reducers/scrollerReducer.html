@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="en"><head><title>src/reducers/scrollerReducer</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="src/reducers/scrollerReducer"><meta name="groc-project-path" content="src/reducers/scrollerReducer.js"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">src/reducers/scrollerReducer.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>Copyright 2020 Ulrich Gaal</p>
+<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<pre><code>http://www.apache.org/licenses/LICENSE-2.0</code></pre>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> { createContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+export const ScrollerDispatch = createContext(null)
+export const SCROLLABLE = <span class="hljs-string">'SCROLLABLE'</span>
+export const FIXED = <span class="hljs-string">'FIXED'</span>
+export const VSCROLL = <span class="hljs-string">'VSCROLL'</span>
+export const HSCROLL = <span class="hljs-string">'HSCROLL'</span>
+export const INVALIDATE = <span class="hljs-string">'INVALIDATE'</span>
+
+export const scrollerReducer = (state, action) =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;scrollerReducer&#39;, state, action)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { type } = action
+  <span class="hljs-keyword">switch</span> (type) {
+    <span class="hljs-keyword">case</span> SCROLLABLE: {
+      <span class="hljs-keyword">const</span> { scrollableBody } = action
+      <span class="hljs-keyword">return</span> { ...state, scrollableBody }
+    }
+    <span class="hljs-keyword">case</span> FIXED: {
+      <span class="hljs-keyword">const</span> { fixedBody } = action
+      <span class="hljs-keyword">return</span> { ...state, fixedBody }
+    }
+    <span class="hljs-keyword">case</span> VSCROLL: {
+      <span class="hljs-keyword">const</span> { scrollTop, scrolling } = action
+      <span class="hljs-keyword">return</span> scrolling
+        ? { ...state, scrolling, scrollTop }
+        : { ...state, scrolling: <span class="hljs-literal">false</span> }
+    }
+    <span class="hljs-keyword">case</span> HSCROLL: {
+      <span class="hljs-keyword">const</span> { scrollLeft, scrolling } = action
+      <span class="hljs-keyword">return</span> scrolling
+        ? { ...state, scrolling, scrollLeft }
+        : { ...state, scrolling: <span class="hljs-literal">false</span> }
+    }
+    <span class="hljs-keyword">case</span> INVALIDATE: {
+      <span class="hljs-keyword">return</span> { ...state }
+    }
+    <span class="hljs-keyword">default</span>:
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`Unknown action: <span class="hljs-subst">${action.type}</span>`</span>)
+  }
+}</div></div></div></div></body></html>

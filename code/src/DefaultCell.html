@@ -8,10 +8,11 @@ distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">'./DefaultCell.css'</span>
 
 const DefaultCell = props =&gt; {
   const { row, column } = props
-  return &lt;div&gt;{row[column.id]}&lt;/div&gt;
+  return &lt;div className=<span class="hljs-string">'rrt-default-cell'</span>&gt;{row[column.id]}&lt;/div&gt;
 }
 
 export const areEqual = (prev, next) =&gt; {

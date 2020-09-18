@@ -7,11 +7,20 @@ You may obtain a copy of the License at</p>
 distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> getProperty = (obj, path, defaultValue = <span class="hljs-literal">null</span>) =&gt;
+limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> { DEFAULT_MIN_WIDTH } <span class="hljs-keyword">from</span> <span class="hljs-string">'./Table'</span></div></div></div><div class="segment"><div class="comments doc-section"><div class="wrapper"><p>Retrieve a property from an object</p>
+<p>Parameters:</p>
+<ul>
+<li><p><strong>obj must be an object.</strong><br/>(The object to query)</p>
+</li>
+<li><p><strong>path must be a string.</strong><br/>(The path the the property)</p>
+</li>
+<li><p><strong>defaultValue must be a *.</strong><br/>(The value to return if the property is not present)</p>
+</li>
+</ul></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> getProperty = (obj, path, defaultValue = <span class="hljs-literal">null</span>) =&gt;
   (path || <span class="hljs-string">''</span>).split(<span class="hljs-string">'.'</span>).reduce((obj, prop, index, array) =&gt; {
     <span class="hljs-keyword">if</span> (obj) {
       <span class="hljs-keyword">const</span> [, key, item] = <span class="hljs-regexp">/([^[]*)(.*)/</span>.exec(prop)
-      <span class="hljs-keyword">if</span> (obj.hasOwnProperty(key)) {
+      <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.prototype.hasOwnProperty.call(obj, key)) {
         <span class="hljs-keyword">if</span> (item) {
           <span class="hljs-keyword">const</span> [, index] = <span class="hljs-regexp">/\[(\d+)\]/</span>.exec(item)
           <span class="hljs-keyword">return</span> obj[key][index]
@@ -28,4 +37,148 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
     <span class="hljs-keyword">return</span> encode ? <span class="hljs-built_in">encodeURIComponent</span>(v) : v
   }
   <span class="hljs-keyword">return</span> tpl.replace(<span class="hljs-regexp">/\${[^}]+}/g</span>, repl(data))
+}</div></div></div><div class="segment"><div class="comments doc-section"><div class="wrapper"><p>Default function to measure cells for column autoresizing
+<code>&lt;PagingType&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>td</td>
+<td><code>&lt;element&gt;</code></td>
+<td>DOM element corresponding to the cell td</td>
+</tr>
+<tr>
+<td>row</td>
+<td><code>&lt;number&gt;</code></td>
+<td>Row index of the cell</td>
+</tr>
+<tr>
+<td>metric</td>
+<td><code>&lt;MetricType&gt;</code></td>
+<td>Metric computed so far for the column</td>
+</tr>
+</tbody>
+</table>
+<p><code>&lt;MetricType&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>width</td>
+<td><code>&lt;number&gt;</code></td>
+<td>The max width of the column, so far. The function should alter this value</td>
+</tr>
+<tr>
+<td>column</td>
+<td><code>&lt;ColumnType&gt;</code></td>
+<td>The column definition</td>
+</tr>
+<tr>
+<td>index</td>
+<td><code>&lt;number&gt;</code></td>
+<td>The column index in its section</td>
+</tr>
+<tr>
+<td>context</td>
+<td><code>&lt;CanvasRenderingContext2D&gt;</code></td>
+<td>A canvas 2D context which can be used as a helper</td>
+</tr>
+</tbody>
+</table>
+<p>Parameters:</p>
+<ul>
+<li><strong>params must be an object.</strong><br/>(parameters specifying which cell to resize)</li>
+</ul></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> measureCell = params =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;measureCell&#39;, params)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { td, metric, row } = params
+  <span class="hljs-keyword">if</span> (td) {
+    <span class="hljs-keyword">const</span> { context } = metric
+    <span class="hljs-keyword">const</span> cell = td.firstChild
+    <span class="hljs-keyword">if</span> (row === <span class="hljs-number">0</span> &amp;&amp; cell) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Retrieve style of the first cell of the column an assume
+all other cells with be styled in the same way</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">const</span> tdStyle = <span class="hljs-built_in">window</span>.getComputedStyle(td)
+      <span class="hljs-keyword">const</span> cellStyle = <span class="hljs-built_in">window</span>.getComputedStyle(cell)
+      <span class="hljs-keyword">const</span> {
+        fontFamily,
+        fontSize,
+        fontWeight,
+        paddingLeft,
+        paddingRight
+      } = tdStyle
+      <span class="hljs-keyword">const</span> { marginLeft, marginRight } = cellStyle
+      metric.dx =
+        <span class="hljs-built_in">parseInt</span>(marginLeft) +
+        <span class="hljs-built_in">parseInt</span>(marginRight) +
+        <span class="hljs-built_in">parseInt</span>(paddingLeft) +
+        <span class="hljs-built_in">parseInt</span>(paddingRight)
+      <span class="hljs-keyword">const</span> font = <span class="hljs-string">`<span class="hljs-subst">${fontWeight}</span> <span class="hljs-subst">${fontSize}</span> <span class="hljs-subst">${fontFamily}</span>`</span>
+      <span class="hljs-keyword">if</span> (context.font !== font) {
+        context.font = font
+      }
+    }
+    <span class="hljs-keyword">if</span> (cell) {
+      <span class="hljs-keyword">const</span> text = cell.textContent</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;text&#39;, text)</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">const</span> { width } = context.measureText(text)
+      metric.width = <span class="hljs-built_in">Math</span>.max(metric.width, width + metric.dx)
+    }
+  }
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> measureCols = (context, cols, section, rowIdAttr) =&gt; {
+  <span class="hljs-keyword">if</span> (section) {
+    <span class="hljs-keyword">const</span> metrics = cols.reduce(
+      (acc, column, colIndex) =&gt; {
+        <span class="hljs-keyword">const</span> { autoresize, minWidth = DEFAULT_MIN_WIDTH, index } = column
+        <span class="hljs-keyword">if</span> (autoresize) {
+          acc.push({
+            column,
+            index: index !== <span class="hljs-literal">undefined</span> ? index : colIndex,
+            width: minWidth,
+            context
+          })
+        }
+        <span class="hljs-keyword">return</span> acc
+      },
+      [],
+      {}
+    )
+    <span class="hljs-keyword">if</span> (metrics.length &gt; <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">const</span> body = section.lastChild
+      <span class="hljs-keyword">if</span> (body) {
+        <span class="hljs-keyword">const</span> rows = body.firstChild
+        <span class="hljs-keyword">if</span> (rows) {
+          <span class="hljs-keyword">const</span> dx = rowIdAttr ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>
+          metrics.forEach(metric =&gt; {
+            <span class="hljs-keyword">const</span> { index } = metric
+            <span class="hljs-built_in">Array</span>.prototype.forEach.call(
+              rows.children,
+              (rowElem, row) =&gt; {
+                <span class="hljs-keyword">if</span> (rowElem) {
+                  <span class="hljs-keyword">const</span> td = rowElem.children[index + dx]
+                  <span class="hljs-keyword">if</span> (td &amp;&amp; td.classList.contains(<span class="hljs-string">'rrt-td'</span>)) {
+                    measureCell({
+                      td,
+                      metric,
+                      row
+                    })
+                  }
+                }
+              },
+              metrics
+            )
+          })
+        }
+      }
+    }
+    <span class="hljs-keyword">return</span> metrics
+  }
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>
 }</div></div></div></div></body></html>
