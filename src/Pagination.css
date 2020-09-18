@@ -26,6 +26,12 @@ limitations under the License.
 .rrt-pagination-info span {
   margin-left: 5px;
 }
+.rrt-pagination-info button .rrt-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .rrt-pagination-input {
   width: 50px;
 }

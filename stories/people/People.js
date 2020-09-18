@@ -26,17 +26,14 @@ import { createDatabase } from './model'
 import { tableReducer, LOADING, RESET } from './peopleReducer'
 import Pagination from './Pagination'
 import { PeopleControls } from './PeopleControls'
-import './People.css'
+import { FiltersContext } from './contexts'
 import ImageCell from './ImageCell'
 import NameCell from './NameCell'
 import CountryCell from './CountryCell'
-import PhoneCell from './PhoneCell'
-import EmailCell from './EmailCell'
+import GenericCell from './GenericCell'
 import NameFilter from './NameFilter'
 import CountryFilter from './CountryFilter'
-import './Cell.css'
-
-export const FiltersContext = React.createContext({ filter: null, query: null })
+import './People.css'
 
 export const tableInit = value => {
   // console.log('tableInit', value)
@@ -51,8 +48,8 @@ export const tableInit = value => {
       {
         id: 'image',
         Cell: ImageCell,
-        minWidth: 20,
-        width: 20,
+        minWidth: 28,
+        width: 28,
         sortable: false,
         resizable: false,
         label: 'Photo'
@@ -65,12 +62,12 @@ export const tableInit = value => {
       },
       {
         id: 'phone',
-        Cell: PhoneCell,
+        Cell: GenericCell,
         label: 'Phone'
       },
       {
         id: 'email',
-        Cell: EmailCell,
+        Cell: GenericCell,
         label: 'E-mail'
       }
     ],

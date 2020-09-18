@@ -26,7 +26,7 @@ limitations under the License.
   text-align: left;
 }
 .simple-table {
-  min-height: 100px;
+  min-height: 150px;
 }
 .people-table {
   min-height: 500px;
@@ -34,6 +34,6 @@ limitations under the License.
 .autosize-table {
   min-height: 250px;
 }
-.autosize-table .rrt-td > div {
-  padding: 5px 10px 5px 10px;
+.autosize-table .rrt-td .rrt-default-cell {
+  white-space: nowrap;
 }

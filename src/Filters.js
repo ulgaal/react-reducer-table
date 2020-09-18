@@ -13,21 +13,24 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React from 'react'
+import React, { useContext } from 'react'
+import { ConfigContext } from './Table'
 import './Filters.css'
 import PropTypes from 'prop-types'
-import { TableStateType, LayoutsType } from './prop-types'
+import { TableStateType, ColumnsType, Modes, ModeType } from './prop-types'
 
 const Filters = props => {
   // console.log('Filters', props)
-  const { layouts, overflow, state, rowIdAttr } = props
-  const { columns } = state
+  const { layouts, rowIdAttr } = useContext(ConfigContext)
+  const { columns, overflow, state, mode } = props
 
   return (
     <div className='rrt-filters'>
       {
         <div className={`rrt-tr${overflow ? ' overflow' : ''}`}>
-          {rowIdAttr ? <div className='rrt-th selection' /> : null}
+          {rowIdAttr && mode !== Modes.scrollable ? (
+            <div className='rrt-th selection' />
+          ) : null}
           {columns.map((column, index) => {
             const { id, Filter, resizable = true } = column
             const layout = layouts[id]
@@ -55,16 +58,14 @@ const Filters = props => {
 
 Filters.propTypes = {
   state: TableStateType,
-  layouts: LayoutsType,
-  rowIdAttr: PropTypes.string,
-  overflow: PropTypes.bool
+  columns: ColumnsType,
+  overflow: PropTypes.bool,
+  mode: ModeType
 }
 
 export const areEqual = (prev, next) => {
-  const prevState = prev.state
-  const nextState = next.state
   const areEqual =
-    prevState.columns === nextState.columns && prev.overflow === next.overflow
+    prev.columns === next.columns && prev.overflow === next.overflow
   /*if (!areEqual) {
     console.log('!Filters.areEqual')
   }*/

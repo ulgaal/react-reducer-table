@@ -20,7 +20,8 @@ import {
   COLUMN_REORDERING,
   COLUMN_RESIZING,
   SELECTING,
-  SORTING
+  SORTING,
+  CELL_RANGE
 } from '../../src'
 
 export const RESET = 'RESET'
@@ -29,23 +30,15 @@ export const END_LOADING = 'END_LOADING'
 export const FILTERING = 'FILTERING'
 export const DELETING = 'DELETING'
 export const QUERYING = 'QUERYING'
+export const CHOOSE_COLUMNS = 'CHOOSE_COLUMNS'
+export const CHOOSE_COLUMNS_OK = 'CHOOSE_COLUMNS_OK'
+export const CHOOSE_COLUMNS_CANCEL = 'CHOOSE_COLUMNS_CANCEL'
+export const CHOOSE_COLUMNS_APPLY = 'CHOOSE_COLUMNS_APPLY'
 
 export const tableReducer = (state, action) => {
-  console.log('tableReducer', state, action)
+  // console.log('tableReducer', state, action)
   const { columns } = state
-  const {
-    type,
-    pageIndex,
-    pageSize,
-    pageCount,
-    selectedIds,
-    sort,
-    filter,
-    query,
-    data,
-    total,
-    dispatch
-  } = action
+  const { type, dispatch } = action
   switch (type) {
     case LOADING: {
       const fetchIdRef = state.fetchIdRef
@@ -54,6 +47,7 @@ export const tableReducer = (state, action) => {
       return { ...state, loading: true }
     }
     case END_LOADING: {
+      const { data, pageCount, total } = action
       return { ...state, loading: false, data, pageCount, total }
     }
     case DELETING: {
@@ -68,31 +62,64 @@ export const tableReducer = (state, action) => {
       getModels({ fetchId, dispatch, state: newState })
       return newState
     }
-    case SORTING:
+    case CELL_RANGE: {
+      const { cellRange } = action
+      return { ...state, cellRange }
+    }
+    case SORTING: {
+      const { sort } = action
       return { ...state, sort }
-    case FILTERING:
+    }
+    case FILTERING: {
+      const { filter } = action
       return { ...state, filter, pageIndex: 0 }
-    case QUERYING:
+    }
+    case QUERYING: {
+      const { query } = action
       return { ...state, query, pageIndex: 0 }
-    case PAGING:
+    }
+    case PAGING: {
+      const { pageIndex, pageSize } = action
       return {
         ...state,
         pageSize,
         pageIndex
       }
-    case COLUMN_REORDERING:
-      return { ...state, columns: action.columns }
-    case COLUMN_RESIZING:
+    }
+    case COLUMN_REORDERING: {
+      const { columns } = action
+      return { ...state, columns }
+    }
+    case COLUMN_RESIZING: {
+      const { id, width } = action
       return {
         ...state,
         columns: columns.map(column =>
-          column.id === action.id ? { ...column, width: action.width } : column
+          column.id === id ? { ...column, width } : column
         )
       }
-    case SELECTING:
+    }
+    case SELECTING: {
+      const { selectedIds } = action
       return { ...state, selectedIds, canDelete: selectedIds.size > 0 }
+    }
     case RESET: {
       return action.state
+    }
+    case CHOOSE_COLUMNS: {
+      return { ...state, displaySelectColumns: true }
+    }
+    case CHOOSE_COLUMNS_OK:
+    case CHOOSE_COLUMNS_APPLY: {
+      const { columns } = action
+      return {
+        ...state,
+        columns,
+        displaySelectColumns: type === CHOOSE_COLUMNS_APPLY
+      }
+    }
+    case CHOOSE_COLUMNS_CANCEL: {
+      return { ...state, displaySelectColumns: false }
     }
     default:
       return state

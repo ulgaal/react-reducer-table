@@ -28,13 +28,12 @@ import { createDatabase } from './model'
 import { tableReducer, LOADING, RESET } from './peopleReducer'
 import './Sellers.css'
 import SellerCell from './SellerCell'
-import PhoneCell from './PhoneCell'
+import GenericCell from './GenericCell'
 import ProductsCell from './ProductsCell'
 import SellerTip from './SellerTip'
 import ProductTip from './ProductTip'
 import NameFilter from './NameFilter'
-import { FiltersContext } from './People'
-import './Cell.css'
+import { FiltersContext } from './contexts'
 
 export const tableInit = value => {
   // console.log('tableInit', value)
@@ -48,7 +47,7 @@ export const tableInit = value => {
       },
       {
         id: 'phone',
-        Cell: PhoneCell,
+        Cell: GenericCell,
         label: 'Phone'
       },
       {
@@ -106,9 +105,9 @@ const Sellers = props => {
       if (kind === 'prd') {
         const [, sellerId, productId] = /(\d+)-(\d+)/.exec(id) || []
         const product = people[sellerId].products[productId]
-        return <ProductTip product={product} />
+        return <ProductTip key={id} product={product} />
       } else if (kind === 'sel') {
-        return <SellerTip seller={people[id]} />
+        return <SellerTip key={id} seller={people[id]} />
       }
     },
     [people]

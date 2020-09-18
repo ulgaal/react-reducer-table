@@ -13,26 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React from 'react'
+import React, { useContext } from 'react'
+import { ConfigContext } from './Table'
 import CellCheckbox from './CellCheckbox'
 import RowContent from './RowContent'
 import PropTypes from 'prop-types'
-import { ColumnsType, LayoutsType, ComponentsType } from './prop-types'
+import { ColumnsType, Modes, ModeType } from './prop-types'
 import './Row.css'
 
 const Row = props => {
   // console.log('Row', props)
-  const {
-    components,
-    row,
-    layouts,
-    colOrder,
-    columns,
-    selected,
-    id,
-    rowIdAttr,
-    labels
-  } = props
+  const { labels, components, layouts, rowIdAttr } = useContext(ConfigContext)
+  const { row, colOrder, columns, selected, id, mode } = props
   const { tr } = components
   const rowProps = {
     className: `rrt-tr${selected ? ' rtf-selected' : ''}`,
@@ -40,7 +32,7 @@ const Row = props => {
     ...tr.props
   }
   return React.createElement(tr.type, rowProps, [
-    rowIdAttr ? (
+    rowIdAttr && mode !== Modes.scrollable ? (
       <div key='selection' className='rrt-td selection'>
         <CellCheckbox id={id} selected={selected} title={labels.toggle} />
       </div>
@@ -57,11 +49,10 @@ const Row = props => {
 
 Row.propTypes = {
   columns: ColumnsType,
-  layouts: LayoutsType,
   colOrder: PropTypes.string,
-  components: ComponentsType,
   row: PropTypes.object,
-  selected: PropTypes.bool
+  selected: PropTypes.bool,
+  mode: ModeType
 }
 
 export const areEqual = (prev, next) => {

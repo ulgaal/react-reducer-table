@@ -15,9 +15,9 @@ limitations under the License.
 */
 import React, { useContext, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { TableStateType, LabelsType, ComponentsType } from './prop-types'
+import { TableStateType } from './prop-types'
 import Icon from './Icon'
-import isEqual from 'lodash.isequal'
+import { ConfigContext } from './Table'
 import { TableDispatch, PAGING } from './actions'
 import { subst } from './utils'
 import './Pagination.css'
@@ -27,7 +27,8 @@ import './Pagination.css'
  */
 const Pagination = props => {
   // console.log('Pagination', props)
-  const { state, pageSizes, components, labels } = props
+  const { labels, components } = useContext(ConfigContext)
+  const { state, pageSizes } = props
   const { paginationExtra } = components
   const { pageIndex, pageSize, pageCount, total } = state
   const dispatch = useContext(TableDispatch)
@@ -136,15 +137,7 @@ Pagination.propTypes = {
   /**
    * An array of supported page sizes.
    */
-  pageSizes: PropTypes.arrayOf(PropTypes.number),
-  /**
-   * A hash of custom components to replace those provided by the library (see [Table](./Table.md) for more details)
-   */
-  components: ComponentsType,
-  /**
-   * A hash of key to labels to customize labels used by the pagination (see [Table](./Table.md) for more details)
-   */
-  labels: LabelsType
+  pageSizes: PropTypes.arrayOf(PropTypes.number)
 }
 
 export const areEqual = (prev, next) => {
@@ -154,12 +147,7 @@ export const areEqual = (prev, next) => {
     prevState.pageIndex === nextState.pageIndex &&
     prevState.pageSize === nextState.pageSize &&
     prevState.pageCount === nextState.pageCount &&
-    prevState.total === nextState.total &&
-    (!prev.components.paginationExtra ||
-      isEqual(
-        prev.components.paginationExtra.props,
-        next.components.paginationExtra.props
-      ))
+    prevState.total === nextState.total
 
   /*if (!areEqual) {
     console.log('!Pagination.areEqual')

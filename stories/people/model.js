@@ -18,7 +18,6 @@ import { seq, compareStrings } from './utils'
 
 const { helpers, internet, address, commerce } = faker
 export const createDatabase = dbsize => {
-  console.log('createDatabase')
   const people = [...seq(0, dbsize)].map(id => ({
     id,
     ...helpers.userCard(),
@@ -40,8 +39,10 @@ export const createDatabase = dbsize => {
       return acc.add(country)
     }, new Set())
   ].sort(compareStrings)
-  return {
+  const database = {
     people,
     countries
   }
+  console.log('createDatabase', database)
+  return database
 }

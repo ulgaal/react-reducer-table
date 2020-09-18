@@ -24,8 +24,11 @@ import BasicReadme from './md/basic.md'
 import CompleteReadme from './md/complete.md'
 import TooltipsReadme from './md/tooltips.md'
 import AutoresizeReadme from './md/autoresize.md'
+import FixedColsReadme from './md/fixedcols.md'
 import { addReadme } from 'storybook-readme'
 import faker from 'faker'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'react-resizable/css/styles.css'
 
 import {
   COLUMN_REORDERING,
@@ -37,10 +40,10 @@ import {
 
 import People from './people/People'
 import Sellers from './people/Sellers'
+import Users from './people/Users'
 
 import './table.stories.css'
 import { seq } from './people/utils'
-import TextSizer from './TextSizer'
 
 const TableReadme = generateMarkdown('Table', docgen['src/Table.js'][0])
 
@@ -191,7 +194,8 @@ storiesOf('Tables', module)
             {
               id: 'firstName',
               label: 'First name',
-              sortable: false
+              sortable: false,
+              autoresize: true
             },
             {
               id: 'lastName',
@@ -206,19 +210,8 @@ storiesOf('Tables', module)
         }
       }, [])
       const [state, dispatch] = useReducer(tableReducer, initialState)
-      const { data } = state
-      const labels = useMemo(() => data.map(({ firstName }) => firstName), [
-        data
-      ])
-      useEffect(() => {
-        const { width } = document
-          .querySelector('.text-sizer')
-          .getBoundingClientRect()
-        dispatch({ type: COLUMN_RESIZING, id: 'firstName', width })
-      }, [labels])
       return (
         <div className='autosize-table'>
-          <TextSizer labels={labels} />
           <TableDispatch.Provider value={dispatch}>
             <Table state={state} />
           </TableDispatch.Provider>
@@ -228,6 +221,23 @@ storiesOf('Tables', module)
     {
       readme: {
         content: AutoresizeReadme,
+        sidebar: TableReadme
+      }
+    }
+  )
+  .add(
+    'Table with fixed cols',
+    () => {
+      return (
+        <div className='people-table'>
+          <Users />
+        </div>
+      )
+    },
+    {
+      decorators: [withKnobs, serverDecorator],
+      readme: {
+        content: FixedColsReadme,
         sidebar: TableReadme
       }
     }

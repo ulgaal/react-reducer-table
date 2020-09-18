@@ -13,15 +13,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React from 'react'
+import React, { useContext } from 'react'
 import './Empty.css'
+import { ConfigContext } from './Table'
 
 const Empty = props => {
-  const { title } = props
+  const { labels } = useContext(ConfigContext)
   return (
     <div className='rrt-empty'>
       <div className='rrt-empty-message'>
-        <span>{title}</span>
+        <span>{labels.noData}</span>
       </div>
     </div>
   )

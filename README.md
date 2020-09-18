@@ -14,6 +14,10 @@ The component supports advanced data grid features:
 - row selection
 - customizable components (cells, filters, row, pagination, extra pagination info)
 - customizable labels
+- auto-resizing of columns to make all elements visible (either when changing page or when double-clicking int the column resizer)
+- cell range selection
+- fixed columns
+- column visibility
 
 ## Why `useReducer` ?
 

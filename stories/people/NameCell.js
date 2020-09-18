@@ -15,12 +15,13 @@ limitations under the License.
 */
 import React, { useContext } from 'react'
 import { highlight } from './utils'
-import { FiltersContext } from './People'
+import { FiltersContext } from './contexts'
+import './NameCell.css'
 
 export const NameCell = props => {
   const { query } = useContext(FiltersContext)
   return (
-    <div className='cell'>
+    <div className='namecell'>
       {highlight(query, props.row.name).map(({ text, highlight }, index) => (
         <span key={index} {...(highlight ? { className: 'highlighted' } : {})}>
           {text}

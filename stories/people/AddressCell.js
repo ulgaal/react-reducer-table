@@ -14,17 +14,32 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import React from 'react'
+import { getProperty } from '../../src'
+import { Source } from '@ulgaal/react-infotip'
+import './AddressCell.css'
 
-const PhoneCell = props => {
-  return <div className='cell'>{props.row.phone}</div>
+const AddressCell = props => {
+  const { row } = props
+  const {
+    id,
+    address: { suite, street, zipcode, city }
+  } = row
+  const value = `${suite} ${street}, ${zipcode} ${city}`
+  return (
+    <Source id={`address@${id}`}>
+      <div className='address-cell'>{value}</div>
+    </Source>
+  )
 }
 
 export const areEqual = (prev, next) => {
-  const areEqual = prev.row.phone === next.row.phone
+  const areEqual =
+    getProperty(prev.row, prev.column.id) ===
+    getProperty(next.row, next.column.id)
   /* if (!areEqual) {
-      console.log('!PhoneCell.areEqual')
+      console.log('!AddressCell.areEqual')
     } */
   return areEqual
 }
 
-export default React.memo(PhoneCell, areEqual)
+export default React.memo(AddressCell, areEqual)

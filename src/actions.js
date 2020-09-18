@@ -20,4 +20,5 @@ export const COLUMN_RESIZING = 'COLUMN_RESIZING'
 export const SELECTING = 'SELECTING'
 export const SORTING = 'SORTING'
 export const VSCROLL = 'VSCROLL'
+export const CELL_RANGE = 'CELL_RANGE'
 export const TableDispatch = React.createContext(null)

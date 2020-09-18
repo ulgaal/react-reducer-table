@@ -15,12 +15,14 @@ limitations under the License.
 */
 import React, { useContext, useCallback } from 'react'
 import { IndeterminateCheckbox } from './IndeterminateCheckbox'
+import { ConfigContext } from './Table'
 import { TableDispatch, SELECTING } from './actions'
 import './HeaderCheckbox.css'
 
 const HeaderCheckbox = props => {
   // console.log('HeaderCheckbox', props)
-  const { state, rowIdAttr, labels } = props
+  const { labels, rowIdAttr } = useContext(ConfigContext)
+  const { state } = props
   const { data, selectedIds } = state
 
   const dispatch = useContext(TableDispatch)

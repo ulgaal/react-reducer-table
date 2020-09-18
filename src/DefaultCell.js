@@ -14,10 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import React from 'react'
+import './DefaultCell.css'
 
 const DefaultCell = props => {
   const { row, column } = props
-  return <div>{row[column.id]}</div>
+  return <div className='rrt-default-cell'>{row[column.id]}</div>
 }
 
 export const areEqual = (prev, next) => {

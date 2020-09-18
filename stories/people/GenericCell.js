@@ -13,14 +13,26 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-.cell {
-  padding: 1px 5px 1px 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+import React from 'react'
+import { getProperty } from '../../src'
+import './GenericCell.css'
+
+const GenericCell = props => {
+  const {
+    column: { id },
+    row
+  } = props
+  return <div className='generic-cell'>{getProperty(row, id)}</div>
 }
 
-.cell span.highlighted {
-  background: yellow;
-  color: black;
+export const areEqual = (prev, next) => {
+  const areEqual =
+    getProperty(prev.row, prev.column.id) ===
+    getProperty(next.row, next.column.id)
+  /* if (!areEqual) {
+      console.log('!GenericCell.areEqual')
+    } */
+  return areEqual
 }
+
+export default React.memo(GenericCell, areEqual)

@@ -15,42 +15,51 @@ limitations under the License.
 */
 import React, { useContext, useCallback } from 'react'
 import { decode, DESC } from './orders'
+import { ConfigContext } from './Table'
 import { TableDispatch, COLUMN_REORDERING } from './actions'
-import { TableStateType, ComponentsType, LayoutsType } from './prop-types'
+import { TableStateType, ColumnsType } from './prop-types'
 
 const HeadContent = props => {
   // console.log('HeadContent', props)
-  const { state, components, layouts } = props
+  const { components, layouts } = useContext(ConfigContext)
+  const { state, columns } = props
   const dispatch = useContext(TableDispatch)
   const { header } = components
 
-  const { columns, sort } = state
+  const { sort } = state
   const { order, name } = decode(sort)
 
   const handleDragStart = useCallback(event => {
-    event.dataTransfer.setData('text/plain', event.target.dataset.id)
+    const th = event.target.closest('.rrt-th')
+    const id = th.dataset.id
+    event.dataTransfer.setDragImage(th, 0, 0)
+    event.dataTransfer.setData('text/plain', id)
   }, [])
-  const handleDragOver = useCallback(event => {
-    event.preventDefault()
-    event.dataTransfer.dropEffect = 'move'
-  }, [])
+  const handleDragOver = useCallback(
+    event => {
+      event.preventDefault()
+      event.dataTransfer.dropEffect = 'move'
+    },
+    [columns]
+  )
   const handleDrop = useCallback(
     event => {
+      const allColumns = state.columns
       const ida = event.target.closest('.rrt-th').dataset.id
       const idb = event.dataTransfer.getData('text/plain')
-      if (ida !== idb) {
+      if (ida !== idb && columns.findIndex(({ id }) => id === idb) !== -1) {
         // console.log('handleDrop', { ida, idb })
-        const newColumns = [...columns]
-        const ixa = columns.findIndex(({ id }) => id === ida)
-        const ixb = columns.findIndex(({ id }) => id === idb)
-        newColumns[ixa] = columns[ixb]
-        newColumns[ixb] = columns[ixa]
+        const newColumns = [...allColumns]
+        const ixa = allColumns.findIndex(({ id }) => id === ida)
+        const ixb = allColumns.findIndex(({ id }) => id === idb)
+        newColumns[ixa] = allColumns[ixb]
+        newColumns[ixb] = allColumns[ixa]
         dispatch({ type: COLUMN_REORDERING, columns: newColumns })
       }
       event.preventDefault()
       event.stopPropagation()
     },
-    [columns, dispatch]
+    [state.columns, dispatch]
   )
 
   return (
@@ -62,6 +71,7 @@ const HeadContent = props => {
         const shouldFlex = resizable && index === columns.length - 1
         const sorted = sortable && name === id ? order === DESC : undefined
         const props = {
+          index,
           column,
           layout,
           sorted,
@@ -88,15 +98,14 @@ const HeadContent = props => {
 
 HeadContent.propTypes = {
   state: TableStateType,
-  components: ComponentsType,
-  layouts: LayoutsType
+  columns: ColumnsType
 }
 
 export const areEqual = (prev, next) => {
   const prevState = prev.state
   const nextState = next.state
   const areEqual =
-    prevState.columns === nextState.columns && prevState.sort === nextState.sort
+    prev.columns === next.columns && prevState.sort === nextState.sort
   /* if (!areEqual) {
     console.log('!HeadContent.areEqual')
   } */

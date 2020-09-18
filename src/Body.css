@@ -14,10 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 .rrt-tbody {
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
+}
+.rrt-section-fixed .rrt-tbody,
+.rrt-section-scrollable .rrt-tbody {
+  overflow-y: hidden;
 }
 
 /* to customize */
@@ -26,4 +31,7 @@ limitations under the License.
   font-size: 11px;
   font-style: normal;
   font-weight: 400;
+}
+.rrt-tbody-rows {
+  position: relative;
 }

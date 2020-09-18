@@ -13,10 +13,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useMemo, useCallback } from 'react'
 import './CountryFilter.css'
 import { TableDispatch } from '../../src'
-import { FiltersContext } from './People'
+import { FiltersContext } from './contexts'
 import { FILTERING } from './peopleReducer'
 import Select from './Select'
 
@@ -37,6 +37,9 @@ const CountryFilter = props => {
       })),
     [countries]
   )
+  const handleChange = useCallback(country => {
+    dispatch({ type: FILTERING, filter: country && country.value })
+  })
   return (
     <div className='country-filter'>
       <Select
@@ -44,9 +47,7 @@ const CountryFilter = props => {
         isClearable
         options={filterOptions}
         value={filterOptions.find(({ value }) => value === filter) || null}
-        onChange={country => {
-          dispatch({ type: FILTERING, filter: country && country.value })
-        }}
+        onChange={handleChange}
         menuPlacement='auto'
         styles={customStyles}
       />

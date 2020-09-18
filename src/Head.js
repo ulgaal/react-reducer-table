@@ -13,37 +13,26 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React from 'react'
+import React, { useContext } from 'react'
+import { ConfigContext } from './Table'
 import HeaderCheckbox from './HeaderCheckbox'
 import HeadContent from './HeadContent'
 import PropTypes from 'prop-types'
-import {
-  TableStateType,
-  ComponentsType,
-  LayoutsType,
-  LabelsType
-} from './prop-types'
+import { TableStateType, ColumnsType, Modes, ModeType } from './prop-types'
 import './Head.css'
 
 const Head = props => {
   // console.log('Head', props)
-  const { state, components, layouts, overflow, rowIdAttr, labels } = props
+  const { rowIdAttr } = useContext(ConfigContext)
+  const { state, columns, overflow, mode } = props
   return (
     <div className='rrt-thead'>
       {
         <div className={`rrt-tr${overflow ? ' overflow' : ''}`}>
-          {rowIdAttr ? (
-            <HeaderCheckbox
-              state={state}
-              rowIdAttr={rowIdAttr}
-              labels={labels}
-            />
+          {rowIdAttr && mode !== Modes.scrollable ? (
+            <HeaderCheckbox state={state} />
           ) : null}
-          <HeadContent
-            state={state}
-            components={components}
-            layouts={layouts}
-          />
+          <HeadContent state={state} columns={columns} />
         </div>
       }
     </div>
@@ -52,18 +41,16 @@ const Head = props => {
 
 Head.propTypes = {
   state: TableStateType,
-  components: ComponentsType,
-  layouts: LayoutsType,
-  rowIdAttr: PropTypes.string,
+  columns: ColumnsType,
   overflow: PropTypes.bool,
-  labels: LabelsType
+  mode: ModeType
 }
 
 export const areEqual = (prev, next) => {
   const prevState = prev.state
   const nextState = next.state
   const areEqual =
-    prevState.columns === nextState.columns &&
+    prev.columns === next.columns &&
     prevState.selectedIds === nextState.selectedIds &&
     prevState.sort === next.sort &&
     prevState.data === next.data &&

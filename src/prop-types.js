@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+/* global Element */
 import PropTypes from 'prop-types'
 
 export const ColumnType = PropTypes.shape({
@@ -23,7 +24,9 @@ export const ColumnType = PropTypes.shape({
   minWidth: PropTypes.number,
   width: PropTypes.number,
   Cell: PropTypes.elementType,
-  Filter: PropTypes.elementType
+  Filter: PropTypes.elementType,
+  fixed: PropTypes.bool,
+  visible: PropTypes.bool
 })
 
 export const ColumnsType = PropTypes.arrayOf(ColumnType)
@@ -35,6 +38,21 @@ export const LayoutType = PropTypes.shape({
 
 export const LayoutsType = PropTypes.objectOf(LayoutType)
 
+export const CellRangeType = PropTypes.shape({
+  row: PropTypes.number,
+  col: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number
+})
+
+export const RangeType = PropTypes.shape({
+  row: PropTypes.number,
+  col: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  split: PropTypes.bool
+})
+
 export const TableStateType = PropTypes.shape({
   data: PropTypes.arrayOf(PropTypes.object),
   columns: PropTypes.arrayOf(ColumnType),
@@ -45,7 +63,8 @@ export const TableStateType = PropTypes.shape({
   loading: PropTypes.bool,
   sort: PropTypes.string,
   selectedIds: PropTypes.object,
-  scrollTop: PropTypes.number
+  scrollTop: PropTypes.number,
+  cellRange: CellRangeType
 })
 
 export const LabelsType = PropTypes.shape({
@@ -85,3 +104,31 @@ export const IconType = PropTypes.oneOf([
   'cancel',
   'sortable'
 ])
+
+export const Modes = {
+  fixed: 'fixed',
+  scrollable: 'scrollable',
+  stretch: 'stretch'
+}
+
+export const ModeType = PropTypes.oneOf(Object.keys(Modes))
+
+const DOMElementType = (props, propName, componentName) => {
+  const value = props[propName]
+  if (value !== null && value instanceof Element === false) {
+    return new Error(`Invalid prop ${propName} supplied to ${componentName}`)
+  }
+}
+
+export const ScrollerStateType = PropTypes.shape({
+  scrolling: PropTypes.bool,
+  scrollableBody: DOMElementType,
+  fixedBody: DOMElementType,
+  scrollTop: PropTypes.number,
+  scrollLeft: PropTypes.number
+})
+
+export const ResizerStateType = PropTypes.shape({
+  resizing: PropTypes.bool,
+  barX: PropTypes.number
+})

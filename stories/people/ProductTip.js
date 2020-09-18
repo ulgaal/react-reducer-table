@@ -18,7 +18,7 @@ import React from 'react'
 import './ProductTip.css'
 
 export const ProductTip = props => {
-  console.log('ProductTip', props)
+  // console.log('ProductTip', props)
   const {
     product: { department, price, product, productName, color }
   } = props
@@ -49,7 +49,7 @@ export const ProductTip = props => {
             </td>
           </tr>
           <tr>
-            <td></td>
+            <td />
             <td>
               <button>Buy now</button>
             </td>
