@@ -46,6 +46,19 @@ const HScroller = props => {
   const scrollLeftMax = scrollerWidth - thumbWidth
   const marginLeft = margin + scrollLeft
 
+  const scrollSection = useCallback(
+    left => {
+      const newLeft = (left * bodyWidth) / scrollerWidth
+      section.scrollLeft = newLeft
+      scrollerDispatch({
+        type: HSCROLL,
+        scrolling: true,
+        scrollLeft: left
+      })
+    },
+    [section, bodyWidth, scrollerWidth, scrollerDispatch]
+  )
+
   const handleMouseDown = useCallback(
     event => {
       event.stopPropagation()
@@ -58,13 +71,7 @@ const HScroller = props => {
           .closest('.rrt-hscroller')
           .getBoundingClientRect()
         left0 = Math.min(x0 - left, scrollLeftMax)
-        scrollerDispatch({
-          type: HSCROLL,
-          scrolling: true,
-          scrollLeft: left0
-        })
-        const newLeft = (left0 * bodyWidth) / scrollerWidth
-        section.scrollLeft = newLeft
+        scrollSection(left0)
       }
       const handlers = {}
       // Position mouse handlers to create a modal drag loop
@@ -73,13 +80,7 @@ const HScroller = props => {
         event.stopPropagation()
         const dx = event.clientX - x0
         const left1 = Math.min(Math.max(0, left0 + dx), scrollLeftMax)
-        scrollerDispatch({
-          type: HSCROLL,
-          scrolling: true,
-          scrollLeft: left1
-        })
-        const newLeft = (left1 * bodyWidth) / scrollerWidth
-        section.scrollLeft = newLeft
+        scrollSection(left1)
       }
       handlers.handleMouseUp = event => {
         event.preventDefault()
@@ -93,14 +94,7 @@ const HScroller = props => {
       window.addEventListener('mousemove', handlers.handleMouseMove, true)
       window.addEventListener('mouseup', handlers.handleMouseUp, true)
     },
-    [
-      scrollerDispatch,
-      scrollLeft,
-      scrollLeftMax,
-      section,
-      bodyWidth,
-      scrollerWidth
-    ]
+    [scrollerDispatch, scrollLeft, scrollLeftMax, scrollSection]
   )
   return visible ? (
     <div className='rrt-hscroller' onMouseDown={handleMouseDown}>

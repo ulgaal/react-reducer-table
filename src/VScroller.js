@@ -47,6 +47,20 @@ const VScroller = props => {
   const scrollTopMax = scrollerHeight_ - thumbHeight
   const marginTop = margin + scrollTop
 
+  const scrollSections = useCallback(
+    top => {
+      const newTop = (top * rowsHeight) / scrollerHeight_
+      fixedBody.scrollTop = newTop
+      scrollableBody.scrollTop = newTop
+      scrollerDispatch({
+        type: VSCROLL,
+        scrolling: true,
+        scrollTop: top
+      })
+    },
+    [rowsHeight, scrollerHeight_, fixedBody, scrollableBody, scrollerDispatch]
+  )
+
   const handleMouseDown = useCallback(
     event => {
       event.stopPropagation()
@@ -59,14 +73,7 @@ const VScroller = props => {
           .closest('.rrt-vscroller-bar')
           .getBoundingClientRect()
         top0 = Math.min(y0 - top, scrollTopMax)
-        scrollerDispatch({
-          type: VSCROLL,
-          scrolling: true,
-          scrollTop: top0
-        })
-        const newTop = (top0 * rowsHeight) / scrollerHeight_
-        fixedBody.scrollTop = newTop
-        scrollableBody.scrollTop = newTop
+        scrollSections(top0)
       }
       const handlers = {}
       // Position mouse handlers to create a modal drag loop
@@ -75,14 +82,7 @@ const VScroller = props => {
         event.stopPropagation()
         const dy = event.clientY - y0
         const top1 = Math.min(Math.max(0, top0 + dy), scrollTopMax)
-        scrollerDispatch({
-          type: VSCROLL,
-          scrolling: true,
-          scrollTop: top1
-        })
-        const newTop = (top1 * rowsHeight) / scrollerHeight_
-        fixedBody.scrollTop = newTop
-        scrollableBody.scrollTop = newTop
+        scrollSections(top1)
       }
       handlers.handleMouseUp = event => {
         event.preventDefault()
@@ -96,15 +96,7 @@ const VScroller = props => {
       window.addEventListener('mousemove', handlers.handleMouseMove, true)
       window.addEventListener('mouseup', handlers.handleMouseUp, true)
     },
-    [
-      scrollerDispatch,
-      scrollTop,
-      scrollTopMax,
-      scrollableBody,
-      fixedBody,
-      rowsHeight,
-      scrollerHeight_
-    ]
+    [scrollerDispatch, scrollTop, scrollTopMax, scrollSections]
   )
   return visible ? (
     <div className='rrt-vscroller'>
