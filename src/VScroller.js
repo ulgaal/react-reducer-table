@@ -44,6 +44,7 @@ const VScroller = props => {
   const thumbHeight = rowsHeight
     ? (scrollerHeight_ * bodyHeight) / rowsHeight
     : 0
+  const scrollTopMax = scrollerHeight_ - thumbHeight
   const marginTop = margin + scrollTop
 
   const handleMouseDown = useCallback(
@@ -57,7 +58,7 @@ const VScroller = props => {
         const { top } = event.target
           .closest('.rrt-vscroller-bar')
           .getBoundingClientRect()
-        top0 = Math.min(y0 - top, scrollerHeight_ - thumbHeight)
+        top0 = Math.min(y0 - top, scrollTopMax)
         scrollerDispatch({
           type: VSCROLL,
           scrolling: true,
@@ -73,10 +74,7 @@ const VScroller = props => {
         event.preventDefault()
         event.stopPropagation()
         const dy = event.clientY - y0
-        const top1 = Math.min(
-          Math.max(0, top0 + dy),
-          scrollerHeight_ - thumbHeight
-        )
+        const top1 = Math.min(Math.max(0, top0 + dy), scrollTopMax)
         scrollerDispatch({
           type: VSCROLL,
           scrolling: true,
@@ -101,11 +99,11 @@ const VScroller = props => {
     [
       scrollerDispatch,
       scrollTop,
+      scrollTopMax,
       scrollableBody,
       fixedBody,
       rowsHeight,
-      scrollerHeight_,
-      thumbHeight
+      scrollerHeight_
     ]
   )
   return visible ? (

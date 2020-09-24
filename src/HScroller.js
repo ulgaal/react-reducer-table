@@ -43,6 +43,7 @@ const HScroller = props => {
   const visible = bodyWidth > sectionWidth
   const scrollerWidth = tableWidth - 2 * margin
   const thumbWidth = bodyWidth ? (scrollerWidth * sectionWidth) / bodyWidth : 0
+  const scrollLeftMax = scrollerWidth - thumbWidth
   const marginLeft = margin + scrollLeft
 
   const handleMouseDown = useCallback(
@@ -56,7 +57,7 @@ const HScroller = props => {
         const { left } = event.target
           .closest('.rrt-hscroller')
           .getBoundingClientRect()
-        left0 = Math.min(x0 - left, scrollerWidth - thumbWidth)
+        left0 = Math.min(x0 - left, scrollLeftMax)
         scrollerDispatch({
           type: HSCROLL,
           scrolling: true,
@@ -71,10 +72,7 @@ const HScroller = props => {
         event.preventDefault()
         event.stopPropagation()
         const dx = event.clientX - x0
-        const left1 = Math.min(
-          Math.max(0, left0 + dx),
-          scrollerWidth - thumbWidth
-        )
+        const left1 = Math.min(Math.max(0, left0 + dx), scrollLeftMax)
         scrollerDispatch({
           type: HSCROLL,
           scrolling: true,
@@ -98,10 +96,10 @@ const HScroller = props => {
     [
       scrollerDispatch,
       scrollLeft,
+      scrollLeftMax,
       section,
       bodyWidth,
-      scrollerWidth,
-      thumbWidth
+      scrollerWidth
     ]
   )
   return visible ? (
