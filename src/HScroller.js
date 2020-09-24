@@ -96,8 +96,25 @@ const HScroller = props => {
     },
     [scrollerDispatch, scrollLeft, scrollLeftMax, scrollSection]
   )
+
+  const handleWheel = useCallback(
+    event => {
+      event.stopPropagation()
+      // Cannot prevent default due to react not supporting passive events yet
+      // event.preventDefault()
+      const { deltaY } = event
+      const left = Math.min(Math.max(0, scrollLeft + deltaY), scrollLeftMax)
+      scrollSection(left)
+    },
+    [scrollSection, scrollLeft, scrollLeftMax]
+  )
+
   return visible ? (
-    <div className='rrt-hscroller' onMouseDown={handleMouseDown}>
+    <div
+      className='rrt-hscroller'
+      onMouseDown={handleMouseDown}
+      onWheel={handleWheel}
+    >
       <div
         className={`rrt-hscroller-thumb${
           scrolling ? ' rrt-hscroller-thumb-active' : ''

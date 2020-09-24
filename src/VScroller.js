@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { useContext, useCallback } from 'react'
+import React, { useContext, useCallback, useEffect } from 'react'
 import { ScrollerDispatch, VSCROLL } from './reducers/scrollerReducer'
 import { ScrollerStateType } from './prop-types'
 import { log } from './utils'
@@ -24,7 +24,7 @@ const margin = 6
 const VScroller = props => {
   log('VScroller', 0, props)
   const {
-    state: { scrolling, scrollTop, scrollableBody, fixedBody }
+    state: { scrolling, wheeling, scrollTop, scrollableBody, fixedBody, deltaY }
   } = props
   const scrollerDispatch = useContext(ScrollerDispatch)
 
@@ -98,6 +98,14 @@ const VScroller = props => {
     },
     [scrollerDispatch, scrollTop, scrollTopMax, scrollSections]
   )
+
+  useEffect(() => {
+    if (wheeling) {
+      const left = Math.min(Math.max(0, scrollTop + deltaY), scrollTopMax)
+      scrollSections(left)
+    }
+  }, [scrollTop, scrollTopMax, deltaY, wheeling, scrollSections])
+
   return visible ? (
     <div className='rrt-vscroller'>
       <div

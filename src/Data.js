@@ -35,7 +35,11 @@ import { TableDispatch, CELL_RANGE, COLUMN_RESIZING } from './actions'
 import { measureCols, log } from './utils'
 import isEqual from 'lodash.isequal'
 import useResizeObserver from './hooks/useResizeObserver'
-import { ScrollerDispatch, INVALIDATE } from './reducers/scrollerReducer'
+import {
+  ScrollerDispatch,
+  INVALIDATE,
+  VWHEEL
+} from './reducers/scrollerReducer'
 import ResizeBar from './ResizeBar'
 import './Data.css'
 
@@ -223,6 +227,19 @@ const Data = props => {
     [cellRange, fixedCols, rowIdAttr]
   )
 
+  const handleWheel = useCallback(
+    event => {
+      if (hasFixedCols) {
+        event.stopPropagation()
+        // Cannot prevent default due to react not supporting passive events yet
+        // event.preventDefault()
+        const { deltaY } = event
+        scrollerDispatch({ type: VWHEEL, deltaY })
+      }
+    },
+    [hasFixedCols, scrollerDispatch]
+  )
+
   useEffect(() => {
     // When data changes, perform column autoresize computations
     const { current } = ref
@@ -253,7 +270,12 @@ const Data = props => {
   useResizeObserver(ref, handleResize)
 
   return (
-    <div className='rrt-data' ref={ref} onMouseDown={handleRange}>
+    <div
+      className='rrt-data'
+      ref={ref}
+      onMouseDown={handleRange}
+      onWheel={handleWheel}
+    >
       {hasFixedCols ? (
         <>
           <Section

@@ -19,6 +19,7 @@ export const ScrollerDispatch = createContext(null)
 export const SCROLLABLE = 'SCROLLABLE'
 export const FIXED = 'FIXED'
 export const VSCROLL = 'VSCROLL'
+export const VWHEEL = 'VWHEEL'
 export const HSCROLL = 'HSCROLL'
 export const INVALIDATE = 'INVALIDATE'
 
@@ -37,7 +38,7 @@ export const scrollerReducer = (state, action) => {
     case VSCROLL: {
       const { scrollTop, scrolling } = action
       return scrolling
-        ? { ...state, scrolling, scrollTop }
+        ? { ...state, scrolling, scrollTop, wheeling: false, deltaY: 0 }
         : { ...state, scrolling: false }
     }
     case HSCROLL: {
@@ -48,6 +49,10 @@ export const scrollerReducer = (state, action) => {
     }
     case INVALIDATE: {
       return { ...state }
+    }
+    case VWHEEL: {
+      const { deltaY } = action
+      return { ...state, wheeling: true, deltaY }
     }
     default:
       throw new Error(`Unknown action: ${action.type}`)

@@ -122,10 +122,12 @@ const DOMElementType = (props, propName, componentName) => {
 
 export const ScrollerStateType = PropTypes.shape({
   scrolling: PropTypes.bool,
+  wheeling: PropTypes.bool,
   scrollableBody: DOMElementType,
   fixedBody: DOMElementType,
   scrollTop: PropTypes.number,
-  scrollLeft: PropTypes.number
+  scrollLeft: PropTypes.number,
+  deltaY: PropTypes.number
 })
 
 export const ResizerStateType = PropTypes.shape({
