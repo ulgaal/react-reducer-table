@@ -32,7 +32,7 @@ import {
 } from './prop-types'
 import { ConfigContext } from './Table'
 import { TableDispatch, CELL_RANGE, COLUMN_RESIZING } from './actions'
-import { measureCols } from './utils'
+import { measureCols, log } from './utils'
 import isEqual from 'lodash.isequal'
 import useResizeObserver from './hooks/useResizeObserver'
 import { ScrollerDispatch, INVALIDATE } from './reducers/scrollerReducer'
@@ -40,7 +40,7 @@ import ResizeBar from './ResizeBar'
 import './Data.css'
 
 const Data = props => {
-  // console.log('Data', props)
+  log('Data', 0, props)
   const { state, scrollerState, resizerState } = props
   const { data, columns, cellRange } = state
 
@@ -137,7 +137,6 @@ const Data = props => {
   // Manage range selection by handling mouseDown bubbling on table cells
   const handleRange = useCallback(
     event => {
-      // console.log('handleRange', event)
       if (cellRange) {
         // Process events only if there is a call range
         const getPosition = event => {

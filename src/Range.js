@@ -17,10 +17,11 @@ import React, { useContext, useMemo, useRef, useEffect, useState } from 'react'
 import { ConfigContext } from './Table'
 import { RangeType, Modes, ModeType } from './prop-types'
 import isEqual from 'lodash.isequal'
+import { log } from './utils'
 import './Range.css'
 
 const Range = props => {
-  // console.log('Range', props)
+  log('Range', 0, props)
   const { rowIdAttr } = useContext(ConfigContext)
   const {
     range: { row, col, width, height, split },

@@ -19,14 +19,14 @@ import { TableStateType } from './prop-types'
 import Icon from './Icon'
 import { ConfigContext } from './Table'
 import { TableDispatch, PAGING } from './actions'
-import { subst } from './utils'
+import { subst, log } from './utils'
 import './Pagination.css'
 
 /**
  * Component to handle pagination
  */
 const Pagination = props => {
-  // console.log('Pagination', props)
+  log('Pagination', 0, props)
   const { labels, components } = useContext(ConfigContext)
   const { state, pageSizes } = props
   const { paginationExtra } = components

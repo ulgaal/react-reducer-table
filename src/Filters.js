@@ -15,12 +15,13 @@ limitations under the License.
 */
 import React, { useContext } from 'react'
 import { ConfigContext } from './Table'
-import './Filters.css'
 import PropTypes from 'prop-types'
 import { TableStateType, ColumnsType, Modes, ModeType } from './prop-types'
+import { log } from './utils'
+import './Filters.css'
 
 const Filters = props => {
-  // console.log('Filters', props)
+  log('Filters', 0, props)
   const { layouts, rowIdAttr } = useContext(ConfigContext)
   const { columns, overflow, state, mode } = props
 

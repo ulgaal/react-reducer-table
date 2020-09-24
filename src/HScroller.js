@@ -16,12 +16,13 @@ limitations under the License.
 import React, { useContext, useCallback } from 'react'
 import { ScrollerStateType } from './prop-types'
 import { ScrollerDispatch, HSCROLL } from './reducers/scrollerReducer'
+import { log } from './utils'
 import './HScroller.css'
 
 const margin = 6
 
 const HScroller = props => {
-  // console.log('Scroller', props)
+  log('HScroller', 0, props)
   const {
     state: { scrolling, scrollLeft, scrollableBody }
   } = props
