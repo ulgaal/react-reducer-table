@@ -13,22 +13,25 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 <span class="hljs-keyword">import</span> HeadContent <span class="hljs-keyword">from</span> <span class="hljs-string">'./HeadContent'</span>
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
 <span class="hljs-keyword">import</span> { TableStateType, ColumnsType, Modes, ModeType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
+<span class="hljs-keyword">import</span> { log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./Head.css'</span>
 
-const Head = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Head&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { rowIdAttr } = useContext(ConfigContext)
-  <span class="hljs-keyword">const</span> { state, columns, overflow, mode } = props
-  <span class="hljs-keyword">return</span> (
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-thead'</span>&gt;</span>
+const Head = props =&gt; {
+  log(<span class="hljs-string">'Head'</span>, 0, props)
+  const { rowIdAttr } = useContext(ConfigContext)
+  const { state, columns, overflow, mode } = props
+  return (
+    &lt;div className=<span class="hljs-string">'rrt-thead'</span>&gt;
       {
-        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">{`rrt-tr${overflow</span> ? ' <span class="hljs-attribute">overflow</span>' <span class="hljs-attribute">:</span> ''}`}&gt;</span>
+        &lt;div className={`rrt-tr${overflow ? <span class="hljs-string">' overflow'</span> : <span class="hljs-string">''</span>}<span class="hljs-string">`}&gt;
           {rowIdAttr &amp;&amp; mode !== Modes.scrollable ? (
-            <span class="hljs-tag">&lt;<span class="hljs-title">HeaderCheckbox</span> <span class="hljs-attribute">state</span>=<span class="hljs-value">{state}</span> /&gt;</span>
-          )</span> : <span class="hljs-literal">null</span>}
+            &lt;HeaderCheckbox state={state} /&gt;
+          ) : null}
           &lt;HeadContent state={state} columns={columns} /&gt;
-        <span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+        &lt;/div&gt;
       }
-    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
-  )</span>
+    &lt;/div&gt;
+  )
 }
 
 Head.propTypes = {
@@ -38,15 +41,15 @@ Head.propTypes = {
   mode: ModeType
 }
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> areEqual = (prev, next) =&gt; {
-  <span class="hljs-keyword">const</span> prevState = prev.state
-  <span class="hljs-keyword">const</span> nextState = next.state
-  <span class="hljs-keyword">const</span> areEqual =
+export const areEqual = (prev, next) =&gt; {
+  const prevState = prev.state
+  const nextState = next.state
+  const areEqual =
     prev.columns === next.columns &amp;&amp;
     prevState.selectedIds === nextState.selectedIds &amp;&amp;
     prevState.sort === next.sort &amp;&amp;
     prevState.data === next.data &amp;&amp;
-    prev.overflow === next.overflow</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if (!areEqual) {
+    prev.overflow === next.overflow</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if (!areEqual) {
   console.log(&#39;!Head.areEqual&#39;)
 } </p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">return</span> areEqual
 }

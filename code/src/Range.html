@@ -11,36 +11,39 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 <span class="hljs-keyword">import</span> { ConfigContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'./Table'</span>
 <span class="hljs-keyword">import</span> { RangeType, Modes, ModeType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
 <span class="hljs-keyword">import</span> isEqual <span class="hljs-keyword">from</span> <span class="hljs-string">'lodash.isequal'</span>
+<span class="hljs-keyword">import</span> { log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./Range.css'</span>
 
-const Range = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Range&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { rowIdAttr } = useContext(ConfigContext)
-  <span class="hljs-keyword">const</span> {
+const Range = props =&gt; {
+  log(<span class="hljs-string">'Range'</span>, 0, props)
+  const { rowIdAttr } = useContext(ConfigContext)
+  const {
     range: { row, col, width, height, split },
     mode
   } = props
-  <span class="hljs-keyword">const</span> ref = useRef(<span class="hljs-literal">null</span>)
-  <span class="hljs-keyword">const</span> className = useMemo(() =&gt; {
-    <span class="hljs-keyword">const</span> classes = [
+  const ref = useRef(null)
+  const className = useMemo(() =&gt; {
+    const classes = [
       <span class="hljs-string">'rrt-range'</span>,
-      ...(split ? [<span class="hljs-string">`rrt-range-<span class="hljs-subst">${mode}</span>`</span>] : []),
-      ...(width * height &gt; <span class="hljs-number">1</span> ? [<span class="hljs-string">'rrt-range-surface'</span>] : [])
+      ...(split ? [`rrt-range-${mode}<span class="hljs-string">`] : []),
+      ...(width * height &gt; 1 ? ['rrt-range-surface'] : [])
     ]
-    <span class="hljs-keyword">return</span> classes.join(<span class="hljs-string">' '</span>)
+    return classes.join(' ')
   }, [width, height, mode])
-  <span class="hljs-keyword">const</span> [style, setStyle] = useState({
-    left: <span class="hljs-number">0</span>,
-    top: <span class="hljs-number">0</span>,
-    width: <span class="hljs-number">0</span>,
-    height: <span class="hljs-number">0</span>
+  const [style, setStyle] = useState({
+    left: 0,
+    top: 0,
+    width: 0,
+    height: 0
   })
   useEffect(() =&gt; {
-    <span class="hljs-keyword">const</span> { current } = ref
-    <span class="hljs-keyword">if</span> (current) {
-      <span class="hljs-keyword">const</span> rows = current.parentNode
-      <span class="hljs-keyword">if</span> (rows) {
-        <span class="hljs-keyword">const</span> upperRow = rows.children[row]
-        <span class="hljs-keyword">const</span> lowerRow = rows.children[row + height - <span class="hljs-number">1</span>]
-        <span class="hljs-keyword">if</span> (upperRow &amp;&amp; lowerRow) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Take into account the extra selection column if row selection is enabled</p></div></div><div class="code"><div class="wrapper">          <span class="hljs-keyword">const</span> dx = rowIdAttr &amp;&amp; mode !== Modes.scrollable ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>
+    const { current } = ref
+    if (current) {
+      const rows = current.parentNode
+      if (rows) {
+        const upperRow = rows.children[row]
+        const lowerRow = rows.children[row + height - 1]
+        if (upperRow &amp;&amp; lowerRow) {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Take into account the extra selection column if row selection is enabled</p></div></div><div class="code"><div class="wrapper">          <span class="hljs-keyword">const</span> dx = rowIdAttr &amp;&amp; mode !== Modes.scrollable ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>
           <span class="hljs-keyword">const</span> leftCell = upperRow.children[col + dx]
           <span class="hljs-keyword">const</span> rightCell = lowerRow.children[col + width - <span class="hljs-number">1</span> + dx]
           <span class="hljs-keyword">if</span> (leftCell &amp;&amp; rightCell) {

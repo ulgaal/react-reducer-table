@@ -253,10 +253,12 @@ which seldom change during its lifetime</p></div></div><div class="code"><div cl
 
   <span class="hljs-keyword">const</span> [scrollerState, scrollerDispatch] = useReducer(scrollerReducer, {
     scrolling: <span class="hljs-literal">false</span>,
+    wheeling: <span class="hljs-literal">false</span>,
     scrollableBody: <span class="hljs-literal">null</span>,
     fixedBody: <span class="hljs-literal">null</span>,
     scrollTop: <span class="hljs-number">0</span>,
-    scrollLeft: <span class="hljs-number">0</span>
+    scrollLeft: <span class="hljs-number">0</span>,
+    deltaY: <span class="hljs-number">0</span>
   })
 
   <span class="hljs-keyword">const</span> { loading, data, pageCount, pageIndex } = state

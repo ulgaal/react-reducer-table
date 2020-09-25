@@ -15,19 +15,23 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
 <span class="hljs-keyword">import</span> { TableStateType, ColumnsType, Modes, RangeType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
 <span class="hljs-keyword">import</span> { SCROLLABLE, FIXED, ScrollerDispatch } <span class="hljs-keyword">from</span> <span class="hljs-string">'./reducers/scrollerReducer'</span>
+<span class="hljs-keyword">import</span> { log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./Body.css'</span>
 
-const Body = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Body&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { rowIdAttr } = useContext(ConfigContext)
-  <span class="hljs-keyword">const</span> scrollerDispatch = useContext(ScrollerDispatch)
-  <span class="hljs-keyword">const</span> { state, columns, colOrder, mode, range } = props
-  <span class="hljs-keyword">const</span> { data, selectedIds, scrollTop = <span class="hljs-number">0</span> } = state
-  <span class="hljs-keyword">const</span> dispatch = useContext(TableDispatch)
-  <span class="hljs-keyword">const</span> handleCellCheckChange = useCallback(
-    event =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;handleCellCheckChange&#39;, event)</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">const</span> id = event.target.dataset.id
-      <span class="hljs-keyword">const</span> newSelectedIds = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(selectedIds)
-      <span class="hljs-keyword">if</span> (event.target.checked) {
+const Body = props =&gt; {
+  log(<span class="hljs-string">'Body'</span>, 0, props)
+  const { rowIdAttr } = useContext(ConfigContext)
+  const scrollerDispatch = useContext(ScrollerDispatch)
+  const { state, columns, colOrder, mode, range } = props
+  const { data, selectedIds, scrollTop = 0 } = state
+  const dispatch = useContext(TableDispatch)
+  const handleCellCheckChange = useCallback(
+    event =&gt; {
+      const id = event.target.dataset.id
+      const newSelectedIds = new Set(selectedIds)
+      if (event.target.checked) {
         newSelectedIds.add(id)
-      } <span class="hljs-keyword">else</span> {
+      } else {
         newSelectedIds.delete(id)
       }
       dispatch({
@@ -38,14 +42,14 @@ const Body = props =&gt; {</div></div></div><div class="segment"><div class="com
     [selectedIds, dispatch]
   )
 
-  <span class="hljs-keyword">const</span> handleScroll = useCallback(event =&gt; {
+  const handleScroll = useCallback(event =&gt; {
     dispatch({ type: VSCROLL, scrollTop: event.target.scrollTop })
   }, [])
 
-  <span class="hljs-keyword">const</span> ref = useRef(<span class="hljs-literal">null</span>)
+  const ref = useRef(null)
   useEffect(() =&gt; {
-    <span class="hljs-keyword">const</span> { current } = ref
-    <span class="hljs-keyword">if</span> (current) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>For table with fixed cols, take measurements
+    const { current } = ref
+    if (current) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>For table with fixed cols, take measurements
 to power parallel vertical scrolling of the two sections if needed</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">if</span> (mode === Modes.scrollable) {
         scrollerDispatch({
           type: SCROLLABLE,
@@ -66,10 +70,11 @@ to power parallel vertical scrolling of the two sections if needed</p></div></di
       <span class="hljs-attribute">onScroll</span>=<span class="hljs-value">{handleScroll}</span>
     &gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-tbody-rows'</span>&gt;</span>
-        {data.map((row, index) =&gt; {</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;row&#39;, row)</p></div></div><div class="code"><div class="wrapper">          <span class="hljs-keyword">const</span> id = row[rowIdAttr]
-          <span class="hljs-keyword">const</span> selected = rowIdAttr &amp;&amp; selectedIds.has(id)
-          <span class="hljs-keyword">return</span> (
-            <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Row</span>
+        {data.map((row, index) =&gt; {
+          const id = row[rowIdAttr]
+          const selected = rowIdAttr &amp;&amp; selectedIds.has(id)
+          return (
+            <span class="hljs-tag">&lt;<span class="hljs-title">Row</span>
               <span class="hljs-attribute">key</span>=<span class="hljs-value">{index}</span>
               <span class="hljs-attribute">columns</span>=<span class="hljs-value">{columns}</span>
               <span class="hljs-attribute">colOrder</span>=<span class="hljs-value">{colOrder}</span>

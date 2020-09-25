@@ -181,4 +181,13 @@ all other cells with be styled in the same way</p></div></div><div class="code">
     <span class="hljs-keyword">return</span> metrics
   }
   <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> LOGS = {}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> log = (facility, severity, ...args) =&gt; {
+  <span class="hljs-keyword">const</span> sev = LOGS[facility]
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> sev === <span class="hljs-string">'number'</span> &amp;&amp; severity &gt;= sev) {
+    <span class="hljs-built_in">console</span>.log(facility, ...args)
+  }
 }</div></div></div></div></body></html>

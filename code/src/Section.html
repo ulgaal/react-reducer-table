@@ -13,20 +13,23 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 <span class="hljs-keyword">import</span> Body <span class="hljs-keyword">from</span> <span class="hljs-string">'./Body'</span>
 <span class="hljs-keyword">import</span> { ModeType, ColumnsType, TableStateType, RangeType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
+<span class="hljs-keyword">import</span> { log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./Section.css'</span>
 
-const Section = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Section&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { mode, state, columns, overflow, hasFilters, colOrder, range } = props
-  <span class="hljs-keyword">return</span> (
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">{`rrt-section</span> <span class="hljs-attribute">rrt-section-</span>${<span class="hljs-attribute">mode</span>}`}&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-title">Head</span> <span class="hljs-attribute">mode</span>=<span class="hljs-value">{mode}</span> <span class="hljs-attribute">state</span>=<span class="hljs-value">{state}</span> <span class="hljs-attribute">columns</span>=<span class="hljs-value">{columns}</span> <span class="hljs-attribute">overflow</span>=<span class="hljs-value">{overflow}</span> /&gt;</span>
+const Section = props =&gt; {
+  log(<span class="hljs-string">'Section'</span>, 0, props)
+  const { mode, state, columns, overflow, hasFilters, colOrder, range } = props
+  return (
+    &lt;div className={`rrt-section rrt-section-${mode}<span class="hljs-string">`}&gt;
+      &lt;Head mode={mode} state={state} columns={columns} overflow={overflow} /&gt;
       {hasFilters ? (
-        <span class="hljs-tag">&lt;<span class="hljs-title">Filters</span>
-          <span class="hljs-attribute">mode</span>=<span class="hljs-value">{mode}</span>
-          <span class="hljs-attribute">state</span>=<span class="hljs-value">{state}</span>
-          <span class="hljs-attribute">columns</span>=<span class="hljs-value">{columns}</span>
-          <span class="hljs-attribute">overflow</span>=<span class="hljs-value">{overflow}</span>
-        /&gt;</span>
-      )</span> : <span class="hljs-literal">null</span>}
+        &lt;Filters
+          mode={mode}
+          state={state}
+          columns={columns}
+          overflow={overflow}
+        /&gt;
+      ) : null}
       &lt;Body
         mode={mode}
         state={state}
@@ -34,8 +37,8 @@ const Section = props =&gt; {</div></div></div><div class="segment"><div class="
         colOrder={colOrder}
         range={range}
       /&gt;
-    <span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
-  )</span>
+    &lt;/div&gt;
+  )
 }
 
 Section.propTypes = {
@@ -47,4 +50,5 @@ Section.propTypes = {
   colOrder: PropTypes.string,
   range: RangeType
 }
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Section</div></div></div></div></body></html>
+export default Section
+</span></div></div></div></div></body></html>

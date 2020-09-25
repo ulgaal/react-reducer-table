@@ -12,36 +12,40 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 <span class="hljs-keyword">import</span> { ConfigContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'./Table'</span>
 <span class="hljs-keyword">import</span> { TableDispatch, COLUMN_REORDERING } <span class="hljs-keyword">from</span> <span class="hljs-string">'./actions'</span>
 <span class="hljs-keyword">import</span> { TableStateType, ColumnsType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
+<span class="hljs-keyword">import</span> { log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
 
-const HeadContent = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;HeadContent&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { components, layouts } = useContext(ConfigContext)
-  <span class="hljs-keyword">const</span> { state, columns } = props
-  <span class="hljs-keyword">const</span> dispatch = useContext(TableDispatch)
-  <span class="hljs-keyword">const</span> { header } = components
+const HeadContent = props =&gt; {
+  log(<span class="hljs-string">'HeadContent'</span>, 0, props)
+  const { components, layouts } = useContext(ConfigContext)
+  const { state, columns } = props
+  const dispatch = useContext(TableDispatch)
+  const { header } = components
 
-  <span class="hljs-keyword">const</span> { sort } = state
-  <span class="hljs-keyword">const</span> { order, name } = decode(sort)
+  const { sort } = state
+  const { order, name } = decode(sort)
 
-  <span class="hljs-keyword">const</span> handleDragStart = useCallback(event =&gt; {
-    <span class="hljs-keyword">const</span> th = event.target.closest(<span class="hljs-string">'.rrt-th'</span>)
-    <span class="hljs-keyword">const</span> id = th.dataset.id
-    event.dataTransfer.setDragImage(th, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+  const handleDragStart = useCallback(event =&gt; {
+    const th = event.target.closest(<span class="hljs-string">'.rrt-th'</span>)
+    const id = th.dataset.id
+    event.dataTransfer.setDragImage(th, 0, 0)
     event.dataTransfer.setData(<span class="hljs-string">'text/plain'</span>, id)
   }, [])
-  <span class="hljs-keyword">const</span> handleDragOver = useCallback(
+  const handleDragOver = useCallback(
     event =&gt; {
       event.preventDefault()
       event.dataTransfer.dropEffect = <span class="hljs-string">'move'</span>
     },
     [columns]
   )
-  <span class="hljs-keyword">const</span> handleDrop = useCallback(
+  const handleDrop = useCallback(
     event =&gt; {
-      <span class="hljs-keyword">const</span> allColumns = state.columns
-      <span class="hljs-keyword">const</span> ida = event.target.closest(<span class="hljs-string">'.rrt-th'</span>).dataset.id
-      <span class="hljs-keyword">const</span> idb = event.dataTransfer.getData(<span class="hljs-string">'text/plain'</span>)
-      <span class="hljs-keyword">if</span> (ida !== idb &amp;&amp; columns.findIndex(({ id }) =&gt; id === idb) !== -<span class="hljs-number">1</span>) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;handleDrop&#39;, { ida, idb })</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">const</span> newColumns = [...allColumns]
-        <span class="hljs-keyword">const</span> ixa = allColumns.findIndex(({ id }) =&gt; id === ida)
-        <span class="hljs-keyword">const</span> ixb = allColumns.findIndex(({ id }) =&gt; id === idb)
+      const allColumns = state.columns
+      const ida = event.target.closest(<span class="hljs-string">'.rrt-th'</span>).dataset.id
+      const idb = event.dataTransfer.getData(<span class="hljs-string">'text/plain'</span>)
+      if (ida !== idb &amp;&amp; columns.findIndex(({ id }) =&gt; id === idb) !== -1) {
+        const newColumns = [...allColumns]
+        const ixa = allColumns.findIndex(({ id }) =&gt; id === ida)
+        const ixb = allColumns.findIndex(({ id }) =&gt; id === idb)
         newColumns[ixa] = allColumns[ixb]
         newColumns[ixb] = allColumns[ixa]
         dispatch({ type: COLUMN_REORDERING, columns: newColumns })
@@ -52,8 +56,8 @@ const HeadContent = props =&gt; {</div></div></div><div class="segment"><div cla
     [state.columns, dispatch]
   )
 
-  <span class="hljs-keyword">return</span> (
-    <span class="xml"><span class="hljs-tag">&lt;&gt;</span>
+  return (
+    &lt;&gt;
       {columns.map((column, index) =&gt; {
         const { id, resizable = true, sortable = true } = column
         const layout = layouts[id]
@@ -69,20 +73,20 @@ const HeadContent = props =&gt; {</div></div></div><div class="segment"><div cla
           ...header.props
         }
         return (
-          <span class="hljs-tag">&lt;<span class="hljs-title">div</span>
-            <span class="hljs-attribute">key</span>=<span class="hljs-value">{index}</span>
-            <span class="hljs-attribute">className</span>=<span class="hljs-value">{`rrt-th</span> ${<span class="hljs-attribute">className</span>}${<span class="hljs-attribute">shouldFlex</span> ? ' <span class="hljs-attribute">flex</span>' <span class="hljs-attribute">:</span> ''}`}
-            <span class="hljs-attribute">onDragStart</span>=<span class="hljs-value">{handleDragStart}</span>
-            <span class="hljs-attribute">draggable</span>
-            <span class="hljs-attribute">data-id</span>=<span class="hljs-value">{id}</span>
-            <span class="hljs-attribute">onDragOver</span>=<span class="hljs-value">{handleDragOver}</span>
-            <span class="hljs-attribute">onDrop</span>=<span class="hljs-value">{handleDrop}</span>
-          &gt;</span>
+          &lt;div
+            key={index}
+            className={`rrt-th ${className}${shouldFlex ? <span class="hljs-string">' flex'</span> : <span class="hljs-string">''</span>}<span class="hljs-string">`}
+            onDragStart={handleDragStart}
+            draggable
+            data-id={id}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+          &gt;
             {React.createElement(header.type, props)}
-          <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
-        )</span>
+          &lt;/div&gt;
+        )
       })}
-    &lt;<span class="hljs-regexp">/&gt;
+    &lt;/&gt;
   )
 }
 

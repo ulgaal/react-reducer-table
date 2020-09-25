@@ -13,30 +13,33 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 <span class="hljs-keyword">import</span> RowContent <span class="hljs-keyword">from</span> <span class="hljs-string">'./RowContent'</span>
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
 <span class="hljs-keyword">import</span> { ColumnsType, Modes, ModeType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
+<span class="hljs-keyword">import</span> { log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./Row.css'</span>
 
-const Row = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Row&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { labels, components, layouts, rowIdAttr } = useContext(ConfigContext)
-  <span class="hljs-keyword">const</span> { row, colOrder, columns, selected, id, mode } = props
-  <span class="hljs-keyword">const</span> { tr } = components
-  <span class="hljs-keyword">const</span> rowProps = {
-    className: <span class="hljs-string">`rrt-tr<span class="hljs-subst">${selected ? ' rtf-selected' : ''}</span>`</span>,
-    ...(<span class="hljs-keyword">typeof</span> tr.type !== <span class="hljs-string">'string'</span> ? { row } : {}),
+const Row = props =&gt; {
+  log(<span class="hljs-string">'Row'</span>, 0, props)
+  const { labels, components, layouts, rowIdAttr } = useContext(ConfigContext)
+  const { row, colOrder, columns, selected, id, mode } = props
+  const { tr } = components
+  const rowProps = {
+    className: `rrt-tr${selected ? <span class="hljs-string">' rtf-selected'</span> : <span class="hljs-string">''</span>}<span class="hljs-string">`,
+    ...(typeof tr.type !== 'string' ? { row } : {}),
     ...tr.props
   }
-  <span class="hljs-keyword">return</span> React.createElement(tr.type, rowProps, [
+  return React.createElement(tr.type, rowProps, [
     rowIdAttr &amp;&amp; mode !== Modes.scrollable ? (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">'selection'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-td selection'</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">CellCheckbox</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">{id}</span> <span class="hljs-attribute">selected</span>=<span class="hljs-value">{selected}</span> <span class="hljs-attribute">title</span>=<span class="hljs-value">{labels.toggle}</span> /&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
-    )</span> : <span class="hljs-literal">null</span>,
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">RowContent</span>
-      <span class="hljs-attribute">key</span>=<span class="hljs-value">'content'</span>
-      <span class="hljs-attribute">columns</span>=<span class="hljs-value">{columns}</span>
-      <span class="hljs-attribute">layouts</span>=<span class="hljs-value">{layouts}</span>
-      <span class="hljs-attribute">colOrder</span>=<span class="hljs-value">{colOrder}</span>
-      <span class="hljs-attribute">row</span>=<span class="hljs-value">{row}</span>
-    /&gt;</span>
-  ]</span>)
+      &lt;div key='selection' className='rrt-td selection'&gt;
+        &lt;CellCheckbox id={id} selected={selected} title={labels.toggle} /&gt;
+      &lt;/div&gt;
+    ) : null,
+    &lt;RowContent
+      key='content'
+      columns={columns}
+      layouts={layouts}
+      colOrder={colOrder}
+      row={row}
+    /&gt;
+  ])
 }
 
 Row.propTypes = {
@@ -47,15 +50,16 @@ Row.propTypes = {
   mode: ModeType
 }
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> areEqual = (prev, next) =&gt; {
-  <span class="hljs-keyword">const</span> areEqual =
+export const areEqual = (prev, next) =&gt; {
+  const areEqual =
     prev.row === next.row &amp;&amp;
     prev.selected === next.selected &amp;&amp;
     prev.colOrder === next.colOrder
-  <span class="hljs-comment">/*if (!areEqual) {
+  /*if (!areEqual) {
     console.log('!Row.areEqual')
-  }*/</span>
-  <span class="hljs-keyword">return</span> areEqual
+  }*/
+  return areEqual
 }
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> React.memo(Row, areEqual)</div></div></div></div></body></html>
+export default React.memo(Row, areEqual)
+</span></div></div></div></div></body></html>

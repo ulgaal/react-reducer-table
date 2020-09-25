@@ -11,51 +11,55 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 <span class="hljs-keyword">import</span> { IndeterminateCheckbox } <span class="hljs-keyword">from</span> <span class="hljs-string">'./IndeterminateCheckbox'</span>
 <span class="hljs-keyword">import</span> { ConfigContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'./Table'</span>
 <span class="hljs-keyword">import</span> { TableDispatch, SELECTING } <span class="hljs-keyword">from</span> <span class="hljs-string">'./actions'</span>
+<span class="hljs-keyword">import</span> { log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./HeaderCheckbox.css'</span>
 
-const HeaderCheckbox = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;HeaderCheckbox&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { labels, rowIdAttr } = useContext(ConfigContext)
-  <span class="hljs-keyword">const</span> { state } = props
-  <span class="hljs-keyword">const</span> { data, selectedIds } = state
+const HeaderCheckbox = props =&gt; {
+  log(<span class="hljs-string">'HeaderCheckbox'</span>, 0, props)
+  const { labels, rowIdAttr } = useContext(ConfigContext)
+  const { state } = props
+  const { data, selectedIds } = state
 
-  <span class="hljs-keyword">const</span> dispatch = useContext(TableDispatch)
+  const dispatch = useContext(TableDispatch)
 
-  <span class="hljs-keyword">const</span> dataLength = data ? data.length : <span class="hljs-number">0</span>
-  <span class="hljs-keyword">const</span> allSelected =
-    selectedIds.size !== <span class="hljs-number">0</span> &amp;&amp; selectedIds.size !== dataLength
-      ? <span class="hljs-literal">undefined</span>
-      : selectedIds.size === dataLength &amp;&amp; dataLength &gt; <span class="hljs-number">0</span>
+  const dataLength = data ? data.length : 0
+  const allSelected =
+    selectedIds.size !== 0 &amp;&amp; selectedIds.size !== dataLength
+      ? undefined
+      : selectedIds.size === dataLength &amp;&amp; dataLength &gt; 0
 
-  <span class="hljs-keyword">const</span> handleChange = useCallback(
-    event =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;handleHeaderCheckChange&#39;, event)</p></div></div><div class="code"><div class="wrapper">      dispatch({
+  const handleChange = useCallback(
+    event =&gt; {
+      dispatch({
         type: SELECTING,
         selectedIds: event.target.checked
           ? data.reduce((acc, row) =&gt; {
               acc.add(row[rowIdAttr])
-              <span class="hljs-keyword">return</span> acc
-            }, <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>())
-          : <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>()
+              return acc
+            }, new Set())
+          : new Set()
       })
     },
     [data, rowIdAttr, dispatch]
   )
-  <span class="hljs-keyword">return</span> (
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-th selection'</span> <span class="hljs-attribute">onChange</span>=<span class="hljs-value">{handleChange}</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-header-checkbox'</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">IndeterminateCheckbox</span>
-          <span class="hljs-attribute">indeterminate</span>=<span class="hljs-value">{allSelected</span> =<span class="hljs-value">==</span> <span class="hljs-attribute">undefined</span>}
-          <span class="hljs-attribute">checked</span>=<span class="hljs-value">{allSelected</span> =<span class="hljs-value">==</span> <span class="hljs-attribute">true</span>}
-          <span class="hljs-attribute">title</span>=<span class="hljs-value">{labels.toggleAll}</span>
-          <span class="hljs-attribute">disabled</span>=<span class="hljs-value">{dataLength</span> =<span class="hljs-value">==</span> <span class="hljs-attribute">0</span>}
-        /&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
-  )</span>
+  return (
+    &lt;div className=<span class="hljs-string">'rrt-th selection'</span> onChange={handleChange}&gt;
+      &lt;div className=<span class="hljs-string">'rrt-header-checkbox'</span>&gt;
+        &lt;IndeterminateCheckbox
+          indeterminate={allSelected === undefined}
+          checked={allSelected === true}
+          title={labels.toggleAll}
+          disabled={dataLength === 0}
+        /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
 }
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> areEqual = (prev, next) =&gt; {
-  <span class="hljs-keyword">const</span> prevState = prev.state
-  <span class="hljs-keyword">const</span> nextState = next.state
-  <span class="hljs-keyword">const</span> areEqual =
+export const areEqual = (prev, next) =&gt; {
+  const prevState = prev.state
+  const nextState = next.state
+  const areEqual =
     prevState.data === nextState.data &amp;&amp;
     prevState.selectedIds === nextState.selectedIds</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if (!areEqual) {
     console.log(&#39;!HeaderCheckbox.areEqual&#39;)

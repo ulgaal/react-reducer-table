@@ -26,19 +26,25 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
 <span class="hljs-keyword">import</span> { ConfigContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'./Table'</span>
 <span class="hljs-keyword">import</span> { TableDispatch, CELL_RANGE, COLUMN_RESIZING } <span class="hljs-keyword">from</span> <span class="hljs-string">'./actions'</span>
-<span class="hljs-keyword">import</span> { measureCols } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
+<span class="hljs-keyword">import</span> { measureCols, log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
 <span class="hljs-keyword">import</span> isEqual <span class="hljs-keyword">from</span> <span class="hljs-string">'lodash.isequal'</span>
 <span class="hljs-keyword">import</span> useResizeObserver <span class="hljs-keyword">from</span> <span class="hljs-string">'./hooks/useResizeObserver'</span>
-<span class="hljs-keyword">import</span> { ScrollerDispatch, INVALIDATE } <span class="hljs-keyword">from</span> <span class="hljs-string">'./reducers/scrollerReducer'</span>
+<span class="hljs-keyword">import</span> {
+  ScrollerDispatch,
+  INVALIDATE,
+  VWHEEL
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'./reducers/scrollerReducer'</span>
 <span class="hljs-keyword">import</span> ResizeBar <span class="hljs-keyword">from</span> <span class="hljs-string">'./ResizeBar'</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./Data.css'</span>
 
-const Data = props =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;Data&#39;, props)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { state, scrollerState, resizerState } = props
-  <span class="hljs-keyword">const</span> { data, columns, cellRange } = state
+const Data = props =&gt; {
+  log(<span class="hljs-string">'Data'</span>, 0, props)
+  const { state, scrollerState, resizerState } = props
+  const { data, columns, cellRange } = state
 
-  <span class="hljs-keyword">const</span> dispatch = useContext(TableDispatch)
-  <span class="hljs-keyword">const</span> { rowIdAttr, context } = useContext(ConfigContext)
-  <span class="hljs-keyword">const</span> scrollerDispatch = useContext(ScrollerDispatch)</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>To keep head and body columns align when body Y scroller appears.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> [overflow, setOverflow] = useState(<span class="hljs-literal">false</span>)
+  const dispatch = useContext(TableDispatch)
+  const { rowIdAttr, context } = useContext(ConfigContext)
+  const scrollerDispatch = useContext(ScrollerDispatch)</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>To keep head and body columns align when body Y scroller appears.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> [overflow, setOverflow] = useState(<span class="hljs-literal">false</span>)
   <span class="hljs-keyword">const</span> ref = useRef(<span class="hljs-literal">null</span>)
   useLayoutEffect(() =&gt; {
     <span class="hljs-keyword">const</span> node = ref.current.querySelector(<span class="hljs-string">'.rrt-tbody'</span>)
@@ -114,7 +120,8 @@ Otherwise, there is just one section</p></div></div><div class="code"><div class
     }
     <span class="hljs-keyword">return</span> { hasFixedCols, range, fixedRange }
   }, [fixedCols, cellRange])</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Manage range selection by handling mouseDown bubbling on table cells</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> handleRange = useCallback(
-    event =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;handleRange&#39;, event)</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">if</span> (cellRange) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Process events only if there is a call range</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">const</span> getPosition = event =&gt; {
+    event =&gt; {
+      <span class="hljs-keyword">if</span> (cellRange) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Process events only if there is a call range</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">const</span> getPosition = event =&gt; {
           <span class="hljs-keyword">const</span> cellElement = event.target.closest(<span class="hljs-string">'.rrt-td'</span>)
           <span class="hljs-keyword">if</span> (!cellElement) {
             <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>
@@ -194,6 +201,17 @@ Otherwise, there is just one section</p></div></div><div class="code"><div class
     [cellRange, fixedCols, rowIdAttr]
   )
 
+  <span class="hljs-keyword">const</span> handleWheel = useCallback(
+    event =&gt; {
+      <span class="hljs-keyword">if</span> (hasFixedCols) {
+        event.stopPropagation()</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Cannot prevent default due to react not supporting passive events yet
+event.preventDefault()</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">const</span> { deltaY } = event
+        scrollerDispatch({ type: VWHEEL, deltaY })
+      }
+    },
+    [hasFixedCols, scrollerDispatch]
+  )
+
   useEffect(() =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>When data changes, perform column autoresize computations</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">const</span> { current } = ref
     <span class="hljs-keyword">if</span> (current &amp;&amp; hasAutoresizeCols &amp;&amp; data.length &gt; <span class="hljs-number">0</span>) {
       <span class="hljs-keyword">const</span> section = current.firstChild
@@ -220,7 +238,12 @@ Otherwise, there is just one section</p></div></div><div class="code"><div class
   useResizeObserver(ref, handleResize)
 
   <span class="hljs-keyword">return</span> (
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-data'</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">{ref}</span> <span class="hljs-attribute">onMouseDown</span>=<span class="hljs-value">{handleRange}</span>&gt;</span>
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>
+      <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-data'</span>
+      <span class="hljs-attribute">ref</span>=<span class="hljs-value">{ref}</span>
+      <span class="hljs-attribute">onMouseDown</span>=<span class="hljs-value">{handleRange}</span>
+      <span class="hljs-attribute">onWheel</span>=<span class="hljs-value">{handleWheel}</span>
+    &gt;</span>
       {hasFixedCols ? (
         <span class="hljs-tag">&lt;&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">Section</span>

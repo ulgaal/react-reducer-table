@@ -8,39 +8,48 @@ distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> { createContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> { log } <span class="hljs-keyword">from</span> <span class="hljs-string">'../utils'</span>
 export const ScrollerDispatch = createContext(null)
 export const SCROLLABLE = <span class="hljs-string">'SCROLLABLE'</span>
 export const FIXED = <span class="hljs-string">'FIXED'</span>
 export const VSCROLL = <span class="hljs-string">'VSCROLL'</span>
+export const VWHEEL = <span class="hljs-string">'VWHEEL'</span>
 export const HSCROLL = <span class="hljs-string">'HSCROLL'</span>
 export const INVALIDATE = <span class="hljs-string">'INVALIDATE'</span>
 
-export const scrollerReducer = (state, action) =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>console.log(&#39;scrollerReducer&#39;, state, action)</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">const</span> { type } = action
-  <span class="hljs-keyword">switch</span> (type) {
-    <span class="hljs-keyword">case</span> SCROLLABLE: {
-      <span class="hljs-keyword">const</span> { scrollableBody } = action
-      <span class="hljs-keyword">return</span> { ...state, scrollableBody }
+export const scrollerReducer = (state, action) =&gt; {
+  log(<span class="hljs-string">'scrollerReducer'</span>, 0, state, action)
+  const { type } = action
+  switch (type) {
+    case SCROLLABLE: {
+      const { scrollableBody } = action
+      return { ...state, scrollableBody }
     }
-    <span class="hljs-keyword">case</span> FIXED: {
-      <span class="hljs-keyword">const</span> { fixedBody } = action
-      <span class="hljs-keyword">return</span> { ...state, fixedBody }
+    case FIXED: {
+      const { fixedBody } = action
+      return { ...state, fixedBody }
     }
-    <span class="hljs-keyword">case</span> VSCROLL: {
-      <span class="hljs-keyword">const</span> { scrollTop, scrolling } = action
-      <span class="hljs-keyword">return</span> scrolling
-        ? { ...state, scrolling, scrollTop }
-        : { ...state, scrolling: <span class="hljs-literal">false</span> }
+    case VSCROLL: {
+      const { scrollTop, scrolling } = action
+      return scrolling
+        ? { ...state, scrolling, scrollTop, wheeling: false, deltaY: 0 }
+        : { ...state, scrolling: false }
     }
-    <span class="hljs-keyword">case</span> HSCROLL: {
-      <span class="hljs-keyword">const</span> { scrollLeft, scrolling } = action
-      <span class="hljs-keyword">return</span> scrolling
+    case HSCROLL: {
+      const { scrollLeft, scrolling } = action
+      return scrolling
         ? { ...state, scrolling, scrollLeft }
-        : { ...state, scrolling: <span class="hljs-literal">false</span> }
+        : { ...state, scrolling: false }
     }
-    <span class="hljs-keyword">case</span> INVALIDATE: {
-      <span class="hljs-keyword">return</span> { ...state }
+    case INVALIDATE: {
+      return { ...state }
     }
-    <span class="hljs-keyword">default</span>:
-      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`Unknown action: <span class="hljs-subst">${action.type}</span>`</span>)
+    case VWHEEL: {
+      const { deltaY } = action
+      return { ...state, wheeling: true, deltaY }
+    }
+    default:
+      throw new Error(`Unknown action: ${action.type}<span class="hljs-string">`)
   }
-}</div></div></div></div></body></html>
+}
+</span></div></div></div></div></body></html>
