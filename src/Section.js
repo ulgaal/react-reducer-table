@@ -19,10 +19,11 @@ import Filters from './Filters'
 import Body from './Body'
 import { ModeType, ColumnsType, TableStateType, RangeType } from './prop-types'
 import PropTypes from 'prop-types'
+import { log } from './utils'
 import './Section.css'
 
 const Section = props => {
-  // console.log('Section', props)
+  log('Section', 0, props)
   const { mode, state, columns, overflow, hasFilters, colOrder, range } = props
   return (
     <div className={`rrt-section rrt-section-${mode}`}>

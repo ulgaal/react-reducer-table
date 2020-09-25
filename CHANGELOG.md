@@ -1,4 +1,11 @@
-## Version 1.2.0 (2020/07/24)
+## Version 1.2.1 (2020/09/25)
+
+- Implemented onwheel to support vertical and horizontal scrolling on tables with fixed columns
+- Extracted scroller code to scroll sections in dedicated callbacks
+- Made max value more explicit in scrollers
+- Centralized logging in a log function which can be activated externally
+
+## Version 1.2.0 (2020/09/18)
 
 - Upgraded to react-infotip@1.1.0
 - Fixed unique key warning in Users story

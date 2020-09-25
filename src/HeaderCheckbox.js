@@ -17,10 +17,11 @@ import React, { useContext, useCallback } from 'react'
 import { IndeterminateCheckbox } from './IndeterminateCheckbox'
 import { ConfigContext } from './Table'
 import { TableDispatch, SELECTING } from './actions'
+import { log } from './utils'
 import './HeaderCheckbox.css'
 
 const HeaderCheckbox = props => {
-  // console.log('HeaderCheckbox', props)
+  log('HeaderCheckbox', 0, props)
   const { labels, rowIdAttr } = useContext(ConfigContext)
   const { state } = props
   const { data, selectedIds } = state
@@ -35,7 +36,6 @@ const HeaderCheckbox = props => {
 
   const handleChange = useCallback(
     event => {
-      // console.log('handleHeaderCheckChange', event)
       dispatch({
         type: SELECTING,
         selectedIds: event.target.checked

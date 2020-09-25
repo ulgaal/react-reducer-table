@@ -13,17 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import React, { useContext, useCallback } from 'react'
+import React, { useContext, useCallback, useEffect } from 'react'
 import { ScrollerDispatch, VSCROLL } from './reducers/scrollerReducer'
 import { ScrollerStateType } from './prop-types'
+import { log } from './utils'
 import './VScroller.css'
 
 const margin = 6
 
 const VScroller = props => {
-  // console.log('Scroller', props)
+  log('VScroller', 0, props)
   const {
-    state: { scrolling, scrollTop, scrollableBody, fixedBody }
+    state: { scrolling, wheeling, scrollTop, scrollableBody, fixedBody, deltaY }
   } = props
   const scrollerDispatch = useContext(ScrollerDispatch)
 
@@ -43,7 +44,22 @@ const VScroller = props => {
   const thumbHeight = rowsHeight
     ? (scrollerHeight_ * bodyHeight) / rowsHeight
     : 0
+  const scrollTopMax = scrollerHeight_ - thumbHeight
   const marginTop = margin + scrollTop
+
+  const scrollSections = useCallback(
+    top => {
+      const newTop = (top * rowsHeight) / scrollerHeight_
+      fixedBody.scrollTop = newTop
+      scrollableBody.scrollTop = newTop
+      scrollerDispatch({
+        type: VSCROLL,
+        scrolling: true,
+        scrollTop: top
+      })
+    },
+    [rowsHeight, scrollerHeight_, fixedBody, scrollableBody, scrollerDispatch]
+  )
 
   const handleMouseDown = useCallback(
     event => {
@@ -56,15 +72,8 @@ const VScroller = props => {
         const { top } = event.target
           .closest('.rrt-vscroller-bar')
           .getBoundingClientRect()
-        top0 = Math.min(y0 - top, scrollerHeight_ - thumbHeight)
-        scrollerDispatch({
-          type: VSCROLL,
-          scrolling: true,
-          scrollTop: top0
-        })
-        const newTop = (top0 * rowsHeight) / scrollerHeight_
-        fixedBody.scrollTop = newTop
-        scrollableBody.scrollTop = newTop
+        top0 = Math.min(y0 - top, scrollTopMax)
+        scrollSections(top0)
       }
       const handlers = {}
       // Position mouse handlers to create a modal drag loop
@@ -72,18 +81,8 @@ const VScroller = props => {
         event.preventDefault()
         event.stopPropagation()
         const dy = event.clientY - y0
-        const top1 = Math.min(
-          Math.max(0, top0 + dy),
-          scrollerHeight_ - thumbHeight
-        )
-        scrollerDispatch({
-          type: VSCROLL,
-          scrolling: true,
-          scrollTop: top1
-        })
-        const newTop = (top1 * rowsHeight) / scrollerHeight_
-        fixedBody.scrollTop = newTop
-        scrollableBody.scrollTop = newTop
+        const top1 = Math.min(Math.max(0, top0 + dy), scrollTopMax)
+        scrollSections(top1)
       }
       handlers.handleMouseUp = event => {
         event.preventDefault()
@@ -97,16 +96,16 @@ const VScroller = props => {
       window.addEventListener('mousemove', handlers.handleMouseMove, true)
       window.addEventListener('mouseup', handlers.handleMouseUp, true)
     },
-    [
-      scrollerDispatch,
-      scrollTop,
-      scrollableBody,
-      fixedBody,
-      rowsHeight,
-      scrollerHeight_,
-      thumbHeight
-    ]
+    [scrollerDispatch, scrollTop, scrollTopMax, scrollSections]
   )
+
+  useEffect(() => {
+    if (wheeling) {
+      const left = Math.min(Math.max(0, scrollTop + deltaY), scrollTopMax)
+      scrollSections(left)
+    }
+  }, [scrollTop, scrollTopMax, deltaY, wheeling, scrollSections])
+
   return visible ? (
     <div className='rrt-vscroller'>
       <div

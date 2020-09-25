@@ -26,7 +26,7 @@ import {
 } from './actions'
 import { decode, DESC } from './orders'
 import Icon from './Icon'
-import { subst, getProperty } from './utils'
+import { subst, getProperty, LOGS } from './utils'
 import { ColumnsType } from './prop-types'
 import DefaultCell from './DefaultCell'
 
@@ -47,5 +47,6 @@ export {
   subst,
   getProperty,
   ColumnsType,
-  DefaultCell
+  DefaultCell,
+  LOGS
 }

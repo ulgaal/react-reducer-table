@@ -19,10 +19,11 @@ import CellCheckbox from './CellCheckbox'
 import RowContent from './RowContent'
 import PropTypes from 'prop-types'
 import { ColumnsType, Modes, ModeType } from './prop-types'
+import { log } from './utils'
 import './Row.css'
 
 const Row = props => {
-  // console.log('Row', props)
+  log('Row', 0, props)
   const { labels, components, layouts, rowIdAttr } = useContext(ConfigContext)
   const { row, colOrder, columns, selected, id, mode } = props
   const { tr } = components

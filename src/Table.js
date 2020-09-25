@@ -188,10 +188,12 @@ const Table = props => {
 
   const [scrollerState, scrollerDispatch] = useReducer(scrollerReducer, {
     scrolling: false,
+    wheeling: false,
     scrollableBody: null,
     fixedBody: null,
     scrollTop: 0,
-    scrollLeft: 0
+    scrollLeft: 0,
+    deltaY: 0
   })
 
   const { loading, data, pageCount, pageIndex } = state

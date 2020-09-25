@@ -18,9 +18,10 @@ import { decode, DESC } from './orders'
 import { ConfigContext } from './Table'
 import { TableDispatch, COLUMN_REORDERING } from './actions'
 import { TableStateType, ColumnsType } from './prop-types'
+import { log } from './utils'
 
 const HeadContent = props => {
-  // console.log('HeadContent', props)
+  log('HeadContent', 0, props)
   const { components, layouts } = useContext(ConfigContext)
   const { state, columns } = props
   const dispatch = useContext(TableDispatch)
@@ -48,7 +49,6 @@ const HeadContent = props => {
       const ida = event.target.closest('.rrt-th').dataset.id
       const idb = event.dataTransfer.getData('text/plain')
       if (ida !== idb && columns.findIndex(({ id }) => id === idb) !== -1) {
-        // console.log('handleDrop', { ida, idb })
         const newColumns = [...allColumns]
         const ixa = allColumns.findIndex(({ id }) => id === ida)
         const ixb = allColumns.findIndex(({ id }) => id === idb)

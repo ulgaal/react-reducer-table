@@ -160,3 +160,12 @@ export const measureCols = (context, cols, section, rowIdAttr) => {
   }
   return null
 }
+
+export const LOGS = {}
+
+export const log = (facility, severity, ...args) => {
+  const sev = LOGS[facility]
+  if (typeof sev === 'number' && severity >= sev) {
+    console.log(facility, ...args)
+  }
+}

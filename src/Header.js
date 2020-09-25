@@ -20,10 +20,11 @@ import { encode, ASC, DESC } from './orders'
 import { TableDispatch, SORTING } from './actions'
 import PropTypes from 'prop-types'
 import { ColumnType, LayoutType } from './prop-types'
+import { log } from './utils'
 import './Header.css'
 
 const Header = props => {
-  // console.log('Header', props)
+  log('Header', 0, props)
   const { index, column, layout, sorted, resizable } = props
   const { id, label, sortable = true } = column
   const dispatch = useContext(TableDispatch)

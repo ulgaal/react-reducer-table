@@ -14,15 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import { createContext } from 'react'
+import { log } from '../utils'
 export const ScrollerDispatch = createContext(null)
 export const SCROLLABLE = 'SCROLLABLE'
 export const FIXED = 'FIXED'
 export const VSCROLL = 'VSCROLL'
+export const VWHEEL = 'VWHEEL'
 export const HSCROLL = 'HSCROLL'
 export const INVALIDATE = 'INVALIDATE'
 
 export const scrollerReducer = (state, action) => {
-  // console.log('scrollerReducer', state, action)
+  log('scrollerReducer', 0, state, action)
   const { type } = action
   switch (type) {
     case SCROLLABLE: {
@@ -36,7 +38,7 @@ export const scrollerReducer = (state, action) => {
     case VSCROLL: {
       const { scrollTop, scrolling } = action
       return scrolling
-        ? { ...state, scrolling, scrollTop }
+        ? { ...state, scrolling, scrollTop, wheeling: false, deltaY: 0 }
         : { ...state, scrolling: false }
     }
     case HSCROLL: {
@@ -47,6 +49,10 @@ export const scrollerReducer = (state, action) => {
     }
     case INVALIDATE: {
       return { ...state }
+    }
+    case VWHEEL: {
+      const { deltaY } = action
+      return { ...state, wheeling: true, deltaY }
     }
     default:
       throw new Error(`Unknown action: ${action.type}`)

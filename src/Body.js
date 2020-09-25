@@ -21,10 +21,11 @@ import { TableDispatch, SELECTING, VSCROLL } from './actions'
 import PropTypes from 'prop-types'
 import { TableStateType, ColumnsType, Modes, RangeType } from './prop-types'
 import { SCROLLABLE, FIXED, ScrollerDispatch } from './reducers/scrollerReducer'
+import { log } from './utils'
 import './Body.css'
 
 const Body = props => {
-  // console.log('Body', props)
+  log('Body', 0, props)
   const { rowIdAttr } = useContext(ConfigContext)
   const scrollerDispatch = useContext(ScrollerDispatch)
   const { state, columns, colOrder, mode, range } = props
@@ -32,7 +33,6 @@ const Body = props => {
   const dispatch = useContext(TableDispatch)
   const handleCellCheckChange = useCallback(
     event => {
-      // console.log('handleCellCheckChange', event)
       const id = event.target.dataset.id
       const newSelectedIds = new Set(selectedIds)
       if (event.target.checked) {
@@ -81,7 +81,6 @@ const Body = props => {
     >
       <div className='rrt-tbody-rows'>
         {data.map((row, index) => {
-          // console.log('row', row)
           const id = row[rowIdAttr]
           const selected = rowIdAttr && selectedIds.has(id)
           return (
