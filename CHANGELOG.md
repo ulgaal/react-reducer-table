@@ -1,3 +1,8 @@
+## Version 1.2.2 (2020/09/28)
+
+- Added a 'measure' optional property to column tables to enable external computations of cell autosizing
+- Renamed incorrect prefix for selected row CSS class
+
 ## Version 1.2.1 (2020/09/25)
 
 - Implemented onwheel to support vertical and horizontal scrolling on tables with fixed columns

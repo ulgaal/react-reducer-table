@@ -18,7 +18,7 @@ limitations under the License.
   display: flex;
 }
 
-.rrt-tr.rtf-selected {
+.rrt-tr.rrt-selected {
   background-color: lightyellow;
 }
 

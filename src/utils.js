@@ -83,19 +83,14 @@ export const measureCell = params => {
       // all other cells with be styled in the same way
       const tdStyle = window.getComputedStyle(td)
       const cellStyle = window.getComputedStyle(cell)
-      const {
-        fontFamily,
-        fontSize,
-        fontWeight,
-        paddingLeft,
-        paddingRight
-      } = tdStyle
-      const { marginLeft, marginRight } = cellStyle
+      const { fontFamily, fontSize, fontWeight } = tdStyle
       metric.dx =
-        parseInt(marginLeft) +
-        parseInt(marginRight) +
-        parseInt(paddingLeft) +
-        parseInt(paddingRight)
+        parseInt(cellStyle.marginLeft) +
+        parseInt(cellStyle.marginRight) +
+        parseInt(cellStyle.paddingLeft) +
+        parseInt(cellStyle.paddingRight) +
+        parseInt(tdStyle.paddingLeft) +
+        parseInt(tdStyle.paddingRight)
       const font = `${fontWeight} ${fontSize} ${fontFamily}`
       if (context.font !== font) {
         context.font = font
@@ -114,13 +109,19 @@ export const measureCols = (context, cols, section, rowIdAttr) => {
   if (section) {
     const metrics = cols.reduce(
       (acc, column, colIndex) => {
-        const { autoresize, minWidth = DEFAULT_MIN_WIDTH, index } = column
+        const {
+          autoresize,
+          minWidth = DEFAULT_MIN_WIDTH,
+          index,
+          measure = measureCell
+        } = column
         if (autoresize) {
           acc.push({
             column,
             index: index !== undefined ? index : colIndex,
             width: minWidth,
-            context
+            context,
+            measure
           })
         }
         return acc
@@ -142,7 +143,7 @@ export const measureCols = (context, cols, section, rowIdAttr) => {
                 if (rowElem) {
                   const td = rowElem.children[index + dx]
                   if (td && td.classList.contains('rrt-td')) {
-                    measureCell({
+                    metric.measure({
                       td,
                       metric,
                       row

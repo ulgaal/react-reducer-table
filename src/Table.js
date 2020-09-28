@@ -265,6 +265,26 @@ Table.propTypes = {
    * | fixed           | `<bool>`          | True if the column remains fixed horizontally, false (default) otherwise (fixed columns cannot be preceded by a non-fixed column)
    * | visible         | `<bool>`          | True if the column is visible (default), false otherwise
    * | autoresize      | `<bool>`          | True if the column should autoresize
+   * | measure         | `<MeasurementFunc>`| An optional function to customize how cells are measured for autoresize. Defaults to defaultMeasureCell
+   *
+   * `<MeasurementFunc>` is a function, which is called repeatedly for each table
+   * cell of columns which have their `autoresize` property set. The function
+   * receives a single object parameter, which contains the following keys:
+   *
+   * | Key        | Type             | Description                                                                        |
+   * |------------|------------------|--------------------------|
+   * | td         | `<element>`      | DOM element corresponding to the cell td   |
+   * | row        | `<number>`       | Row index of the cell |
+   * | metric     | `<MetricType>`   | Metric computed so far for the column |
+   *
+   * `<MetricType>`
+   *
+   * | Key        | Type             | Description                                                                        |
+   * |------------|------------------|--------------------------|
+   * | width      | `<number>`       | The max width of the column, so far. The function should alter this value |
+   * | column     | `<ColumnType>`   | The column definition |
+   * | index      | `<number>`       | The column index in its section |
+   * | context    | `<CanvasRenderingContext2D>` | A canvas 2D context which can be used as a helper |
    *
    * `<CellRangeType>` is an object, which contains the following keys:
    *
