@@ -107,19 +107,14 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
     <span class="hljs-keyword">if</span> (row === <span class="hljs-number">0</span> &amp;&amp; cell) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Retrieve style of the first cell of the column an assume
 all other cells with be styled in the same way</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">const</span> tdStyle = <span class="hljs-built_in">window</span>.getComputedStyle(td)
       <span class="hljs-keyword">const</span> cellStyle = <span class="hljs-built_in">window</span>.getComputedStyle(cell)
-      <span class="hljs-keyword">const</span> {
-        fontFamily,
-        fontSize,
-        fontWeight,
-        paddingLeft,
-        paddingRight
-      } = tdStyle
-      <span class="hljs-keyword">const</span> { marginLeft, marginRight } = cellStyle
+      <span class="hljs-keyword">const</span> { fontFamily, fontSize, fontWeight } = tdStyle
       metric.dx =
-        <span class="hljs-built_in">parseInt</span>(marginLeft) +
-        <span class="hljs-built_in">parseInt</span>(marginRight) +
-        <span class="hljs-built_in">parseInt</span>(paddingLeft) +
-        <span class="hljs-built_in">parseInt</span>(paddingRight)
+        <span class="hljs-built_in">parseInt</span>(cellStyle.marginLeft) +
+        <span class="hljs-built_in">parseInt</span>(cellStyle.marginRight) +
+        <span class="hljs-built_in">parseInt</span>(cellStyle.paddingLeft) +
+        <span class="hljs-built_in">parseInt</span>(cellStyle.paddingRight) +
+        <span class="hljs-built_in">parseInt</span>(tdStyle.paddingLeft) +
+        <span class="hljs-built_in">parseInt</span>(tdStyle.paddingRight)
       <span class="hljs-keyword">const</span> font = <span class="hljs-string">`<span class="hljs-subst">${fontWeight}</span> <span class="hljs-subst">${fontSize}</span> <span class="hljs-subst">${fontFamily}</span>`</span>
       <span class="hljs-keyword">if</span> (context.font !== font) {
         context.font = font
@@ -136,13 +131,19 @@ all other cells with be styled in the same way</p></div></div><div class="code">
   <span class="hljs-keyword">if</span> (section) {
     <span class="hljs-keyword">const</span> metrics = cols.reduce(
       (acc, column, colIndex) =&gt; {
-        <span class="hljs-keyword">const</span> { autoresize, minWidth = DEFAULT_MIN_WIDTH, index } = column
+        <span class="hljs-keyword">const</span> {
+          autoresize,
+          minWidth = DEFAULT_MIN_WIDTH,
+          index,
+          measure = measureCell
+        } = column
         <span class="hljs-keyword">if</span> (autoresize) {
           acc.push({
             column,
             index: index !== <span class="hljs-literal">undefined</span> ? index : colIndex,
             width: minWidth,
-            context
+            context,
+            measure
           })
         }
         <span class="hljs-keyword">return</span> acc
@@ -164,7 +165,7 @@ all other cells with be styled in the same way</p></div></div><div class="code">
                 <span class="hljs-keyword">if</span> (rowElem) {
                   <span class="hljs-keyword">const</span> td = rowElem.children[index + dx]
                   <span class="hljs-keyword">if</span> (td &amp;&amp; td.classList.contains(<span class="hljs-string">'rrt-td'</span>)) {
-                    measureCell({
+                    metric.measure({
                       td,
                       metric,
                       row

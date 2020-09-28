@@ -22,7 +22,7 @@ const Row = props =&gt; {
   const { row, colOrder, columns, selected, id, mode } = props
   const { tr } = components
   const rowProps = {
-    className: `rrt-tr${selected ? <span class="hljs-string">' rtf-selected'</span> : <span class="hljs-string">''</span>}<span class="hljs-string">`,
+    className: `rrt-tr${selected ? <span class="hljs-string">' rrt-selected'</span> : <span class="hljs-string">''</span>}<span class="hljs-string">`,
     ...(typeof tr.type !== 'string' ? { row } : {}),
     ...tr.props
   }
