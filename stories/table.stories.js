@@ -195,7 +195,8 @@ storiesOf('Tables', module)
               id: 'firstName',
               label: 'First name',
               sortable: false,
-              autoresize: true
+              autoresize: true,
+              resizable: false
             },
             {
               id: 'lastName',
