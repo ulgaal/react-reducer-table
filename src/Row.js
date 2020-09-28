@@ -28,7 +28,7 @@ const Row = props => {
   const { row, colOrder, columns, selected, id, mode } = props
   const { tr } = components
   const rowProps = {
-    className: `rrt-tr${selected ? ' rtf-selected' : ''}`,
+    className: `rrt-tr${selected ? ' rrt-selected' : ''}`,
     ...(typeof tr.type !== 'string' ? { row } : {}),
     ...tr.props
   }
