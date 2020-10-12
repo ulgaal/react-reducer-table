@@ -103,7 +103,10 @@ const HScroller = props => {
       // Cannot prevent default due to react not supporting passive events yet
       // event.preventDefault()
       const { deltaY } = event
-      const left = Math.min(Math.max(0, scrollLeft + deltaY), scrollLeftMax)
+      const left = Math.min(
+        Math.max(0, scrollLeft + Math.sign(deltaY) * 30),
+        scrollLeftMax
+      )
       scrollSection(left)
     },
     [scrollSection, scrollLeft, scrollLeftMax]

@@ -234,7 +234,7 @@ const Data = props => {
         // Cannot prevent default due to react not supporting passive events yet
         // event.preventDefault()
         const { deltaY } = event
-        scrollerDispatch({ type: VWHEEL, deltaY })
+        scrollerDispatch({ type: VWHEEL, deltaY: Math.sign(deltaY) * 30 })
       }
     },
     [hasFixedCols, scrollerDispatch]
