@@ -17,16 +17,34 @@ import React from 'react'
 import Head from './Head'
 import Filters from './Filters'
 import Body from './Body'
-import { ModeType, ColumnsType, TableStateType, RangeType } from './prop-types'
+import {
+  ModeType,
+  ColumnsType,
+  TableStateType,
+  RangeType,
+  Modes
+} from './prop-types'
 import PropTypes from 'prop-types'
 import { log } from './utils'
 import './Section.css'
 
 const Section = props => {
   log('Section', 0, props)
-  const { mode, state, columns, overflow, hasFilters, colOrder, range } = props
+  const {
+    mode,
+    state,
+    columns,
+    overflow,
+    hasFilters,
+    colOrder,
+    range,
+    stretch
+  } = props
+  const style = {
+    alignItems: stretch || mode === Modes.stretch ? 'stretch' : 'flex-start'
+  }
   return (
-    <div className={`rrt-section rrt-section-${mode}`}>
+    <div className={`rrt-section rrt-section-${mode}`} style={style}>
       <Head mode={mode} state={state} columns={columns} overflow={overflow} />
       {hasFilters ? (
         <Filters
@@ -52,6 +70,7 @@ Section.propTypes = {
   state: TableStateType,
   columns: ColumnsType,
   overflow: PropTypes.bool,
+  stretch: PropTypes.bool,
   hasFilters: PropTypes.bool,
   colOrder: PropTypes.string,
   range: RangeType
