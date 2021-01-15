@@ -11,16 +11,34 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 <span class="hljs-keyword">import</span> Head <span class="hljs-keyword">from</span> <span class="hljs-string">'./Head'</span>
 <span class="hljs-keyword">import</span> Filters <span class="hljs-keyword">from</span> <span class="hljs-string">'./Filters'</span>
 <span class="hljs-keyword">import</span> Body <span class="hljs-keyword">from</span> <span class="hljs-string">'./Body'</span>
-<span class="hljs-keyword">import</span> { ModeType, ColumnsType, TableStateType, RangeType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
+<span class="hljs-keyword">import</span> {
+  ModeType,
+  ColumnsType,
+  TableStateType,
+  RangeType,
+  Modes
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
 <span class="hljs-keyword">import</span> { log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./Section.css'</span>
 
 const Section = props =&gt; {
   log(<span class="hljs-string">'Section'</span>, 0, props)
-  const { mode, state, columns, overflow, hasFilters, colOrder, range } = props
+  const {
+    mode,
+    state,
+    columns,
+    overflow,
+    hasFilters,
+    colOrder,
+    range,
+    stretch
+  } = props
+  const style = {
+    alignItems: stretch || mode === Modes.stretch ? <span class="hljs-string">'stretch'</span> : <span class="hljs-string">'flex-start'</span>
+  }
   return (
-    &lt;div className={`rrt-section rrt-section-${mode}<span class="hljs-string">`}&gt;
+    &lt;div className={`rrt-section rrt-section-${mode}<span class="hljs-string">`} style={style}&gt;
       &lt;Head mode={mode} state={state} columns={columns} overflow={overflow} /&gt;
       {hasFilters ? (
         &lt;Filters
@@ -46,6 +64,7 @@ Section.propTypes = {
   state: TableStateType,
   columns: ColumnsType,
   overflow: PropTypes.bool,
+  stretch: PropTypes.bool,
   hasFilters: PropTypes.bool,
   colOrder: PropTypes.string,
   range: RangeType

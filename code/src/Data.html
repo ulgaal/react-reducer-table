@@ -206,7 +206,7 @@ Otherwise, there is just one section</p></div></div><div class="code"><div class
       <span class="hljs-keyword">if</span> (hasFixedCols) {
         event.stopPropagation()</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Cannot prevent default due to react not supporting passive events yet
 event.preventDefault()</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">const</span> { deltaY } = event
-        scrollerDispatch({ type: VWHEEL, deltaY })
+        scrollerDispatch({ type: VWHEEL, deltaY: <span class="hljs-built_in">Math</span>.sign(deltaY) * <span class="hljs-number">30</span> })
       }
     },
     [hasFixedCols, scrollerDispatch]
@@ -237,6 +237,16 @@ event.preventDefault()</p></div></div><div class="code"><div class="wrapper">   
   }, [])
   useResizeObserver(ref, handleResize)
 
+  <span class="hljs-keyword">let</span> stretch = <span class="hljs-literal">false</span>
+  <span class="hljs-keyword">if</span> (hasFixedCols) {
+    <span class="hljs-keyword">const</span> { scrollableBody } = scrollerState
+    <span class="hljs-keyword">if</span> (scrollableBody &amp;&amp; scrollableBody.isConnected) {
+      <span class="hljs-keyword">const</span> section = scrollableBody.closest(<span class="hljs-string">'.rrt-section'</span>)
+      <span class="hljs-keyword">const</span> sectionWidth = section.getBoundingClientRect().width
+      <span class="hljs-keyword">const</span> bodyWidth = cols.reduce((acc, { width = <span class="hljs-number">250</span> }) =&gt; acc + width, <span class="hljs-number">0</span>)</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Stretch the columns in the scrollable section if the columns do
+not occupy the horizontal space of the section fully</p></div></div><div class="code"><div class="wrapper">      stretch = bodyWidth &lt;= sectionWidth
+    }
+  }
   <span class="hljs-keyword">return</span> (
     <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>
       <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-data'</span>
@@ -263,6 +273,7 @@ event.preventDefault()</p></div></div><div class="code"><div class="wrapper">   
             <span class="hljs-attribute">colOrder</span>=<span class="hljs-value">{colOrder}</span>
             <span class="hljs-attribute">overflow</span>=<span class="hljs-value">{false}</span>
             <span class="hljs-attribute">range</span>=<span class="hljs-value">{range}</span>
+            <span class="hljs-attribute">stretch</span>=<span class="hljs-value">{stretch}</span>
           /&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">VScroller</span> <span class="hljs-attribute">state</span>=<span class="hljs-value">{scrollerState}</span> /&gt;</span>
         <span class="hljs-tag">&lt;/&gt;</span>
