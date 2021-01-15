@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 import React from 'react'
+import img from './ai-faces.jpg'
 import './SellerTip.css'
 
 const SellerTip = props => {
@@ -29,6 +30,8 @@ const SellerTip = props => {
       image
     }
   } = props
+  const x = image % 15
+  const y = Math.floor(image / 15)
   return (
     <div className='seller-tip'>
       <table>
@@ -37,7 +40,15 @@ const SellerTip = props => {
             <td className='seller-tip-key'>Name:</td>
             <td>{name}</td>
             <td rowSpan={5}>
-              <img className='seller-tip-image' src={image} />
+              <svg className='seller-tip-image' title={name}>
+                <image
+                  x={0}
+                  y={0}
+                  href={img}
+                  transform={`scale(1.6, 1.6) translate(-${x * 50}, -${y *
+                    50})`}
+                />
+              </svg>
             </td>
           </tr>
           <tr>

@@ -16,13 +16,15 @@ limitations under the License.
 import faker from 'faker'
 import { seq, compareStrings } from './utils'
 
-const { helpers, internet, address, commerce } = faker
+const { helpers, address, commerce } = faker
 export const createDatabase = dbsize => {
   const people = [...seq(0, dbsize)].map(id => ({
     id,
     ...helpers.userCard(),
     country: address.country(),
-    image: internet.avatar(),
+    // replaced internet.avatar which does not work any more
+    // with a 9x15 mosaic of ai generated people faces
+    image: Math.floor(135 * Math.random()),
     products: [...seq(0, 1 + Math.floor(20 * Math.random()))].map(
       productId => ({
         id: `${id}-${productId}`,
