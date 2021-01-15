@@ -1,3 +1,11 @@
+## Version 1.2.3 (2021/01/15)
+- Upgraded internal dependencies
+- Removed unused variable
+- replaced faker's internet.avatar() which does not work any more with a 9x15 mosaic of ai generated people faces
+- Changed flex layout of the scrollable section of tables with fixed columns to stretch to the whole section if columns do not occupy the horizontal space of the section fully
+- Enabled logging for Table component
+- Made wheel response more homogeneous between FF and chromium
+
 ## Version 1.2.2 (2020/09/28)
 
 - Added a 'measure' optional property to column tables to enable external computations of cell autosizing

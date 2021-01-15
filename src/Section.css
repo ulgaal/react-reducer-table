@@ -20,17 +20,14 @@ limitations under the License.
 }
 .rrt-section-stretch {
   flex-grow: 1;
-  align-items: stretch;
   border: 1px solid gray;
 }
 .rrt-section-fixed {
-  align-items: flex-start;
   flex-shrink: 0;
   overflow-x: hidden;
   border-right: 3px solid gray;
 }
 .rrt-section-scrollable {
-  align-items: flex-start;
   flex-shrink: 1;
   min-width: 0;
   flex-grow: 1;

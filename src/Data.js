@@ -234,7 +234,7 @@ const Data = props => {
         // Cannot prevent default due to react not supporting passive events yet
         // event.preventDefault()
         const { deltaY } = event
-        scrollerDispatch({ type: VWHEEL, deltaY })
+        scrollerDispatch({ type: VWHEEL, deltaY: Math.sign(deltaY) * 30 })
       }
     },
     [hasFixedCols, scrollerDispatch]
@@ -269,6 +269,18 @@ const Data = props => {
   }, [])
   useResizeObserver(ref, handleResize)
 
+  let stretch = false
+  if (hasFixedCols) {
+    const { scrollableBody } = scrollerState
+    if (scrollableBody && scrollableBody.isConnected) {
+      const section = scrollableBody.closest('.rrt-section')
+      const sectionWidth = section.getBoundingClientRect().width
+      const bodyWidth = cols.reduce((acc, { width = 250 }) => acc + width, 0)
+      // Stretch the columns in the scrollable section if the columns do
+      // not occupy the horizontal space of the section fully
+      stretch = bodyWidth <= sectionWidth
+    }
+  }
   return (
     <div
       className='rrt-data'
@@ -295,6 +307,7 @@ const Data = props => {
             colOrder={colOrder}
             overflow={false}
             range={range}
+            stretch={stretch}
           />
           <VScroller state={scrollerState} />
         </>

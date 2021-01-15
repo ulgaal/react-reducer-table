@@ -1,8 +1,15 @@
 {
   "name": "react-reducer-table",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A library to provide a fast data grid to React apps based on the useReducer hook",
-  "keywords": ["react", "table", "grid", "datagrid", "reducer", "useReducer"],
+  "keywords": [
+    "react",
+    "table",
+    "grid",
+    "datagrid",
+    "reducer",
+    "useReducer"
+  ],
   "homepage": "http://github.com/ulgaal/react-reducer-table",
   "bugs": {
     "url": "https://github.com/ulgaal/react-reducer-table/issues"
@@ -12,7 +19,9 @@
     "name": "Ulrich Gaal",
     "email": "react-reducer-table@coder-tribe.ovh"
   },
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "main": "lib/index.js",
   "module": "lib/index.js",
   "sideEffects": false,
@@ -32,12 +41,12 @@
     "resize-observer-polyfill": "^1.5.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.10.5",
-    "@babel/core": "^7.10.5",
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/polyfill": "^7.10.4",
-    "@babel/preset-env": "7.10.4",
-    "@babel/preset-react": "^7.10.4",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "7.12.11",
+    "@babel/preset-react": "^7.12.10",
     "@storybook/addon-actions": "^5.3.19",
     "@storybook/addon-knobs": "^5.3.19",
     "@storybook/addon-links": "^5.3.19",
@@ -45,27 +54,27 @@
     "@storybook/addons": "^5.3.19",
     "@storybook/react": "^5.3.19",
     "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "^26.1.0",
-    "babel-loader": "^8.1.0",
-    "bootstrap": "^4.5.2",
-    "cross-env": "^7.0.2",
-    "faker": "^4.1.0",
-    "jest": "^26.1.0",
+    "babel-jest": "^26.6.3",
+    "babel-loader": "^8.2.2",
+    "bootstrap": "^4.5.3",
+    "cross-env": "^7.0.3",
+    "faker": "^5.1.0",
+    "jest": "^26.6.3",
     "promisify-node": "^0.5.0",
     "prop-types": "^15.7.2",
-    "react": "^16.13.1",
-    "react-docgen": "^5.3.0",
-    "react-dom": "^16.13.1",
-    "react-draggable": "^3.3.0",
-    "react-resizable": "^1.10.1",
-    "standard": "^14.3.4",
+    "react": "^16.14.0",
+    "react-docgen": "^5.3.1",
+    "react-dom": "^16.14.0",
+    "react-draggable": "^4.4.3",
+    "react-resizable": "^1.11.0",
+    "standard": "^16.0.3",
     "storybook-readme": "^5.0.8",
-    "@testing-library/jest-dom": "^5.11.1",
-    "@testing-library/react": "^10.4.7",
-    "@testing-library/user-event": "^12.0.12",
-    "react-bootstrap": "^1.2.2",
-    "react-select": "^3.1.0",
-    "@ulgaal/react-infotip": "^1.1.1"
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.3",
+    "@testing-library/user-event": "^12.6.0",
+    "react-bootstrap": "^1.4.3",
+    "react-select": "^3.2.0",
+    "@ulgaal/react-infotip": "^1.1.4"
   },
   "peerDependencies": {
     "prop-types": "^15.x",
@@ -98,7 +107,11 @@
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",

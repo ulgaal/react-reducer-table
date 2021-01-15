@@ -100,7 +100,7 @@ const Sellers = props => {
   }, [query])
 
   const handleTip = useCallback(
-    (tipid, pinned) => {
+    tipid => {
       const [, kind, id] = /(prd|sel)@(.+)/.exec(tipid) || []
       if (kind === 'prd') {
         const [, sellerId, productId] = /(\d+)-(\d+)/.exec(id) || []

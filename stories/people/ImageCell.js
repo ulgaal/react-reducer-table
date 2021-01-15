@@ -15,10 +15,22 @@ limitations under the License.
 */
 import React from 'react'
 import './ImageCell.css'
+import img from './ai-faces.jpg'
 
 export const ImageCell = props => {
   const { name, image } = props.row
-  return <img src={image} className='image-cell' alt={name} />
+  const x = image % 15
+  const y = Math.floor(image / 15)
+  return (
+    <svg className='image-cell' title={name}>
+      <image
+        x={0}
+        y={0}
+        href={img}
+        transform={`scale(0.4, 0.4) translate(-${x * 50}, -${y * 50})`}
+      />
+    </svg>
+  )
 }
 
 export const areEqual = (prev, next) => {
