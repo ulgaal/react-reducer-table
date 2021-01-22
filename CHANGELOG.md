@@ -1,3 +1,6 @@
+## Version 1.3.0 (2021/01/21)
+- Migration to react@17.0.1 and @storybook/react@6.1.15
+
 ## Version 1.2.3 (2021/01/15)
 - Upgraded internal dependencies
 - Removed unused variable
