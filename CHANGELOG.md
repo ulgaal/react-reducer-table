@@ -1,3 +1,9 @@
+## Version 1.4.0 (2022/09/23)
+- Added displayNames to all components
+- Fixed bug: metric.measure is not called if a customized tr component inserts elements in the DOM hierarchy between rrt-tr and rrt-td
+- Fixed bug: HScroller and VScroller do not remove mouseup listeners
+- Froze storybook dependencies ; upgraded react-infotip dependency
+
 ## Version 1.3.1 (2021/03/16)
 - Fixed peer dependency to target React 17.x
 
