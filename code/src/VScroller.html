@@ -80,6 +80,7 @@ const VScroller = props =&gt; {
         event.preventDefault()
         event.stopPropagation()
         <span class="hljs-built_in">window</span>.removeEventListener(<span class="hljs-string">'mousemove'</span>, handlers.handleMouseMove, <span class="hljs-literal">true</span>)
+        <span class="hljs-built_in">window</span>.removeEventListener(<span class="hljs-string">'mouseup'</span>, handlers.handleMouseUp, <span class="hljs-literal">true</span>)
         scrollerDispatch({
           type: VSCROLL,
           scrolling: <span class="hljs-literal">false</span>
@@ -122,5 +123,7 @@ const VScroller = props =&gt; {
 VScroller.propTypes = {
   state: ScrollerStateType
 }
+
+VScroller.displayName = <span class="hljs-string">'VScroller'</span>
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> VScroller</div></div></div></div></body></html>

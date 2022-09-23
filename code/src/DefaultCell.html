@@ -15,6 +15,8 @@ const DefaultCell = props =&gt; {
   return &lt;div className=<span class="hljs-string">'rrt-default-cell'</span>&gt;{row[column.id]}&lt;/div&gt;
 }
 
+DefaultCell.displayName = <span class="hljs-string">'DefaultCell'</span>
+
 export const areEqual = (prev, next) =&gt; {
   const areEqual =
     prev.column === next.column &amp;&amp;

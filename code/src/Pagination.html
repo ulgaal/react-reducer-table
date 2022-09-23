@@ -121,6 +121,8 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 Pagination.propTypes = {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The state of the pagination component (see <a href="./Table.md">Table</a> for more details)</p></div></div><div class="code"><div class="wrapper">  state: TableStateType,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>An array of supported page sizes.</p></div></div><div class="code"><div class="wrapper">  pageSizes: PropTypes.arrayOf(PropTypes.number)
 }
 
+Pagination.displayName = <span class="hljs-string">'Pagination'</span>
+
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> areEqual = (prev, next) =&gt; {
   <span class="hljs-keyword">const</span> prevState = prev.state
   <span class="hljs-keyword">const</span> nextState = next.state

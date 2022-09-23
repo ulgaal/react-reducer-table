@@ -24,6 +24,9 @@ const SortArrow = props =&gt; {
     <span class="hljs-string">''</span>
   )
 }
+
+SortArrow.displayName = <span class="hljs-string">'SortArrow'</span>
+
 export const areEqual = (prev, next) =&gt; {
   const areEqual = prev.sorted === next.sorted</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if (!areEqual) {
     console.log(&#39;!SortArrow.areEqual&#39;)

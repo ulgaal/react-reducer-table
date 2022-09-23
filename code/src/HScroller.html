@@ -76,6 +76,7 @@ if one hides all previously fixed columns</p></div></div><div class="code"><div 
         event.preventDefault()
         event.stopPropagation()
         <span class="hljs-built_in">window</span>.removeEventListener(<span class="hljs-string">'mousemove'</span>, handlers.handleMouseMove, <span class="hljs-literal">true</span>)
+        <span class="hljs-built_in">window</span>.removeEventListener(<span class="hljs-string">'mouseup'</span>, handlers.handleMouseUp, <span class="hljs-literal">true</span>)
         scrollerDispatch({
           type: HSCROLL,
           scrolling: <span class="hljs-literal">false</span>
@@ -122,5 +123,7 @@ event.preventDefault()</p></div></div><div class="code"><div class="wrapper">   
 HScroller.propTypes = {
   state: ScrollerStateType
 }
+
+HScroller.displayName = <span class="hljs-string">'HScroller'</span>
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> HScroller</div></div></div></div></body></html>
