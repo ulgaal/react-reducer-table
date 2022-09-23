@@ -21,6 +21,8 @@ const DefaultCell = props => {
   return <div className='rrt-default-cell'>{row[column.id]}</div>
 }
 
+DefaultCell.displayName = 'DefaultCell'
+
 export const areEqual = (prev, next) => {
   const areEqual =
     prev.column === next.column &&

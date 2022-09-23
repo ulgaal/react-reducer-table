@@ -86,6 +86,7 @@ const HScroller = props => {
         event.preventDefault()
         event.stopPropagation()
         window.removeEventListener('mousemove', handlers.handleMouseMove, true)
+        window.removeEventListener('mouseup', handlers.handleMouseUp, true)
         scrollerDispatch({
           type: HSCROLL,
           scrolling: false
@@ -134,5 +135,7 @@ const HScroller = props => {
 HScroller.propTypes = {
   state: ScrollerStateType
 }
+
+HScroller.displayName = 'HScroller'
 
 export default HScroller

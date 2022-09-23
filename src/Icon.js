@@ -75,4 +75,7 @@ Icon.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number
 }
+
+Icon.displayName = 'Icon'
+
 export default Icon

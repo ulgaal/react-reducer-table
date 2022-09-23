@@ -65,6 +65,8 @@ const Section = props => {
   )
 }
 
+Section.displayName = 'Section'
+
 Section.propTypes = {
   mode: ModeType,
   state: TableStateType,

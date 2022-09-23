@@ -62,6 +62,8 @@ const HeaderCheckbox = props => {
   )
 }
 
+HeaderCheckbox.displayName = 'HeaderCheckbox'
+
 export const areEqual = (prev, next) => {
   const prevState = prev.state
   const nextState = next.state

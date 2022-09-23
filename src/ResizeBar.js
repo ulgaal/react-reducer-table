@@ -24,4 +24,7 @@ const ResizeBar = props => {
     </div>
   )
 }
+
+ResizeBar.displayName = 'ResizeBar'
+
 export default ResizeBar

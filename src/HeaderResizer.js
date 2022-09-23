@@ -129,4 +129,6 @@ HeaderResizer.propTypes = {
   layout: LayoutType
 }
 
+HeaderResizer.displayName = 'HeaderResizer'
+
 export default HeaderResizer

@@ -37,3 +37,5 @@ export const IndeterminateCheckbox = React.forwardRef(
     )
   }
 )
+
+IndeterminateCheckbox.displayName = 'IndeterminateCheckbox'

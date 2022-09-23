@@ -47,6 +47,8 @@ Head.propTypes = {
   mode: ModeType
 }
 
+Head.displayName = 'Head'
+
 export const areEqual = (prev, next) => {
   const prevState = prev.state
   const nextState = next.state

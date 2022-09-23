@@ -101,6 +101,8 @@ HeadContent.propTypes = {
   columns: ColumnsType
 }
 
+HeadContent.displayName = 'HeadContent'
+
 export const areEqual = (prev, next) => {
   const prevState = prev.state
   const nextState = next.state

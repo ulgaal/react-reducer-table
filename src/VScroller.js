@@ -88,6 +88,7 @@ const VScroller = props => {
         event.preventDefault()
         event.stopPropagation()
         window.removeEventListener('mousemove', handlers.handleMouseMove, true)
+        window.removeEventListener('mouseup', handlers.handleMouseUp, true)
         scrollerDispatch({
           type: VSCROLL,
           scrolling: false
@@ -130,5 +131,7 @@ const VScroller = props => {
 VScroller.propTypes = {
   state: ScrollerStateType
 }
+
+VScroller.displayName = 'VScroller'
 
 export default VScroller

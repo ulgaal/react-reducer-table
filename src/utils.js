@@ -141,8 +141,9 @@ export const measureCols = (context, cols, section, rowIdAttr) => {
               rows.children,
               (rowElem, row) => {
                 if (rowElem) {
-                  const td = rowElem.children[index + dx]
-                  if (td && td.classList.contains('rrt-td')) {
+                  const children = rowElem.querySelectorAll('.rrt-td')
+                  const td = children[index + dx];
+                  if (td) {
                     metric.measure({
                       td,
                       metric,

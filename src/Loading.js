@@ -29,4 +29,6 @@ const Loading = props => {
   )
 }
 
+Loading.displayName = 'Loading'
+
 export default Loading
