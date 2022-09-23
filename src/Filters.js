@@ -64,6 +64,8 @@ Filters.propTypes = {
   mode: ModeType
 }
 
+Filters.displayName = 'Filters'
+
 export const areEqual = (prev, next) => {
   const areEqual =
     prev.columns === next.columns && prev.overflow === next.overflow

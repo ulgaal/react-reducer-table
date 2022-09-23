@@ -60,6 +60,8 @@ const Header = props => {
   )
 }
 
+Header.displayName = 'Header'
+
 Header.propTypes = {
   index: PropTypes.number,
   column: ColumnType,

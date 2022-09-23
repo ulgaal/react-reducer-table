@@ -108,6 +108,8 @@ Body.propTypes = {
   range: RangeType
 }
 
+Body.displayName = 'Body'
+
 export const areEqual = (prev, next) => {
   const prevState = prev.state
   const nextState = next.state

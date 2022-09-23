@@ -30,6 +30,9 @@ const SortArrow = props => {
     ''
   )
 }
+
+SortArrow.displayName = 'SortArrow'
+
 export const areEqual = (prev, next) => {
   const areEqual = prev.sorted === next.sorted
   /* if (!areEqual) {

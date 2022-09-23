@@ -37,6 +37,8 @@ const CellCheckbox = props => {
   )
 }
 
+CellCheckbox.displayName = 'CellCheckbox'
+
 export const areEqual = (prev, next) => {
   const areEqual =
     prev.selected === next.selected &&

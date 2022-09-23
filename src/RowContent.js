@@ -49,6 +49,8 @@ RowContent.propTypes = {
   row: PropTypes.object
 }
 
+RowContent.displayName = 'RowContent'
+
 export const areEqual = (prev, next) => {
   const areEqual = prev.row === next.row && prev.colOrder === next.colOrder
   /* if (!areEqual) {

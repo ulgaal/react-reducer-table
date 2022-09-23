@@ -132,4 +132,6 @@ VScroller.propTypes = {
   state: ScrollerStateType
 }
 
+VScroller.displayName = 'VScroller'
+
 export default VScroller

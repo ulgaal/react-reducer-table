@@ -136,4 +136,6 @@ HScroller.propTypes = {
   state: ScrollerStateType
 }
 
+HScroller.displayName = 'HScroller'
+
 export default HScroller

@@ -28,4 +28,6 @@ const Empty = props => {
   )
 }
 
+Empty.displayName = 'Empty'
+
 export default React.memo(Empty)

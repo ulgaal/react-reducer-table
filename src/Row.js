@@ -56,6 +56,8 @@ Row.propTypes = {
   mode: ModeType
 }
 
+Row.displayName = 'Row'
+
 export const areEqual = (prev, next) => {
   const areEqual =
     prev.row === next.row &&

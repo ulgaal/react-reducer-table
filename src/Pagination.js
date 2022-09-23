@@ -140,6 +140,8 @@ Pagination.propTypes = {
   pageSizes: PropTypes.arrayOf(PropTypes.number)
 }
 
+Pagination.displayName = 'Pagination'
+
 export const areEqual = (prev, next) => {
   const prevState = prev.state
   const nextState = next.state

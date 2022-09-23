@@ -333,6 +333,8 @@ Data.propTypes = {
   resizerState: ResizerStateType
 }
 
+Data.displayName = 'Data'
+
 export const areEqual = (prev, next) => {
   const prevState = prev.state
   const nextState = next.state

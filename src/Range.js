@@ -81,6 +81,8 @@ Range.propTypes = {
   mode: ModeType
 }
 
+Range.displayName = 'Range'
+
 export const areEqual = (prev, next) => {
   const areEqual = prev.range === next.range
   /* if (!areEqual) {

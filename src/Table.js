@@ -341,4 +341,6 @@ Table.propTypes = {
   labels: LabelsType
 }
 
+Table.displayName = 'Table'
+
 export default Table
