@@ -1,3 +1,6 @@
+## Version 1.5.0 (2023/02/08)
+- Upgraded dependencies to React@18.2.0
+
 ## Version 1.4.0 (2022/09/23)
 - Added displayNames to all components
 - Fixed bug: metric.measure is not called if a customized tr component inserts elements in the DOM hierarchy between rrt-tr and rrt-td
