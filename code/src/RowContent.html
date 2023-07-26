@@ -11,11 +11,11 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
 <span class="hljs-keyword">import</span> { ColumnsType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
 <span class="hljs-keyword">import</span> DefaultCell <span class="hljs-keyword">from</span> <span class="hljs-string">'./DefaultCell'</span>
-<span class="hljs-keyword">import</span> { log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
+<span class="hljs-keyword">import</span> { LEVELS, log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./Row.css'</span>
 
 const RowContent = props =&gt; {
-  log(<span class="hljs-string">'RowContent'</span>, 0, props)
+  log(<span class="hljs-string">'RowContent'</span>, LEVELS.INFO, props)
   const { row, layouts, columns } = props
   return (
     &lt;&gt;

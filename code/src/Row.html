@@ -13,11 +13,11 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 <span class="hljs-keyword">import</span> RowContent <span class="hljs-keyword">from</span> <span class="hljs-string">'./RowContent'</span>
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
 <span class="hljs-keyword">import</span> { ColumnsType, Modes, ModeType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
-<span class="hljs-keyword">import</span> { log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
+<span class="hljs-keyword">import</span> { LEVELS, log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./Row.css'</span>
 
 const Row = props =&gt; {
-  log(<span class="hljs-string">'Row'</span>, 0, props)
+  log(<span class="hljs-string">'Row'</span>, LEVELS.INFO, props)
   const { labels, components, layouts, rowIdAttr } = useContext(ConfigContext)
   const { row, colOrder, columns, selected, id, mode } = props
   const { tr } = components
@@ -59,7 +59,7 @@ export const areEqual = (prev, next) =&gt; {
     prev.colOrder === next.colOrder
   /*if (!areEqual) {
     console.log('!Row.areEqual')
-  }*/
+  } */
   return areEqual
 }
 

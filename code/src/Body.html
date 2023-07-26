@@ -15,11 +15,11 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 <span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>
 <span class="hljs-keyword">import</span> { TableStateType, ColumnsType, Modes, RangeType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
 <span class="hljs-keyword">import</span> { SCROLLABLE, FIXED, ScrollerDispatch } <span class="hljs-keyword">from</span> <span class="hljs-string">'./reducers/scrollerReducer'</span>
-<span class="hljs-keyword">import</span> { log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
+<span class="hljs-keyword">import</span> { LEVELS, log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./Body.css'</span>
 
 const Body = props =&gt; {
-  log(<span class="hljs-string">'Body'</span>, 0, props)
+  log(<span class="hljs-string">'Body'</span>, LEVELS.INFO, props)
   const { rowIdAttr } = useContext(ConfigContext)
   const scrollerDispatch = useContext(ScrollerDispatch)
   const { state, columns, colOrder, mode, range } = props
@@ -43,7 +43,11 @@ const Body = props =&gt; {
   )
 
   const handleScroll = useCallback(event =&gt; {
-    dispatch({ type: VSCROLL, scrollTop: event.target.scrollTop })
+    dispatch({ type: VSCROLL, scrollTop: event.target.scrollTop, isScrollEnd: false })
+  }, [])
+
+  const handleScrollEnd = useCallback(event =&gt; {
+    dispatch({ type: VSCROLL, scrollTop: event.target.scrollTop, isScrollEnd: true })
   }, [])
 
   const ref = useRef(null)
@@ -62,6 +66,18 @@ to power parallel vertical scrolling of the two sections if needed</p></div></di
       }
     }
   })
+
+  useEffect(() =&gt; {
+    <span class="hljs-keyword">const</span> { current } = ref
+    <span class="hljs-keyword">if</span> (current) {
+      current.addEventListener(<span class="hljs-string">'scrollend'</span>, handleScrollEnd)
+    }
+    <span class="hljs-keyword">return</span> () =&gt; {
+      log(<span class="hljs-string">'Body'</span>, LEVELS.DEBUG, <span class="hljs-string">'scrollend unsubscribe'</span>)
+      current.removeEventListener(<span class="hljs-string">'scrollend'</span>, handleScrollEnd)
+    }
+  }, [handleScrollEnd])
+
   <span class="hljs-keyword">return</span> (
     <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>
       <span class="hljs-attribute">className</span>=<span class="hljs-value">'rrt-tbody'</span>

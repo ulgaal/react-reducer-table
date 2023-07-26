@@ -26,7 +26,7 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 } <span class="hljs-keyword">from</span> <span class="hljs-string">'./prop-types'</span>
 <span class="hljs-keyword">import</span> { ConfigContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'./Table'</span>
 <span class="hljs-keyword">import</span> { TableDispatch, CELL_RANGE, COLUMN_RESIZING } <span class="hljs-keyword">from</span> <span class="hljs-string">'./actions'</span>
-<span class="hljs-keyword">import</span> { measureCols, log } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
+<span class="hljs-keyword">import</span> { measureCols, log, LEVELS } <span class="hljs-keyword">from</span> <span class="hljs-string">'./utils'</span>
 <span class="hljs-keyword">import</span> isEqual <span class="hljs-keyword">from</span> <span class="hljs-string">'lodash.isequal'</span>
 <span class="hljs-keyword">import</span> useResizeObserver <span class="hljs-keyword">from</span> <span class="hljs-string">'./hooks/useResizeObserver'</span>
 <span class="hljs-keyword">import</span> {
@@ -38,7 +38,7 @@ limitations under the License.</p></div></div><div class="code"><div class="wrap
 <span class="hljs-keyword">import</span> <span class="hljs-string">'./Data.css'</span>
 
 const Data = props =&gt; {
-  log(<span class="hljs-string">'Data'</span>, 0, props)
+  log(<span class="hljs-string">'Data'</span>, LEVELS.INFO, props)
   const { state, scrollerState, resizerState } = props
   const { data, columns, cellRange } = state
 

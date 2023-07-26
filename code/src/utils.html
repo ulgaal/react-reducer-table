@@ -164,7 +164,7 @@ all other cells with be styled in the same way</p></div></div><div class="code">
               (rowElem, row) =&gt; {
                 <span class="hljs-keyword">if</span> (rowElem) {
                   <span class="hljs-keyword">const</span> children = rowElem.querySelectorAll(<span class="hljs-string">'.rrt-td'</span>)
-                  <span class="hljs-keyword">const</span> td = children[index + dx];
+                  <span class="hljs-keyword">const</span> td = children[index + dx]
                   <span class="hljs-keyword">if</span> (td) {
                     metric.measure({
                       td,
@@ -186,6 +186,11 @@ all other cells with be styled in the same way</p></div></div><div class="code">
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> LOGS = {}
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> LEVELS = {
+  ERROR: <span class="hljs-number">0</span>,
+  INFO: <span class="hljs-number">1</span>,
+  DEBUG: <span class="hljs-number">2</span>
+}
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> log = (facility, severity, ...args) =&gt; {
   <span class="hljs-keyword">const</span> sev = LOGS[facility]
