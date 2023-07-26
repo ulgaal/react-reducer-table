@@ -15,7 +15,7 @@ limitations under the License.
 */
 import { createContext } from 'react'
 import { COLUMN_RESIZING } from '../actions'
-import { log } from '../utils'
+import { LEVELS, log } from '../utils'
 
 export const START_RESIZING = 'START_RESIZING'
 export const RESIZE = 'RESIZE'
@@ -23,7 +23,7 @@ export const END_RESIZING = 'END_RESIZING'
 export const ResizerContext = createContext(null)
 
 export const resizerReducer = (state, action) => {
-  log('resizerReducer', 0, state, action)
+  log('resizerReducer', LEVELS.INFO, state, action)
   switch (action.type) {
     case START_RESIZING:
       return { ...state, barX: action.x, resizing: true }

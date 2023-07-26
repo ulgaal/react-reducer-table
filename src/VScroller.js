@@ -16,13 +16,13 @@ limitations under the License.
 import React, { useContext, useCallback, useEffect } from 'react'
 import { ScrollerDispatch, VSCROLL } from './reducers/scrollerReducer'
 import { ScrollerStateType } from './prop-types'
-import { log } from './utils'
+import { LEVELS, log } from './utils'
 import './VScroller.css'
 
 const margin = 6
 
 const VScroller = props => {
-  log('VScroller', 0, props)
+  log('VScroller', LEVELS.INFO, props)
   const {
     state: { scrolling, wheeling, scrollTop, scrollableBody, fixedBody, deltaY }
   } = props

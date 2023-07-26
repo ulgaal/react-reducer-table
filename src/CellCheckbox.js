@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import React from 'react'
-import { log } from './utils'
+import { LEVELS, log } from './utils'
 import './CellCheckbox.css'
 
 // Required onChange handle to prevent react warning
@@ -22,7 +22,7 @@ import './CellCheckbox.css'
 const nop = event => {}
 
 const CellCheckbox = props => {
-  log('CellCheckbox', 0, props)
+  log('CellCheckbox', LEVELS.INFO, props)
   const { selected, title, id } = props
   return (
     <div className='rrt-cell-checkbox'>

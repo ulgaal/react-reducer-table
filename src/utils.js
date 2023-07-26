@@ -142,7 +142,7 @@ export const measureCols = (context, cols, section, rowIdAttr) => {
               (rowElem, row) => {
                 if (rowElem) {
                   const children = rowElem.querySelectorAll('.rrt-td')
-                  const td = children[index + dx];
+                  const td = children[index + dx]
                   if (td) {
                     metric.measure({
                       td,
@@ -164,6 +164,11 @@ export const measureCols = (context, cols, section, rowIdAttr) => {
 }
 
 export const LOGS = {}
+export const LEVELS = {
+  ERROR: 0,
+  INFO: 1,
+  DEBUG: 2
+}
 
 export const log = (facility, severity, ...args) => {
   const sev = LOGS[facility]

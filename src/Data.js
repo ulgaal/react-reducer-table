@@ -32,7 +32,7 @@ import {
 } from './prop-types'
 import { ConfigContext } from './Table'
 import { TableDispatch, CELL_RANGE, COLUMN_RESIZING } from './actions'
-import { measureCols, log } from './utils'
+import { measureCols, log, LEVELS } from './utils'
 import isEqual from 'lodash.isequal'
 import useResizeObserver from './hooks/useResizeObserver'
 import {
@@ -44,7 +44,7 @@ import ResizeBar from './ResizeBar'
 import './Data.css'
 
 const Data = props => {
-  log('Data', 0, props)
+  log('Data', LEVELS.INFO, props)
   const { state, scrollerState, resizerState } = props
   const { data, columns, cellRange } = state
 

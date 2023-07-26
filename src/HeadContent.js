@@ -18,10 +18,10 @@ import { decode, DESC } from './orders'
 import { ConfigContext } from './Table'
 import { TableDispatch, COLUMN_REORDERING } from './actions'
 import { TableStateType, ColumnsType } from './prop-types'
-import { log } from './utils'
+import { LEVELS, log } from './utils'
 
 const HeadContent = props => {
-  log('HeadContent', 0, props)
+  log('HeadContent', LEVELS.INFO, props)
   const { components, layouts } = useContext(ConfigContext)
   const { state, columns } = props
   const dispatch = useContext(TableDispatch)

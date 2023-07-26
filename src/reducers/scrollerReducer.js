@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import { createContext } from 'react'
-import { log } from '../utils'
+import { LEVELS, log } from '../utils'
 export const ScrollerDispatch = createContext(null)
 export const SCROLLABLE = 'SCROLLABLE'
 export const FIXED = 'FIXED'
@@ -24,7 +24,7 @@ export const HSCROLL = 'HSCROLL'
 export const INVALIDATE = 'INVALIDATE'
 
 export const scrollerReducer = (state, action) => {
-  log('scrollerReducer', 0, state, action)
+  log('scrollerReducer', LEVELS.INFO, state, action)
   const { type } = action
   switch (type) {
     case SCROLLABLE: {

@@ -21,11 +21,11 @@ import { TableDispatch, SELECTING, VSCROLL } from './actions'
 import PropTypes from 'prop-types'
 import { TableStateType, ColumnsType, Modes, RangeType } from './prop-types'
 import { SCROLLABLE, FIXED, ScrollerDispatch } from './reducers/scrollerReducer'
-import { log } from './utils'
+import { LEVELS, log } from './utils'
 import './Body.css'
 
 const Body = props => {
-  log('Body', 0, props)
+  log('Body', LEVELS.INFO, props)
   const { rowIdAttr } = useContext(ConfigContext)
   const scrollerDispatch = useContext(ScrollerDispatch)
   const { state, columns, colOrder, mode, range } = props
