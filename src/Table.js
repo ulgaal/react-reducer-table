@@ -89,6 +89,7 @@ const styleSheet = stylesheet.createStyleSheet()
  * | Key        | Type         | Description                                                                        |
  * |------------|--------------|--------------------------|
  * | scrollTop  | `<number>` | the offset to the top of the table body element |
+ * | isScrollEnd | `<boolean>` | true is the action was triggered by a scrollend event, false otherwise |
  */
 const Table = props => {
   log('Table', LEVELS.INFO, props)

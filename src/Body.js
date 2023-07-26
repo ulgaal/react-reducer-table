@@ -49,7 +49,11 @@ const Body = props => {
   )
 
   const handleScroll = useCallback(event => {
-    dispatch({ type: VSCROLL, scrollTop: event.target.scrollTop })
+    dispatch({ type: VSCROLL, scrollTop: event.target.scrollTop, isScrollEnd: false })
+  }, [])
+
+  const handleScrollEnd = useCallback(event => {
+    dispatch({ type: VSCROLL, scrollTop: event.target.scrollTop, isScrollEnd: true })
   }, [])
 
   const ref = useRef(null)
@@ -72,6 +76,18 @@ const Body = props => {
       }
     }
   })
+
+  useEffect(() => {
+    const { current } = ref
+    if (current) {
+      current.addEventListener('scrollend', handleScrollEnd)
+    }
+    return () => {
+      log('Body', LEVELS.DEBUG, 'scrollend unsubscribe')
+      current.removeEventListener('scrollend', handleScrollEnd)
+    }
+  }, [handleScrollEnd])
+
   return (
     <div
       className='rrt-tbody'

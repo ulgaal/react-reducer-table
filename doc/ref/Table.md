@@ -47,6 +47,7 @@ The table will trigger the following action to ask the reducer to alter its stat
 | Key        | Type         | Description                                                                        |
 |------------|--------------|--------------------------|
 | scrollTop  | `<number>` | the offset to the top of the table body element |
+| isScrollEnd | `<boolean>` | true is the action was triggered by a scrollend event, false otherwise |
 
 Props
 -----
