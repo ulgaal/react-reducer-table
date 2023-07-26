@@ -1,6 +1,6 @@
 {
   "name": "react-reducer-table",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "A library to provide a fast data grid to React apps based on the useReducer hook",
   "keywords": [
     "react",
