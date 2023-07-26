@@ -25,11 +25,11 @@ import {
   Modes
 } from './prop-types'
 import PropTypes from 'prop-types'
-import { log } from './utils'
+import { LEVELS, log } from './utils'
 import './Section.css'
 
 const Section = props => {
-  log('Section', 0, props)
+  log('Section', LEVELS.INFO, props)
   const {
     mode,
     state,

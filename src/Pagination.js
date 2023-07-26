@@ -19,14 +19,14 @@ import { TableStateType } from './prop-types'
 import Icon from './Icon'
 import { ConfigContext } from './Table'
 import { TableDispatch, PAGING } from './actions'
-import { subst, log } from './utils'
+import { subst, log, LEVELS } from './utils'
 import './Pagination.css'
 
 /**
  * Component to handle pagination
  */
 const Pagination = props => {
-  log('Pagination', 0, props)
+  log('Pagination', LEVELS.INFO, props)
   const { labels, components } = useContext(ConfigContext)
   const { state, pageSizes } = props
   const { paginationExtra } = components
@@ -69,8 +69,7 @@ const Pagination = props => {
         <button
           title={labels.previousPage}
           onClick={() =>
-            dispatch({ type: PAGING, pageIndex: pageIndex - 1, pageSize })
-          }
+            dispatch({ type: PAGING, pageIndex: pageIndex - 1, pageSize })}
           disabled={!canPreviousPage}
         >
           <Icon icon='previous' />
@@ -94,8 +93,7 @@ const Pagination = props => {
         <button
           title={labels.nextPage}
           onClick={() =>
-            dispatch({ type: PAGING, pageIndex: pageIndex + 1, pageSize })
-          }
+            dispatch({ type: PAGING, pageIndex: pageIndex + 1, pageSize })}
           disabled={!canNextPage}
         >
           <Icon icon='next' />
@@ -103,8 +101,7 @@ const Pagination = props => {
         <button
           title={labels.lastPage}
           onClick={() =>
-            dispatch({ type: PAGING, pageIndex: pageCount - 1, pageSize })
-          }
+            dispatch({ type: PAGING, pageIndex: pageCount - 1, pageSize })}
           disabled={!canNextPage}
         >
           <Icon icon='last' />
@@ -153,7 +150,7 @@ export const areEqual = (prev, next) => {
 
   /*if (!areEqual) {
     console.log('!Pagination.areEqual')
-  }*/
+  } */
   return areEqual
 }
 

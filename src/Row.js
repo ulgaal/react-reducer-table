@@ -19,11 +19,11 @@ import CellCheckbox from './CellCheckbox'
 import RowContent from './RowContent'
 import PropTypes from 'prop-types'
 import { ColumnsType, Modes, ModeType } from './prop-types'
-import { log } from './utils'
+import { LEVELS, log } from './utils'
 import './Row.css'
 
 const Row = props => {
-  log('Row', 0, props)
+  log('Row', LEVELS.INFO, props)
   const { labels, components, layouts, rowIdAttr } = useContext(ConfigContext)
   const { row, colOrder, columns, selected, id, mode } = props
   const { tr } = components
@@ -65,7 +65,7 @@ export const areEqual = (prev, next) => {
     prev.colOrder === next.colOrder
   /*if (!areEqual) {
     console.log('!Row.areEqual')
-  }*/
+  } */
   return areEqual
 }
 

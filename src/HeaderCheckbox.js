@@ -17,11 +17,11 @@ import React, { useContext, useCallback } from 'react'
 import { IndeterminateCheckbox } from './IndeterminateCheckbox'
 import { ConfigContext } from './Table'
 import { TableDispatch, SELECTING } from './actions'
-import { log } from './utils'
+import { LEVELS, log } from './utils'
 import './HeaderCheckbox.css'
 
 const HeaderCheckbox = props => {
-  log('HeaderCheckbox', 0, props)
+  log('HeaderCheckbox', LEVELS.INFO, props)
   const { labels, rowIdAttr } = useContext(ConfigContext)
   const { state } = props
   const { data, selectedIds } = state

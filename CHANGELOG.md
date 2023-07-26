@@ -1,3 +1,7 @@
+## Version 1.5.1 (2023/07/26)
+- Added log level definitions and migrated logging to use them
+- Mapped native scrollend events to a isScrollEnd property in VSCROLL actions
+
 ## Version 1.5.0 (2023/02/08)
 - Upgraded dependencies to React@18.2.0
 

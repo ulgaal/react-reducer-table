@@ -34,7 +34,7 @@ import { TableDispatch } from './actions'
 import { resizerReducer, ResizerContext } from './reducers/resizerReducer'
 import { scrollerReducer, ScrollerDispatch } from './reducers/scrollerReducer'
 import HScroller from './HScroller'
-import { log } from './utils'
+import { LEVELS, log } from './utils'
 import './Table.css'
 
 export const ConfigContext = createContext(null)
@@ -89,9 +89,10 @@ const styleSheet = stylesheet.createStyleSheet()
  * | Key        | Type         | Description                                                                        |
  * |------------|--------------|--------------------------|
  * | scrollTop  | `<number>` | the offset to the top of the table body element |
+ * | isScrollEnd | `<boolean>` | true is the action was triggered by a scrollend event, false otherwise |
  */
 const Table = props => {
-  log('Table', 0, props)
+  log('Table', LEVELS.INFO, props)
   const { state, rowIdAttr, components = {}, labels } = props
   const { columns } = state
 

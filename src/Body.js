@@ -21,11 +21,11 @@ import { TableDispatch, SELECTING, VSCROLL } from './actions'
 import PropTypes from 'prop-types'
 import { TableStateType, ColumnsType, Modes, RangeType } from './prop-types'
 import { SCROLLABLE, FIXED, ScrollerDispatch } from './reducers/scrollerReducer'
-import { log } from './utils'
+import { LEVELS, log } from './utils'
 import './Body.css'
 
 const Body = props => {
-  log('Body', 0, props)
+  log('Body', LEVELS.INFO, props)
   const { rowIdAttr } = useContext(ConfigContext)
   const scrollerDispatch = useContext(ScrollerDispatch)
   const { state, columns, colOrder, mode, range } = props
@@ -49,7 +49,11 @@ const Body = props => {
   )
 
   const handleScroll = useCallback(event => {
-    dispatch({ type: VSCROLL, scrollTop: event.target.scrollTop })
+    dispatch({ type: VSCROLL, scrollTop: event.target.scrollTop, isScrollEnd: false })
+  }, [])
+
+  const handleScrollEnd = useCallback(event => {
+    dispatch({ type: VSCROLL, scrollTop: event.target.scrollTop, isScrollEnd: true })
   }, [])
 
   const ref = useRef(null)
@@ -72,6 +76,18 @@ const Body = props => {
       }
     }
   })
+
+  useEffect(() => {
+    const { current } = ref
+    if (current) {
+      current.addEventListener('scrollend', handleScrollEnd)
+    }
+    return () => {
+      log('Body', LEVELS.DEBUG, 'scrollend unsubscribe')
+      current.removeEventListener('scrollend', handleScrollEnd)
+    }
+  }, [handleScrollEnd])
+
   return (
     <div
       className='rrt-tbody'

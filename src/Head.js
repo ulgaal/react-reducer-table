@@ -19,11 +19,11 @@ import HeaderCheckbox from './HeaderCheckbox'
 import HeadContent from './HeadContent'
 import PropTypes from 'prop-types'
 import { TableStateType, ColumnsType, Modes, ModeType } from './prop-types'
-import { log } from './utils'
+import { LEVELS, log } from './utils'
 import './Head.css'
 
 const Head = props => {
-  log('Head', 0, props)
+  log('Head', LEVELS.INFO, props)
   const { rowIdAttr } = useContext(ConfigContext)
   const { state, columns, overflow, mode } = props
   return (

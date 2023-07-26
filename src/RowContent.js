@@ -17,11 +17,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { ColumnsType } from './prop-types'
 import DefaultCell from './DefaultCell'
-import { log } from './utils'
+import { LEVELS, log } from './utils'
 import './Row.css'
 
 const RowContent = props => {
-  log('RowContent', 0, props)
+  log('RowContent', LEVELS.INFO, props)
   const { row, layouts, columns } = props
   return (
     <>
