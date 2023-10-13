@@ -53,7 +53,8 @@ export const tableInit = value => {
       {
         id: 'products',
         Cell: ProductsCell,
-        label: 'Products'
+        label: 'Products',
+        flexible: true
       }
     ],
     ...value
