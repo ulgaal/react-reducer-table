@@ -26,10 +26,10 @@ const RowContent = props => {
   return (
     <>
       {columns.map((column, index) => {
-        const { id, Cell = DefaultCell, resizable = true } = column
+        const { id, Cell = DefaultCell, resizable = true, flexible = false } = column
         const layout = layouts[id]
         const { className } = layout
-        const shouldFlex = resizable && index === columns.length - 1
+        const shouldFlex = flexible || (resizable && index === columns.length - 1)
         return (
           <div
             key={index}
