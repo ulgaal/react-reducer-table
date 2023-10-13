@@ -1,3 +1,7 @@
+## Version 1.6.0 (2023/10/13)
+- Migrated Sellers sample to reflect use of flexible
+- Added new flexible attribute to column definition
+
 ## Version 1.5.1 (2023/07/26)
 - Added log level definitions and migrated logging to use them
 - Mapped native scrollend events to a isScrollEnd property in VSCROLL actions
