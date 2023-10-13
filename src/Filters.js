@@ -27,32 +27,30 @@ const Filters = props => {
 
   return (
     <div className='rrt-filters'>
-      {
-        <div className={`rrt-tr${overflow ? ' overflow' : ''}`}>
-          {rowIdAttr && mode !== Modes.scrollable ? (
-            <div className='rrt-th selection' />
-          ) : null}
-          {columns.map((column, index) => {
-            const { id, Filter, resizable = true } = column
-            const layout = layouts[id]
-            const { className } = layout
-            const shouldFlex = resizable && index === columns.length - 1
-            const props = {
-              column,
-              resizable: resizable && !shouldFlex,
-              state
-            }
-            return (
-              <div
-                key={index}
-                className={`rrt-th ${className}${shouldFlex ? ' flex' : ''}`}
-              >
-                {Filter ? React.createElement(Filter, props) : null}
-              </div>
-            )
-          })}
-        </div>
-      }
+      <div className={`rrt-tr${overflow ? ' overflow' : ''}`}>
+        {rowIdAttr && mode !== Modes.scrollable ? (
+          <div className='rrt-th selection' />
+        ) : null}
+        {columns.map((column, index) => {
+          const { id, Filter, resizable = true, flexible = false } = column
+          const layout = layouts[id]
+          const { className } = layout
+          const shouldFlex = flexible || (resizable && index === columns.length - 1)
+          const props = {
+            column,
+            resizable: resizable && !shouldFlex,
+            state
+          }
+          return (
+            <div
+              key={index}
+              className={`rrt-th ${className}${shouldFlex ? ' flex' : ''}`}
+            >
+              {Filter ? React.createElement(Filter, props) : null}
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

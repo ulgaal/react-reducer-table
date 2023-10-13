@@ -260,6 +260,7 @@ Table.propTypes = {
    * | label           | `<string>`        | The label to display for this column
    * | resizable       | `<bool>`          | True if the column can be resized
    * | sortable        | `<bool>`          | True if the column can be sorted
+   * | flexible        | `<bool>`          | True if the column can flex
    * | minWidth        | `<number>`        | The min width of the column (in pixels)
    * | width           | `<number>`        | The default width of the column (in pixels)
    * | Cell            | `<elementType>`   | The React component to use for cells corresponding to this column
