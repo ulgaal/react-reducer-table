@@ -21,32 +21,30 @@ const Filters = props =&gt; {
 
   return (
     &lt;div className=<span class="hljs-string">'rrt-filters'</span>&gt;
-      {
-        &lt;div className={`rrt-tr${overflow ? <span class="hljs-string">' overflow'</span> : <span class="hljs-string">''</span>}<span class="hljs-string">`}&gt;
-          {rowIdAttr &amp;&amp; mode !== Modes.scrollable ? (
-            &lt;div className='rrt-th selection' /&gt;
-          ) : null}
-          {columns.map((column, index) =&gt; {
-            const { id, Filter, resizable = true } = column
-            const layout = layouts[id]
-            const { className } = layout
-            const shouldFlex = resizable &amp;&amp; index === columns.length - 1
-            const props = {
-              column,
-              resizable: resizable &amp;&amp; !shouldFlex,
-              state
-            }
-            return (
-              &lt;div
-                key={index}
-                className={`</span>rrt-th ${className}${shouldFlex ? <span class="hljs-string">' flex'</span> : <span class="hljs-string">''</span>}<span class="hljs-string">`}
-              &gt;
-                {Filter ? React.createElement(Filter, props) : null}
-              &lt;/div&gt;
-            )
-          })}
-        &lt;/div&gt;
-      }
+      &lt;div className={`rrt-tr${overflow ? <span class="hljs-string">' overflow'</span> : <span class="hljs-string">''</span>}<span class="hljs-string">`}&gt;
+        {rowIdAttr &amp;&amp; mode !== Modes.scrollable ? (
+          &lt;div className='rrt-th selection' /&gt;
+        ) : null}
+        {columns.map((column, index) =&gt; {
+          const { id, Filter, resizable = true, flexible = false } = column
+          const layout = layouts[id]
+          const { className } = layout
+          const shouldFlex = flexible || (resizable &amp;&amp; index === columns.length - 1)
+          const props = {
+            column,
+            resizable: resizable &amp;&amp; !shouldFlex,
+            state
+          }
+          return (
+            &lt;div
+              key={index}
+              className={`</span>rrt-th ${className}${shouldFlex ? <span class="hljs-string">' flex'</span> : <span class="hljs-string">''</span>}<span class="hljs-string">`}
+            &gt;
+              {Filter ? React.createElement(Filter, props) : null}
+            &lt;/div&gt;
+          )
+        })}
+      &lt;/div&gt;
     &lt;/div&gt;
   )
 }

@@ -59,10 +59,10 @@ const HeadContent = props =&gt; {
   return (
     &lt;&gt;
       {columns.map((column, index) =&gt; {
-        const { id, resizable = true, sortable = true } = column
+        const { id, resizable = true, sortable = true, flexible = false } = column
         const layout = layouts[id]
         const { className } = layout
-        const shouldFlex = resizable &amp;&amp; index === columns.length - 1
+        const shouldFlex = flexible || (resizable &amp;&amp; index === columns.length - 1)
         const sorted = sortable &amp;&amp; name === id ? order === DESC : undefined
         const props = {
           index,
