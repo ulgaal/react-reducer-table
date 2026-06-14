@@ -1,5 +1,7 @@
 [![npm (scoped)](https://img.shields.io/npm/v/react-reducer-table)](https://www.npmjs.com/package/react-reducer-table) [![GitHub](https://img.shields.io/github/license/ulgaal/react-reducer-table)](https://github.com/ulgaal/react-reducer-table/blob/master/LICENSE)
 
+THIS REPOSITORY HAS BEEN TRANSFERRED TO [gitlab](https://gitlab.com/coder-tribe-group/react-infra)
+
 # React data grid library based on the `useReducer` pattern
 
 ## What are the supported feature ?
